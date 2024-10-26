@@ -31,10 +31,10 @@ export default function Search({ result }: { result: CourseResult[] }) {
       new Set(
         result
           .filter(
-            (course) => !selectedSubject || course.subject === selectedSubject
+            (course) => !selectedSubject || course.subject === selectedSubject,
           )
-          .map((course) => course.courseNumber)
-      )
+          .map((course) => course.courseNumber),
+      ),
     );
   }, [result, selectedSubject]);
 
@@ -49,7 +49,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
       const selectedCourse = result.find(
         (course) =>
           course.subject === selectedSubject &&
-          course.courseNumber === selectedCourseNumber
+          course.courseNumber === selectedCourseNumber,
       );
       if (selectedCourse) {
         router.push(`/courses/${selectedCourse.id}`);

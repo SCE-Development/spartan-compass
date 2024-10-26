@@ -45,7 +45,7 @@ export const professorsCoursesTable = pgTable(
   },
   (table) => ({
     pk: primaryKey({ columns: [table.professorId, table.courseId] }), // Composite primary key
-  })
+  }),
 );
 
 // Define relationships for the join table. This part of the code specifies
@@ -62,5 +62,5 @@ export const professorsCoursesRelations = relations(
       fields: [professorsCoursesTable.courseId],
       references: [coursesTable.id],
     }),
-  })
+  }),
 );
