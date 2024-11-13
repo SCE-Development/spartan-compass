@@ -7,11 +7,3 @@ export const google = new Google(
 	"http://localhost:3000/login/google/callback"
 );
 
-
-export function decodeIdToken(token: string) {
-	const decoded = jwt.decode(token) as { [key: string]: any };
-	if (!decoded) {
-	  throw new Error("Invalid ID token");
-	}
-	return decoded;
-  }
