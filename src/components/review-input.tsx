@@ -10,18 +10,18 @@ import { Textarea } from "@/components/ui/textarea"
 
 export default function ReviewInput() {
   const [rating, setRating] = useState(0)
+  const [hover, setHover] = useState(0)
   const [review, setReview] = useState('')
   const [course, setCourse] = useState('')
   const [professor, setProfessor] = useState('')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission here
     console.log({ course, professor, rating, review })
   }
 
   return (
-    <Card className="w-full md:w-3/4 lg:w-2/3 xl:w-1/2 border-white/20 mx-auto">
+    <Card className="w-full md:w-3/4 lg:w-2/3 xl:w-1/2 dark:border-white/20 border-black/20 shadow-lg mx-auto">
       <CardHeader>
         <CardTitle>Add a Review</CardTitle>
       </CardHeader>
@@ -59,19 +59,21 @@ export default function ReviewInput() {
 
           
           <div className="space-y-2">
-            <Label>Rating</Label>
-            <div className="flex space-x-1">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <Star
-                  key={star}
-                  className={`w-6 h-6 cursor-pointer ${
-                    star <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-                  }`}
-                  onClick={() => setRating(star)}
-                />
-              ))}
-            </div>
-          </div>
+      <Label>Rating</Label>
+      <div className="flex space-x-1">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <Star
+            key={star}
+            className={`w-6 h-6 cursor-pointer transition-colors ${
+              star <= (hover || rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
+            }`}
+            onClick={() => setRating(star)}
+            onMouseEnter={() => setHover(star)}
+            onMouseLeave={() => setHover(0)}
+          />
+        ))}
+      </div>
+    </div>
           
           <div className="space-y-2">
             <Label htmlFor="review">Review</Label>
