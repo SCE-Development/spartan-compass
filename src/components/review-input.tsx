@@ -21,7 +21,7 @@ export default function ReviewInput() {
   }
 
   return (
-    <Card className="w-full md:w-3/4 lg:w-2/3 xl:w-1/2 mx-auto">
+    <Card className="w-full md:w-3/4 lg:w-2/3 xl:w-1/2 border-white/20 mx-auto">
       <CardHeader>
         <CardTitle>Add a Review</CardTitle>
       </CardHeader>
@@ -89,7 +89,7 @@ export default function ReviewInput() {
         </form>
       </CardContent>
       <CardFooter className="flex justify-end px-4 sm:px-6">
-        <Button type="submit" onClick={handleSubmit} className="w-full sm:w-auto">Submit Review</Button>
+        <Button type="submit" onClick={handleSubmit} className="w-full sm:w-auto">Add Review</Button>
       </CardFooter>
     </Card>
   )
