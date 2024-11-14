@@ -26,17 +26,27 @@ export default function Search({ result }: { result: CourseResult[] }) {
   const [hover, setHover] = useState(0);
   const [review, setReview] = useState("");
   const [selectedProfessor, setSelectedProfessor] = useState("");
-  const [selectedCourse, setSelectedCourse] = useState(""); 
+  const [selectedCourse, setSelectedCourse] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [filteredCourses, setFilteredCourses] = useState<any[]>([]);
+  const professors = result.map((item) => ({
+    id: item.professorId,
+    name: item.professorName,
+  }));
+
+  // Filter unique professors based on professor ID
   const uniqueProfessors = Array.from(
-    new Set(result.map((item) => item.professorName)),
-  );
+    new Set(professors.map((prof) => prof.id)),
+  ).map((id) => professors.find((prof) => prof.id === id));
 
   useEffect(() => {
     if (selectedProfessor) {
       const courses = result
-        .filter(item => item.professorName === selectedProfessor)
-        .map(item => item.courseSubject + " " + item.courseNumber);
+        .filter((item) => item.professorId === Number(selectedProfessor))
+        .map((item) => ({
+          displayName: item.courseSubject + " " + item.courseNumber,
+          id: item.courseId,
+        }));
       setFilteredCourses(courses);
     } else {
       setFilteredCourses([]);
@@ -66,9 +76,12 @@ export default function Search({ result }: { result: CourseResult[] }) {
                   <SelectValue placeholder="Select a professor" />
                 </SelectTrigger>
                 <SelectContent>
-                  {uniqueProfessors.map((number) => (
-                    <SelectItem value={number} key={number}>
-                      {number}
+                  {uniqueProfessors.map((professor) => (
+                    <SelectItem
+                      value={String(professor?.id) || ""}
+                      key={professor?.id || ""}
+                    >
+                      {professor?.name || ""}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -76,14 +89,21 @@ export default function Search({ result }: { result: CourseResult[] }) {
             </div>
             <div className="space-y-2">
               <Label htmlFor="course">Course</Label>
-              <Select disabled={!selectedProfessor} value={selectedCourse} onValueChange={setSelectedCourse}>
+              <Select
+                disabled={!selectedProfessor}
+                value={selectedCourse}
+                onValueChange={setSelectedCourse}
+              >
                 <SelectTrigger id="course">
                   <SelectValue placeholder="Select a course" />
                 </SelectTrigger>
                 <SelectContent>
-                {filteredCourses.map((courseName) => (
-                    <SelectItem value={courseName} key={courseName}>
-                      {courseName}
+                  {filteredCourses.map((course) => (
+                    <SelectItem
+                      value={String(course?.id) || ""}
+                      key={course.id}
+                    >
+                      {course.displayName}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -126,7 +146,11 @@ export default function Search({ result }: { result: CourseResult[] }) {
         </form>
       </CardContent>
       <CardFooter className="flex justify-end px-4 sm:px-6">
-        <Button onClick={handleSubmit} type="submit" className="w-full sm:w-auto">
+        <Button
+          onClick={handleSubmit}
+          type="submit"
+          className="w-full sm:w-auto"
+        >
           Add Review
         </Button>
       </CardFooter>

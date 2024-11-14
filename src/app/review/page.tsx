@@ -9,7 +9,9 @@ const getCourses = async () => {
     .select({
       courseNumber: coursesTable.courseNumber,
       courseSubject: coursesTable.subject,
+      courseId: coursesTable.id,
       professorName: professorsTable.name,
+      professorId: professorsTable.id,
     })
     .from(professorsCoursesTable)
     .innerJoin(coursesTable, eq(professorsCoursesTable.courseId, coursesTable.id))
