@@ -1,80 +1,115 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Star } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
+import { useEffect, useState } from "react";
+import { Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { CourseResult } from "@/app/review/page";
 
-export default function ReviewInput() {
-  const [rating, setRating] = useState(0)
-  const [hover, setHover] = useState(0)
-  const [review, setReview] = useState('')
-  const [course, setCourse] = useState('')
-  const [professor, setProfessor] = useState('')
+export default function Search({ result }: { result: CourseResult[] }) {
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+  const [review, setReview] = useState("");
+  const [selectedProfessor, setSelectedProfessor] = useState("");
+  const [selectedCourse, setSelectedCourse] = useState(""); 
+  const [filteredCourses, setFilteredCourses] = useState<any[]>([]);
+  const uniqueProfessors = Array.from(
+    new Set(result.map((item) => item.professorName)),
+  );
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log({ course, professor, rating, review })
+  useEffect(() => {
+    if (selectedProfessor) {
+      const courses = result
+        .filter(item => item.professorName === selectedProfessor)
+        .map(item => item.courseSubject + " " + item.courseNumber);
+      setFilteredCourses(courses);
+    } else {
+      setFilteredCourses([]);
+    }
+  }, [selectedProfessor, result]);
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    console.log({ rating, review, selectedProfessor, selectedCourse });
   }
 
   return (
     <Card className="w-full md:w-3/4 lg:w-2/3 xl:w-1/2 dark:border-white/20 border-black/20 shadow-lg mx-auto">
       <CardHeader>
-        <CardTitle>Add a Review</CardTitle>
+        <CardTitle></CardTitle>
       </CardHeader>
       <CardContent className="px-4 sm:px-6">
-        <form onSubmit={handleSubmit} className="space-y-3">
+        <form className="space-y-3">
           <div className="flex gap-2 w-full">
-          <div className="space-y-2">
-            <Label htmlFor="course">Course</Label>
-            <Select value={course} onValueChange={setCourse}>
-              <SelectTrigger id="course">
-                <SelectValue placeholder="Select a course" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="cs101">CS 101: Introduction to Programming</SelectItem>
-                <SelectItem value="cs201">CS 201: Data Structures</SelectItem>
-                <SelectItem value="cs301">CS 301: Algorithms</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="professor">Professor</Label>
-            <Select value={professor} onValueChange={setProfessor}>
-              <SelectTrigger id="professor">
-                <SelectValue placeholder="Select a professor" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="smith">Dr. Smith</SelectItem>
-                <SelectItem value="johnson">Prof. Johnson</SelectItem>
-                <SelectItem value="williams">Dr. Williams</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+            <div className="space-y-2">
+              <Label htmlFor="professor">Professor</Label>
+              <Select
+                value={selectedProfessor}
+                onValueChange={setSelectedProfessor}
+              >
+                <SelectTrigger id="professor">
+                  <SelectValue placeholder="Select a professor" />
+                </SelectTrigger>
+                <SelectContent>
+                  {uniqueProfessors.map((number) => (
+                    <SelectItem value={number} key={number}>
+                      {number}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="course">Course</Label>
+              <Select disabled={!selectedProfessor} value={selectedCourse} onValueChange={setSelectedCourse}>
+                <SelectTrigger id="course">
+                  <SelectValue placeholder="Select a course" />
+                </SelectTrigger>
+                <SelectContent>
+                {filteredCourses.map((courseName) => (
+                    <SelectItem value={courseName} key={courseName}>
+                      {courseName}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
-          
           <div className="space-y-2">
-      <Label>Rating</Label>
-      <div className="flex space-x-1">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <Star
-            key={star}
-            className={`w-6 h-6 cursor-pointer transition-colors ${
-              star <= (hover || rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-            }`}
-            onClick={() => setRating(star)}
-            onMouseEnter={() => setHover(star)}
-            onMouseLeave={() => setHover(0)}
-          />
-        ))}
-      </div>
-    </div>
-          
+            <Label>Rating</Label>
+            <div className="flex space-x-1">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Star
+                  key={star}
+                  className={`w-6 h-6 cursor-pointer transition-colors ${
+                    star <= (hover || rating)
+                      ? "fill-yellow-400 text-yellow-400"
+                      : "text-gray-300"
+                  }`}
+                  onClick={() => setRating(star)}
+                  onMouseEnter={() => setHover(star)}
+                  onMouseLeave={() => setHover(0)}
+                />
+              ))}
+            </div>
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="review">Review</Label>
             <Textarea
@@ -91,8 +126,10 @@ export default function ReviewInput() {
         </form>
       </CardContent>
       <CardFooter className="flex justify-end px-4 sm:px-6">
-        <Button type="submit" onClick={handleSubmit} className="w-full sm:w-auto">Add Review</Button>
+        <Button onClick={handleSubmit} type="submit" className="w-full sm:w-auto">
+          Add Review
+        </Button>
       </CardFooter>
     </Card>
-  )
+  );
 }
