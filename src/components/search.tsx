@@ -58,10 +58,10 @@ export default function Search({ result }: { result: CourseResult[] }) {
   }, [selectedSubject, selectedCourseNumber, result, router]);
 
   return (
-    <div className="container mx-auto h-screen flex items-center justify-center">
+    <div className="container mx-auto h-[75vh] flex items-center justify-center">
       <div className="flex flex-row items-center space-x-4">
         <Select onValueChange={handleSubjectChange}>
-          <SelectTrigger className="w-[200px]">
+          <SelectTrigger className="w-[200px] dark:border-white/30 border-black/30 ">
             <SelectValue placeholder="Select a subject" />
           </SelectTrigger>
           <SelectContent>
@@ -81,7 +81,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
           disabled={!selectedSubject}
           value={selectedCourseNumber?.toString() || ""}
         >
-          <SelectTrigger className="w-[200px]">
+          <SelectTrigger className="w-[200px] dark:border-white/30 border-black/30">
             <SelectValue placeholder="Select a course number" />
           </SelectTrigger>
           <SelectContent>

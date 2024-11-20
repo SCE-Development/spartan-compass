@@ -9,6 +9,14 @@ import {
 } from "drizzle-orm/pg-core";
 import { InferSelectModel, relations } from "drizzle-orm";
 
+export const reviewsTable = pgTable("reviews", {
+  id: serial("id").primaryKey(),
+  rating: integer("rating").notNull(),
+  review: text("review").notNull(),
+  courseId: integer("course_id").notNull().references(() => coursesTable.id),
+  professorId: integer("professor_id").notNull().references(() => professorsTable.id),
+});
+
 // Define the `professors` table with id, name, and department columns.
 // - `id` is a serial column used as the primary key.
 // - `name` and `department` are text columns that cannot be null.
