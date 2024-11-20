@@ -1,5 +1,5 @@
 {
-  "id": "deb64e95-635b-411f-ad04-e7c6d98223d8",
+  "id": "766c74ce-46bf-4204-85d7-f25a8c3c0a50",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -67,8 +67,12 @@
           "name": "professors_courses_professor_id_professors_id_fk",
           "tableFrom": "professors_courses",
           "tableTo": "professors",
-          "columnsFrom": ["professor_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "professor_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -76,8 +80,12 @@
           "name": "professors_courses_course_id_courses_id_fk",
           "tableFrom": "professors_courses",
           "tableTo": "courses",
-          "columnsFrom": ["course_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "course_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -85,7 +93,10 @@
       "compositePrimaryKeys": {
         "professors_courses_professor_id_course_id_pk": {
           "name": "professors_courses_professor_id_course_id_pk",
-          "columns": ["professor_id", "course_id"]
+          "columns": [
+            "professor_id",
+            "course_id"
+          ]
         }
       },
       "uniqueConstraints": {}
@@ -115,6 +126,73 @@
       },
       "indexes": {},
       "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.reviews": {
+      "name": "reviews",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "rating": {
+          "name": "rating",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "review": {
+          "name": "review",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "course_id": {
+          "name": "course_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "professor_id": {
+          "name": "professor_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "reviews_course_id_courses_id_fk": {
+          "name": "reviews_course_id_courses_id_fk",
+          "tableFrom": "reviews",
+          "tableTo": "courses",
+          "columnsFrom": [
+            "course_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "reviews_professor_id_professors_id_fk": {
+          "name": "reviews_professor_id_professors_id_fk",
+          "tableFrom": "reviews",
+          "tableTo": "professors",
+          "columnsFrom": [
+            "professor_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     }
