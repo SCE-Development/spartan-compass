@@ -3,6 +3,7 @@ import {
   professorsTable,
   coursesTable,
   professorsCoursesTable,
+  reviewsTable,
 } from "./schema";
 
 const main = async () => {
@@ -11,6 +12,7 @@ const main = async () => {
     await db.delete(professorsCoursesTable);
     await db.delete(professorsTable);
     await db.delete(coursesTable);
+    await db.delete(reviewsTable);
 
     console.log("Inserting data");
     const professors = [
@@ -121,10 +123,27 @@ const main = async () => {
       { professorId: 7, courseId: 10 },
       { professorId: 8, courseId: 11 },
     ];
+    const reviews = [
+      {
+        id: 1,
+        rating: 4,
+        review: "Great course, would recommend",
+        courseId: 1,
+        professorId: 1,
+      },
+      {
+        id: 2,
+        rating: 2,
+        review: "Terrible course, would not reccommend",
+        courseId: 4,
+        professorId: 1,
+      }
+    ]
 
     await db.insert(professorsTable).values(professors);
     await db.insert(coursesTable).values(courses);
     await db.insert(professorsCoursesTable).values(professorsCourses);
+    await db.insert(reviewsTable).values(reviews);
     console.log("Database seeded, press Ctrl+C to exit");
   } catch (error) {
     console.error(error);
