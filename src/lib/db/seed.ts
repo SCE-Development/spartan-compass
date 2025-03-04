@@ -9,10 +9,10 @@ import {
 const main = async () => {
   try {
     console.log("Seeding database");
+    await db.delete(reviewsTable);
     await db.delete(professorsCoursesTable);
     await db.delete(professorsTable);
     await db.delete(coursesTable);
-    await db.delete(reviewsTable);
 
     console.log("Inserting data");
     const professors = [

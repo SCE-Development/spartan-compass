@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1728946370734,
-      "tag": "0000_absent_albert_cleary",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1730222650026,
-      "tag": "0001_panoramic_butterfly",
+      "when": 1741052571868,
+      "tag": "0000_large_tombstone",
       "breakpoints": true
     }
   ]
