@@ -7,4 +7,6 @@
 5. `npm run db:migrate`
 6. `npm run db:seed`
 
+Run `npm run dev` to start the dev server at `http://localhost:3000`
+
 Run `npm run db:studio` to access the database at `http://local.drizzle.studio`
