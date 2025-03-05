@@ -16,10 +16,13 @@ git clone https://github.com/SCE-Development/spartan-compass/
 - For Linux: [here](https://docs.docker.com/desktop/linux/install/)
 
 2. `cp .env.example .env`
-3. `npm run db:start`
-4. `npm run db:generate` (This command is only needed when database schema changes are made)
-5. `npm run db:migrate`
-6. `npm run db:seed`
+
+Only run the following steps after completing the tutorial in the wiki
+
+4. `npm run db:start`
+5. `npm run db:generate` (This command is only needed when database schema changes are made)
+6. `npm run db:migrate`
+7. `npm run db:seed`
 
 Run `npm run db:studio` to access the database at `http://local.drizzle.studio`
 
