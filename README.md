@@ -36,16 +36,3 @@ Run `npm run db:studio` to access the database at `http://local.drizzle.studio`
 1. `npm install`
 
 Run `npm run dev` to start the dev server at `http://localhost:3000`
-
-# Spartan Compass
-
-## Setup
-1. `npm install`
-2. `cp .env.example .env`
-4. `npm run db:start`
-6. `npm run db:migrate`
-7. `npm run db:seed`
-
-Run `npm run dev` to start the dev server at `http://localhost:3000`
-
-Run `npm run db:studio` to access the database at `http://local.drizzle.studio`
