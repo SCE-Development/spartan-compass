@@ -15,10 +15,10 @@ git clone https://github.com/SCE-Development/spartan-compass/
 - For Mac: [here](https://docs.docker.com/desktop/mac/install/)
 - For Linux: [here](https://docs.docker.com/desktop/linux/install/)
 
+
+If you are going to do the tutorial in the wiki, finish the tutorial before proceeding with steps 2 - 7
+
 2. `cp .env.example .env`
-
-If you are following the tutorial in the wiki, finish the tutorial before proceeding with steps 3 - 7
-
 3. `npm run db:start`
 4. `npm run db:generate` (This command is only needed when database schema changes are made)
 5. `npm run db:migrate`
