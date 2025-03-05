@@ -17,14 +17,20 @@ git clone https://github.com/SCE-Development/spartan-compass/
 
 2. `cp .env.example .env`
 
-Only run the following steps after completing the tutorial in the wiki
+If you are following the tutorial in the wiki, finish the tutorial before proceeding with steps 3 - 7
 
-4. `npm run db:start`
-5. `npm run db:generate` (This command is only needed when database schema changes are made)
-6. `npm run db:migrate`
-7. `npm run db:seed`
+3. `npm run db:start`
+4. `npm run db:generate` (This command is only needed when database schema changes are made)
+5. `npm run db:migrate`
+6. `npm run db:seed`
 
 Run `npm run db:studio` to access the database at `http://local.drizzle.studio`
+
+> [!WARNING]
+> If you need to, never delete the files themselves as this will mess with Drizzle. You should instead run:
+> ```sh
+> bun run db:drop
+> ```
 
 ### Running the dev server
 1. `npm install`
