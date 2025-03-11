@@ -1,9 +1,21 @@
 import requests
 from bs4 import BeautifulSoup
+from datetime import datetime
+
+def get_semester():
+    current_month = datetime.now().month
+    current_year = datetime.now().year
+    if current_month >= 4 and current_month < 9:
+        return f"fall-{current_year}" 
+    elif current_month >= 1 and current_month<=3:
+        return f"spring-{current_year}"
+    else:
+        return f"spring-{current_year+1}"
+
 
 def get_classes():
     #url of latest class catalog
-    url = "https://www.sjsu.edu/classes/schedules/spring-2025.php"
+    url = f"https://www.sjsu.edu/classes/schedules/{get_semester()}.php"
 
     response = requests.get(url)
 
