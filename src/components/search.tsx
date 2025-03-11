@@ -15,12 +15,18 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
 export default function Search({ result }: { result: CourseResult[] }) {
+  const [selectedTerm, setSelectedTerm] = useState<string>("");
   const [selectedSubject, setSelectedSubject] = useState<string>("");
   const [selectedCourseNumber, setSelectedCourseNumber] = useState<
     number | null
   >(null);
 
   const router = useRouter();
+
+  const terms = useMemo(() => {
+    //return Array.from(new Set(result.map((course) => course.term)));
+    return ["Spring 2025", "Fall 2025"]; // test value
+  }, [/*result*/]);
 
   const subjects = useMemo(() => {
     return Array.from(new Set(result.map((course) => course.subject)));
@@ -37,6 +43,12 @@ export default function Search({ result }: { result: CourseResult[] }) {
       ),
     );
   }, [result, selectedSubject]);
+
+  const handleTermChange = useCallback((value: string) => {
+    setSelectedTerm(value);
+    setSelectedSubject("");
+    setSelectedCourseNumber(null);
+  }, []);
 
   const handleSubjectChange = useCallback((value: string) => {
     setSelectedSubject(value);
@@ -59,8 +71,32 @@ export default function Search({ result }: { result: CourseResult[] }) {
 
   return (
     <div className="container mx-auto h-[75vh] flex items-center justify-center">
+      <div className="flex items-center justify-center p-10">
+        <h1 className="text-3xl font-bold">Select a class:</h1>
+      </div>
       <div className="flex flex-row items-center space-x-4">
-        <Select onValueChange={handleSubjectChange}>
+      <Select
+          onValueChange={handleTermChange}
+        >
+          <SelectTrigger className="w-[200px] dark:border-white/30 border-black/30">
+            <SelectValue placeholder="Select a term" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Term</SelectLabel>
+              {terms.map((term) => (
+                <SelectItem key={term} value={term}>
+                  {term}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+
+        <Select 
+            onValueChange={handleSubjectChange}
+            disabled={!selectedTerm}
+        >
           <SelectTrigger className="w-[200px] dark:border-white/30 border-black/30 ">
             <SelectValue placeholder="Select a subject" />
           </SelectTrigger>
