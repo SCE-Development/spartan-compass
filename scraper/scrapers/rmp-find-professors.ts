@@ -62,3 +62,24 @@ export async function rmpFindProfessors(params: { cursor: string, count: number 
 
   return data["data"]["search"]["teachers"];
 }
+
+export async function fetchAllProfessors() {
+  let cursor = "";
+  let count = 1000;
+  let allProfessors: any[] = [];
+
+  try {
+    while (true) {
+      const data = await rmpFindProfessors({ cursor, count });
+      if (!data.edges.length) break;
+      
+      allProfessors.push(...data.edges);
+      
+      if (!data.pageInfo.hasNextPage) break;
+      cursor = data.pageInfo.endCursor;
+    }
+    return allProfessors
+  } catch (error) {
+    console.error("Error fetching professors:", error);
+  }
+}
