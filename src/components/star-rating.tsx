@@ -4,9 +4,10 @@ import { Star, StarHalf } from "lucide-react";
 
 interface StarRatingProps {
   rating: number;
+  textColor: string;
 }
 
-export function StarRating({ rating }: StarRatingProps) {
+export function StarRating({ rating, textColor }: StarRatingProps) {
   const fullStars = Math.floor(rating);
   const hasHalfStar = rating % 1 !== 0;
 
@@ -18,7 +19,7 @@ export function StarRating({ rating }: StarRatingProps) {
       {hasHalfStar && (
         <StarHalf className="w-5 h-5 fill-yellow-400 text-yellow-400" />
       )}
-      <span className="ml-2 text-sm text-muted-foreground">
+      <span className={"ml-2 text-sm " + textColor}>
         {rating.toFixed(1)} / 5
       </span>
     </div>
