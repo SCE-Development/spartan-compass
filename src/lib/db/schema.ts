@@ -32,9 +32,10 @@ export const professorsTable = pgTable("professors", {
 // - `description` is an optional text column.
 export const coursesTable = pgTable("courses", {
   id: serial("id").primaryKey(),
+  semester : text("semester").notNull(),
   title: text("title").notNull(),
   subject: text("subject").notNull(),
-  courseNumber: integer("course_number").notNull(),
+  courseNumber: text("course_number").notNull(),
   description: text("description"),
 });
 

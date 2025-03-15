@@ -81,5 +81,6 @@ export async function fetchAllProfessors() {
     return allProfessors
   } catch (error) {
     console.error("Error fetching professors:", error);
+    return [];
   }
 }
