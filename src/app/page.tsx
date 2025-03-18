@@ -7,6 +7,7 @@ const getCourses = async () => {
   return db
     .select({
       id: coursesTable.id,
+      semester: coursesTable.semester,
       title: coursesTable.title,
       subject: coursesTable.subject,
       courseNumber: coursesTable.courseNumber,

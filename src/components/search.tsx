@@ -15,20 +15,20 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
 export default function Search({ result }: { result: CourseResult[] }) {
-  const [selectedTerm, setSelectedTerm] = useState("");
+  const [selectedSemester, setSelectedSemester] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedCourseNumber, setSelectedCourseNumber] = useState("");
 
   const router = useRouter();
 
-  const terms = useMemo(() => {
-    //return Array.from(new Set(result.map((course) => course.term)));
-    return ["Spring 2025", "Fall 2025"]; // test value
-  }, [/*result*/]);
+  const semesters = useMemo(() => {
+    return Array.from(new Set(result.map((course) => course.semester.split('-')[0] + " " + course.semester.split('-')[1])));
+  }, [result]);
 
   const subjects = useMemo(() => {
-    return Array.from(new Set(result.map((course) => course.subject)));
-  }, [result]);
+    //return Array.from(new Set(result.map((course) => course.subject)));
+    return Array.from(new Set(result.filter((course) => course.semester === selectedSemester.replace(' ', '-')).map((course) => course.subject)));
+  }, [result, selectedSemester]);
 
   const courseNumbers = useMemo(() => {
     return Array.from(
@@ -42,8 +42,8 @@ export default function Search({ result }: { result: CourseResult[] }) {
     );
   }, [result, selectedSubject]);
 
-  const handleTermChange = useCallback((value: string) => {
-    setSelectedTerm(value);
+  const handleSemesterChange = useCallback((value: string) => {
+    setSelectedSemester(value);
     setSelectedSubject("");
     setSelectedCourseNumber("");
   }, []);
@@ -68,23 +68,23 @@ export default function Search({ result }: { result: CourseResult[] }) {
   }, [selectedSubject, selectedCourseNumber, result, router]);
 
   return (
-    <div className="container mx-auto h-[75vh] flex items-center justify-center">
+    <div className="container mx-auto h-[75vh] flex flex-col items-center justify-center">
       <div className="flex items-center justify-center p-10">
         <h1 className="text-3xl font-bold">Select a class:</h1>
       </div>
       <div className="flex flex-row items-center space-x-4">
       <Select
-          onValueChange={handleTermChange}
+          onValueChange={handleSemesterChange}
         >
           <SelectTrigger className="w-[200px] dark:border-white/30 border-black/30">
-            <SelectValue placeholder="Select a term" />
+            <SelectValue placeholder="Select a semester" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectLabel>Term</SelectLabel>
-              {terms.map((term) => (
-                <SelectItem key={term} value={term}>
-                  {term}
+              <SelectLabel>Semester</SelectLabel>
+              {semesters.map((semester) => (
+                <SelectItem key={semester} value={semester}>
+                  {semester}
                 </SelectItem>
               ))}
             </SelectGroup>
@@ -93,7 +93,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
 
         <Select
             onValueChange={handleSubjectChange}
-            disabled={!selectedTerm}
+            disabled={!selectedSemester}
         >
           <SelectTrigger className="w-[200px] dark:border-white/30 border-black/30 ">
             <SelectValue placeholder="Select a subject" />
