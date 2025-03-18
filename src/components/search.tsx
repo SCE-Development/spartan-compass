@@ -15,11 +15,9 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
 export default function Search({ result }: { result: CourseResult[] }) {
-  const [selectedTerm, setSelectedTerm] = useState<string>("");
-  const [selectedSubject, setSelectedSubject] = useState<string>("");
-  const [selectedCourseNumber, setSelectedCourseNumber] = useState<
-    number | null
-  >(null);
+  const [selectedTerm, setSelectedTerm] = useState("");
+  const [selectedSubject, setSelectedSubject] = useState("");
+  const [selectedCourseNumber, setSelectedCourseNumber] = useState("");
 
   const router = useRouter();
 
@@ -47,12 +45,12 @@ export default function Search({ result }: { result: CourseResult[] }) {
   const handleTermChange = useCallback((value: string) => {
     setSelectedTerm(value);
     setSelectedSubject("");
-    setSelectedCourseNumber(null);
+    setSelectedCourseNumber("");
   }, []);
 
   const handleSubjectChange = useCallback((value: string) => {
     setSelectedSubject(value);
-    setSelectedCourseNumber(null);
+    setSelectedCourseNumber("");
   }, []);
 
   const handleSubmit = useCallback(() => {
@@ -93,7 +91,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
           </SelectContent>
         </Select>
 
-        <Select 
+        <Select
             onValueChange={handleSubjectChange}
             disabled={!selectedTerm}
         >
@@ -113,9 +111,9 @@ export default function Search({ result }: { result: CourseResult[] }) {
         </Select>
 
         <Select
-          onValueChange={(value) => setSelectedCourseNumber(Number(value))}
+          onValueChange={setSelectedCourseNumber}
           disabled={!selectedSubject}
-          value={selectedCourseNumber?.toString() || ""}
+          value={selectedCourseNumber}
         >
           <SelectTrigger className="w-[200px] dark:border-white/30 border-black/30">
             <SelectValue placeholder="Select a course number" />
