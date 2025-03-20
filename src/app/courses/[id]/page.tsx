@@ -1,3 +1,4 @@
+import AddReviewForm from "@/components/AddReviewForm";
 import { StarRating } from "@/components/star-rating";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { db } from "@/lib/db";
@@ -7,12 +8,15 @@ import {
   professorsTable,
 } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
+import link from 'next/link'
 
 export default async function CoursePage({
   params,
 }: {
   params: { id: string };
 }) {
+  const courseId = Number(params.id);
+  const professorId = 1;
   const courseResult = await db
     .select()
     .from(coursesTable)
@@ -53,11 +57,20 @@ export default async function CoursePage({
                   <div className="mt-2">
                     {/* The actual rating is a placeholder, the professorsTable scheme has not been updated to have starRating as a field */}
                     <StarRating rating={4.5} textColor="text-muted-foreground"/>
+                  
                   </div>
+                  <AddReviewForm courseId={courseId} professorId={1}/>
                 </div>
+                
               ))}
             </CardContent>
           </Card>
+
+          
+
+          
+
+      
         ))}
       </div>
     </div>
