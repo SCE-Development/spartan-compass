@@ -90,10 +90,11 @@ export default function AddReviewPage() {
         const res = await fetch(`/api/courses/${courseId}`);
         if (!res.ok) throw new Error("Failed to fetch course");
         const course = await res.json();
-
+          
         setSelectedCourse(
           `${course.subject} ${course.courseNumber} - ${course.title}`
         );
+        document.title = `Spartan Compass | Add Review - ${course.subject} ${course.courseNumber}`
       } catch (error) {
         console.error("Error fetching course:", error);
         setSelectedCourse("Error Loading Course");

@@ -2,6 +2,7 @@ import AddReviewForm from "@/components/AddReviewForm";
 import { StarRating } from "@/components/star-rating";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { db } from "@/lib/db";
+import CourseTitleSetter from "@/components/CourseTitleSetter";
 import {
   coursesTable,
   professorsCoursesTable,
@@ -35,6 +36,11 @@ export default async function CoursePage({
 
   return (
     <div className="container mx-auto p-4">
+      {courseResult.length > 0 && (
+      <CourseTitleSetter
+      courseTitle={`${courseResult[0].subject} ${courseResult[0].courseNumber}`}
+    />
+    )}
       <div className="grid">
         {courseResult.map((course) => (
           <Card key={course.id} className="overflow-hidden mt-4">
