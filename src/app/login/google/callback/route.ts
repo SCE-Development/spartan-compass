@@ -35,6 +35,7 @@ export async function GET(request: Request): Promise<Response> {
 	const claims = decodeIdToken(tokens.idToken());
 	const googleUserId = claims.sub;
 	const username = claims.name;
+	console.log(claims)
 
 	// TODO: Replace this with your own DB query.
 	const existingUser = await getUserFromGoogleId(googleUserId);
