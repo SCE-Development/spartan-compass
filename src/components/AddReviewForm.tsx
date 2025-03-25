@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import { submitReview } from "@/lib/actions/reviews";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { useParams,useRouter } from "next/navigation";

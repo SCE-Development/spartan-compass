@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { submitReview } from "@/lib/actions/reviews";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -74,11 +73,29 @@ export default function AddReviewPage() {
 
   const [selectedTags, setSelectedTag] = useState<String[]>([]);
   const [open, setOpen] = useState(false); // to see if the tag is checked or not
-
+  const[isLoggedIn, setIsLoggedIn] = useState(false);
   
 
-
   useEffect(() => {
+    async function checkSession() {
+      const response = await fetch("/api/session/validate");
+      const { session } = await response.json(); 
+      setIsLoggedIn(!!session); 
+    }
+    checkSession();
+  }, []);
+
+  //can only add a review if the user is logged in
+  
+  useEffect(() => {
+    
+    if(!isLoggedIn){
+      router.push("/login");
+    }
+    
+
+
+
     if (!courseId) {
       setSelectedCourse("Invalid Course");
       setLoading(false);
@@ -121,13 +138,30 @@ export default function AddReviewPage() {
       setIsSubmitting(false);
       return;
     }
-
     try {
-      await submitReview(Number(courseId), rating, difficulty, reviewText);
-      alert("Review submitted successfully");
+      const res = await fetch("/api/reviews", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          courseID: Number(courseId), // match the API route param name
+          professorId: 1, // you can make this dynamic later if needed
+          rating,
+          reviewText,
+        }),
+      });
+  
+      const result = await res.json();
+  
+      if (!res.ok) {
+        throw new Error(result.error || "Failed to submit review");
+      }
+  
+      alert("✅ Review submitted successfully!");
       router.push("/");
-    } catch (error) {
-      alert("Failed to submit");
+    } catch (error: any) {
+      alert("❌ " + error.message);
       setIsSubmitting(false);
     }
   };
