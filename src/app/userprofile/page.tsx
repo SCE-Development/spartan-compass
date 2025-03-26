@@ -1,7 +1,13 @@
-'use client'
 import React from 'react';
 import UserInfo from './userInfo';
-export default function UserProfile() {
+import { getCurrentSession } from '@/lib/db/session';
+import { redirect } from 'next/navigation';
+export default async function UserProfile() {
+  const { user } = await getCurrentSession();
+  if (user === null) {
+    return redirect('/login');
+  }
+
   return (
     <div className='px-60 pt-10 flex justify-center '>
       <div className='w-[100%] lg:w-[60%] space-y-20'>
@@ -12,7 +18,7 @@ export default function UserProfile() {
             Profile
           </div>  
         </div>
-        <UserInfo/>
+        <UserInfo user={user?.name}/>
       </div>
       </div>
     </div>
