@@ -35,6 +35,17 @@ export async function GET(request: Request): Promise<Response> {
 	const claims = decodeIdToken(tokens.idToken());
 	const googleUserId = claims.sub;
 	const username = claims.name;
+	
+	// Check if the email is SJSU email
+	const email = claims.email;
+	if (!email || !email.trim().endsWith("@sjsu.edu")) {
+		return new Response(null, {
+			status: 302,
+			headers: {
+				Location: '/login'
+			}
+		});
+	}
 
 	// TODO: Replace this with your own DB query.
 	const existingUser = await getUserFromGoogleId(googleUserId);
