@@ -39,7 +39,16 @@ export default function Search({ result }: { result: CourseResult[] }) {
           )
           .map((course) => course.courseNumber),
       ),
-    );
+    ).sort((a, b) => {
+      const numA = parseInt(a, 10);
+      const numB = parseInt(b, 10);
+
+      if (numA !== numB) {
+        return numA - numB;
+      } else {
+        return a.localeCompare(b);
+      }
+    });
   }, [result, selectedSubject]);
 
   const handleSemesterChange = useCallback((value: string) => {
