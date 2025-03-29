@@ -32,16 +32,22 @@ export default async function ProfessorPage({ params }: { params: { id: string }
             </CardHeader>
             <CardContent className="mt-4">
               <h2 className="text-2xl font-bold mb-4">Courses</h2>
-              {courseResult.map((result, index) => (
-                <div key={index} className="mb-6 border-b pb-4 last:border-0">
-                  <p className="text-lg font-semibold mb-2">{result.courses.subject} {result.courses.courseNumber}: {result.courses.title}</p>
-                  <p className="text-muted-foreground">{result.courses.description}</p>
-                  <div className="mt-2">
-                    {/* The actual rating is a placeholder, the coursesTable scheme has not been updated to have starRating as a field */}
-                    <StarRating rating={4.5} textColor="text-muted-foreground" />
-                  </div>
-                </div>
-              ))}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {courseResult.map((result, index) => (
+                  <Card key={index} className="p-4">
+                    <CardHeader>
+                      <CardTitle className="text-lg font-semibold">
+                        {result.courses.subject} {result.courses.courseNumber}: {result.courses.title}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="mt-2">
+                        <StarRating rating={4.5} textColor="text-muted-foreground" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             </CardContent>
           </Card>
         ))}
