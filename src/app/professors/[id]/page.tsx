@@ -14,9 +14,7 @@ export default async function ProfessorPage({ params }: { params: { id: string }
     .select()
     .from(professorsCoursesTable)
     .where(eq(professorsCoursesTable.professorId, Number(params.id)))
-    .then((res) => {
-      return db.select().from(coursesTable).where(eq(coursesTable.id, res[0].courseId))
-    })
+    .innerJoin(coursesTable, eq(professorsCoursesTable.courseId, coursesTable.id));
 
   return (
     <div className="container mx-auto p-4">
@@ -34,10 +32,10 @@ export default async function ProfessorPage({ params }: { params: { id: string }
             </CardHeader>
             <CardContent className="mt-4">
               <h2 className="text-2xl font-bold mb-4">Courses</h2>
-              {courseResult.map((course) => (
-                <div key={course.id} className="mb-6 border-b pb-4 last:border-0">
-                  <p className="text-lg font-semibold mb-2">{course.title}</p>
-                  <p className="text-muted-foreground">{course.description}</p>
+              {courseResult.map((result, index) => (
+                <div key={index} className="mb-6 border-b pb-4 last:border-0">
+                  <p className="text-lg font-semibold mb-2">{result.courses.subject} {result.courses.courseNumber}: {result.courses.title}</p>
+                  <p className="text-muted-foreground">{result.courses.description}</p>
                   <div className="mt-2">
                     {/* The actual rating is a placeholder, the coursesTable scheme has not been updated to have starRating as a field */}
                     <StarRating rating={4.5} textColor="text-muted-foreground" />
