@@ -7,6 +7,7 @@ import {
   professorsTable,
 } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
+import Link from "next/link";
 
 export default async function CoursePage({
   params,
@@ -46,7 +47,11 @@ export default async function CoursePage({
                 {professorResult.map((result, index) => (
                   <Card key={index} className="p-4">
                     <CardHeader>
-                      <CardTitle className="text-lg font-semibold">{result.professor.name}</CardTitle>
+                      <Link href={`/professors/${result.professor.id}`}>
+                        <CardTitle className="text-lg font-semibold hover:text-primary hover:underline">
+                          {result.professor.name}
+                        </CardTitle>
+                      </Link>
                       <p className="text-muted-foreground">
                         {result.professor.department}
                       </p>
