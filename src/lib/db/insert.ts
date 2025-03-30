@@ -1,6 +1,6 @@
 import { db } from ".";
 import { sql, eq, and } from "drizzle-orm";
-import { fetchAllProfessors } from "../../../scraper/scrapers/rmp-find-professors";
+import { rmpFindAllProfessors } from "../../../scraper/scrapers/rmp-find-professors";
 import { fetchAllCourses, getSemester } from "../../../scraper/scrapers/sjsu-find-courses";
 import {
     professorsTable,
@@ -12,11 +12,11 @@ import {
 
 export async function insertProfessors() {
     const existingProfessors = await db.select().from(professorsTable);
-    const professors = await fetchAllProfessors();
-    professors.forEach(async (professor) => {
+    const professors = await rmpFindAllProfessors();
+    for (const professor of professors) {
         // Some name entries have a space at the end so remove with replace. Some names also have accents so have to normalize and replace
-        const fullName = `${professor.node.firstName.replace(/\s*$/,'')} ${professor.node.lastName.replace(/\s*$/,'')}`;
-        const department = professor.node.department;
+        const fullName = `${professor.firstName.replace(/\s*$/,'')} ${professor.lastName.replace(/\s*$/,'')}`;
+        const department = professor.department;
         const exists = existingProfessors.some(
             p => p.name === fullName && p.department === department
         );
@@ -27,12 +27,12 @@ export async function insertProfessors() {
             }).returning();
             console.log("Added: ", newProfessor);
         }
-    });
+    }
 }
 
 export async function insertCourses() {
     const courses = await fetchAllCourses();
-    let attempted = courses.length;
+    const attempted = courses.length;
     let added = 0;
     let alreadyExists = 0;
     let professorNotFound = 0;
@@ -40,7 +40,7 @@ export async function insertCourses() {
         try {
             const semester = getSemester();
             const { title, subject, courseNumber, professor } = course;
-            
+
             //check if professor for course exists
             const existingProfessor = await db.select().from(professorsTable)
                 .where(eq(sql`LOWER(${professorsTable.name})`, professor.toLowerCase()))
@@ -60,7 +60,7 @@ export async function insertCourses() {
                     eq(coursesTable.courseNumber, courseNumber)
                 ))
                 .limit(1);
-            //if course already exists in courses table then check if professorCourse exists 
+            //if course already exists in courses table then check if professorCourse exists
             if (existingCourse.length > 0) {
                 const courseId = existingCourse[0].id;
                 const existingProfCourse = await db.select().from(professorsCoursesTable)
