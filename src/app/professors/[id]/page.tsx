@@ -16,6 +16,9 @@ export default async function ProfessorPage({ params }: { params: { id: string }
     .where(eq(professorsCoursesTable.professorId, Number(params.id)))
     .innerJoin(coursesTable, eq(professorsCoursesTable.courseId, coursesTable.id));
 
+  console.log(courseResult);
+
+
   return (
     <div className="container mx-auto p-4">
       <div className="grid">
@@ -31,23 +34,31 @@ export default async function ProfessorPage({ params }: { params: { id: string }
               </div>
             </CardHeader>
             <CardContent className="mt-4">
-              <h2 className="text-2xl font-bold mb-4">Courses</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {courseResult.map((result, index) => (
-                  <Card key={index} className="p-4">
-                    <CardHeader>
-                      <CardTitle className="text-lg font-semibold">
-                        {result.courses.subject} {result.courses.courseNumber}: {result.courses.title}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="mt-2">
-                        <StarRating rating={4.5} textColor="text-muted-foreground" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+              {courseResult.length > 0 ? (
+                <>
+                  <h2 className="text-2xl font-bold mb-4">Courses</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {courseResult.map((result, index) => (
+                      <Card key={index} className="p-4">
+                        <CardHeader>
+                          <CardTitle className="text-lg font-semibold">
+                            {result.courses.subject} {result.courses.courseNumber}: {result.courses.title}
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="mt-2">
+                            <StarRating rating={4.5} textColor="text-muted-foreground" />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <p className="text-muted-foreground text-center py-8">
+                  No courses found
+                </p>
+              )}
             </CardContent>
           </Card>
         ))}
