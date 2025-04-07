@@ -22,23 +22,39 @@ export default function Search({ result }: { result: CourseResult[] }) {
   const router = useRouter();
 
   const semesters = useMemo(() => {
-    return Array.from(new Set(result.map((course) => course.semester.split('-')[0] + " " + course.semester.split('-')[1])));
+    return Array.from(
+      new Set(
+        result
+        .map((course) => course.semester.replace('-', ' ').toUpperCase())
+      ))
+      .sort((a, b) => {
+        const monthPriority: Record<string, number> = {
+          "SPRING": 0,
+          "SUMMER": 1,
+          "FALL": 2,
+          "WINTER": 3
+        };
+        return monthPriority[a.split(' ')[0]] - monthPriority[b.split(' ')[0]];
+      })
+      .sort((a, b) => a.split(' ')[1].localeCompare(b.split(' ')[1]));
   }, [result]);
 
   const subjects = useMemo(() => {
-    //return Array.from(new Set(result.map((course) => course.subject)));
-    return Array.from(new Set(result.filter((course) => course.semester === selectedSemester.replace(' ', '-')).map((course) => course.subject)));
+    return Array.from(
+      new Set(
+        result
+        .filter((course) => course.semester === selectedSemester.replace(' ', '-').toLowerCase())
+        .map((course) => course.subject)
+      ));
   }, [result, selectedSemester]);
 
   const courseNumbers = useMemo(() => {
     return Array.from(
       new Set(
         result
-          .filter(
-            (course) => !selectedSubject || course.subject === selectedSubject,
-          )
-          .map((course) => course.courseNumber),
-      ),
+        .filter((course) => course.semester === selectedSemester.replace(' ', '-').toLowerCase() && (!selectedSubject || course.subject === selectedSubject))
+        .map((course) => course.courseNumber)
+      )
     ).sort((a, b) => {
       const numA = parseInt(a, 10);
       const numB = parseInt(b, 10);
@@ -49,7 +65,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
         return a.localeCompare(b);
       }
     });
-  }, [result, selectedSubject]);
+  }, [result, selectedSemester, selectedSubject]);
 
   const handleSemesterChange = useCallback((value: string) => {
     setSelectedSemester(value);
@@ -64,17 +80,18 @@ export default function Search({ result }: { result: CourseResult[] }) {
 
   const handleSubmit = useCallback(() => {
     // to handle our search, we'll redirect to the course page with the corresponding id
-    if (selectedSubject && selectedCourseNumber) {
+    if (selectedSemester && selectedSubject && selectedCourseNumber) {
       const selectedCourse = result.find(
         (course) =>
+          course.semester === selectedSemester.replace(' ', '-').toLowerCase() &&
           course.subject === selectedSubject &&
-          course.courseNumber === selectedCourseNumber,
+          course.courseNumber === selectedCourseNumber
       );
       if (selectedCourse) {
         router.push(`/courses/${selectedCourse.id}`);
       }
     }
-  }, [selectedSubject, selectedCourseNumber, result, router]);
+  }, [selectedSemester, selectedSubject, selectedCourseNumber, result, router]);
 
   return (
     <div className="container mx-auto h-[75vh] flex flex-col items-center justify-center">
@@ -121,7 +138,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
 
         <Select
           onValueChange={setSelectedCourseNumber}
-          disabled={!selectedSubject}
+          disabled={!selectedSemester || !selectedSubject}
           value={selectedCourseNumber}
         >
           <SelectTrigger className="w-[200px] dark:border-white/30 border-black/30">
@@ -141,7 +158,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
 
         <Button
           onClick={handleSubmit}
-          disabled={!selectedSubject || !selectedCourseNumber}
+          disabled={!selectedSemester || !selectedSubject || !selectedCourseNumber}
         >
           Submit
         </Button>
