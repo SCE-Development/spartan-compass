@@ -28,9 +28,9 @@ const UserInfo:React.FC<UserInfoProps> = ({user}) => {
   }
   return (
     <div className='h-[90%] pt-10'>
-          <div className='flex justify-end space-x-4'>
-              <PencilIcon color='black' className='cursor-pointer' size={24} onClick={() => setInEditMode(true)}/>
-              <p className='font-[700] text-sm cursor-pointer' onClick={() => setInEditMode(true)}>Edit</p>
+          <div className='flex justify-end space-x-4  items-center'>
+              <PencilIcon  className='dark:text-white text-black' size={24} onClick={() => setInEditMode(true)}/>
+              <Button variant={'link'} className='text-dark hover:no-underline h-0 w-0 font-[700] ' onClick={() => setInEditMode(true)}>Edit</Button>
           </div> 
 
           <div className='flex flex-col lg:flex-row h-auto text-left w-full items-start lg:gap-x-44  2xl:gap-x-36 mt-12  '>    
@@ -38,18 +38,14 @@ const UserInfo:React.FC<UserInfoProps> = ({user}) => {
               <Label className='text-base text-left whitespace-nowrap font-[700]'>Name</Label>
             </div>
             {inEditMode ? <div className='flex flex-col w-full space-y-20'>
-      <Input type='text' placeholder={username} className='w-full h-12 pl-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:placeholder:text-white dark:bg-black dark:text-white' onChange={(e) => setnewUserName(e.target.value)}>
-
-      </Input>
-
-      <Button className='text-md h-14 w-64 bg-black  cursor-pointer font-bold text-center outline-none self-center text-white rounded-full dark:text-black dark:bg-white' onClick={handleUpdateName}>
+      <Input type='text'  placeholder={username}  onChange={(e) => setnewUserName(e.target.value)}/>
+      <Button className='h-14 w-64 bg-black  cursor-pointer font-bold self-center text-white rounded-full dark:text-black dark:bg-white' onClick={handleUpdateName}>
         Save Change
       </Button>
-      
-      <Button variant={'link'} className=' font-bold text-md text-black hover:no-underline dark:text-white' onClick={() => setInEditMode(false)}>
+      <Button variant={'link'} className='font-bold  text-black hover:no-underline dark:text-white' onClick={() => setInEditMode(false)}>
         Cancel
       </Button>
-
+      
     </div> : <div className='w-auto'>
               <p className='text-base font-light'>{username}</p>
             </div>}
