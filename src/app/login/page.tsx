@@ -1,5 +1,8 @@
+'use client'
 import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils"
+import { useSearchParams, useRouter } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -12,6 +15,17 @@ export default async function Page({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  useEffect(() => {
+    // may need to click the OK button twice in the alert to dismiss it because useEffect runs twice in development mode, but onl one in production.
+    const error = searchParams.get("error");
+    if (error && error === "invalid_email") {
+    alert("Please login with your SJSU email");
+    router.replace("/login");
+  }
+  },[])
+  
 	return (
 
 		<div className="flex min-h-[calc(100svh-64px)] flex-col items-center justify-center gap-6 p-6 md:p-10">
