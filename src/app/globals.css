@@ -77,3 +77,19 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.compass-origin:hover > .compass {
+  animation: compass-spin 1s linear infinite;
+}
+
+@keyframes compass-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(45deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}

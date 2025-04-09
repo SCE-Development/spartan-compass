@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { Calendar, BookOpen, Hash, Rocket } from "lucide-react";
 
 export default function Search({ result }: { result: CourseResult[] }) {
   const [selectedSemester, setSelectedSemester] = useState("");
@@ -20,6 +21,13 @@ export default function Search({ result }: { result: CourseResult[] }) {
   const [selectedCourseNumber, setSelectedCourseNumber] = useState("");
 
   const router = useRouter();
+
+  addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' && selectedSemester && selectedSubject && selectedCourseNumber) {
+      event.preventDefault();
+      handleSubmit();
+    }
+  });
 
   const semesters = useMemo(() => {
     return Array.from(
@@ -95,19 +103,20 @@ export default function Search({ result }: { result: CourseResult[] }) {
 
   return (
     <div className="container mx-auto h-[75vh] flex flex-col items-center justify-center">
-      <div className="flex items-center justify-center p-10">
-        <h1 className="text-3xl font-bold">Select a class:</h1>
+      <div className="flex items-center justify-center p-10 text-2xl md:text-3xl">
+        <h1 className="font-bold">Select a class:</h1>
       </div>
-      <div className="flex flex-row items-center space-x-4">
+      <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-4 flex-col md:flex-row">
       <Select
           onValueChange={handleSemesterChange}
         >
-          <SelectTrigger className="w-[200px] dark:border-white/30 border-black/30">
+          <SelectTrigger className="w-[200px] md:w-[220px] dark:border-white/30 border-black/30">
+            <Calendar className="h-[1rem] w-[1rem] rotate-0 scale-100 transition-all" />
             <SelectValue placeholder="Select a semester" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectLabel>Semester</SelectLabel>
+              <SelectLabel>Semesters</SelectLabel>
               {semesters.map((semester) => (
                 <SelectItem key={semester} value={semester}>
                   {semester}
@@ -121,7 +130,8 @@ export default function Search({ result }: { result: CourseResult[] }) {
             onValueChange={handleSubjectChange}
             disabled={!selectedSemester}
         >
-          <SelectTrigger className="w-[200px] dark:border-white/30 border-black/30 ">
+          <SelectTrigger className="w-[200px] md:w-[220px] dark:border-white/30 border-black/30 ">
+            <BookOpen className="h-[1rem] w-[1rem] rotate-0 scale-100 transition-all" />
             <SelectValue placeholder="Select a subject" />
           </SelectTrigger>
           <SelectContent>
@@ -141,7 +151,8 @@ export default function Search({ result }: { result: CourseResult[] }) {
           disabled={!selectedSemester || !selectedSubject}
           value={selectedCourseNumber}
         >
-          <SelectTrigger className="w-[200px] dark:border-white/30 border-black/30">
+          <SelectTrigger className="w-[200px] md:w-[220px] dark:border-white/30 border-black/30">
+            <Hash className="h-[1rem] w-[1rem] rotate-0 scale-100 transition-all" />
             <SelectValue placeholder="Select a course number" />
           </SelectTrigger>
           <SelectContent>
@@ -159,7 +170,9 @@ export default function Search({ result }: { result: CourseResult[] }) {
         <Button
           onClick={handleSubmit}
           disabled={!selectedSemester || !selectedSubject || !selectedCourseNumber}
+          className="w-[100px] flex justify-between"
         >
+          <Rocket className="h-[1rem] w-[1rem] rotate-0 scale-100 transition-all" />
           Submit
         </Button>
       </div>
