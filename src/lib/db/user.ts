@@ -19,7 +19,12 @@ export async function getUserFromGoogleId(googleId: string) {
       .from(userTable)
       .where(eq(userTable.googleId, googleId)) 
       .execute();
-
-    
     return user || null;
+}
+
+export async function updateUserName(googleId: string, newName: string) {
+  await db.update(userTable)
+          .set({name: newName})
+          .where(eq(userTable.googleId, googleId))
+          .execute();
 }
