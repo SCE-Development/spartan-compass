@@ -2,7 +2,6 @@ import { generateSessionToken, createSession, setSessionTokenCookie } from "@/li
 import { google } from "@/lib/oauth";
 import { cookies } from "next/headers";
 import { decodeIdToken } from "arctic";
-
 import type { OAuth2Tokens } from "arctic";
 import { createUser, getUserFromGoogleId } from "@/lib/db/user";
 

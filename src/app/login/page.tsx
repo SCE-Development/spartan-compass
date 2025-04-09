@@ -1,8 +1,10 @@
 'use client'
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { cn } from "@/lib/utils"
 import { useSearchParams, useRouter } from "next/navigation";
+
+import { toast, Toaster } from "sonner"
 import {
   Card,
   CardContent,
@@ -11,24 +13,32 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-export default async function Page({
+export default function Page({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const error = searchParams.get("error");
   useEffect(() => {
-    // may need to click the OK button twice in the alert to dismiss it because useEffect runs twice in development mode, but onl one in production.
-    const error = searchParams.get("error");
     if (error && error === "invalid_email") {
-    alert("Please login with your SJSU email");
+    // the error msg may show up twice when the error happens because useEffect runs twice in development mode, but only one in production.
+    toast.error("Only SJSU email is allowed", {
+      duration: 4000,
+      closeButton: true,
+      style: {
+        backgroundColor: 'red',
+        border: 'none',
+        color: 'white',
+        fontWeight: 'bold',
+      }
+    })
     router.replace("/login");
   }
-  },[])
-  
+  },[error])
 	return (
-
 		<div className="flex min-h-[calc(100svh-64px)] flex-col items-center justify-center gap-6 p-6 md:p-10">
+      <Toaster/>
       <div className="flex w-full max-w-sm flex-col gap-6">
 				<div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
