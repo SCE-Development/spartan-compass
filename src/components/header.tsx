@@ -55,7 +55,7 @@ export function Header({ children }: { children: React.ReactNode }) {
           <form className="ml-auto flex-initial">
             <div className="relative">
               <Search className="absolute left-2.5 top-0 bottom-0 m-auto h-4 w-4 text-muted-foreground" />
-              <Input type="search" placeholder="Search classes..." className="pl-8 w-[104px] md:w-[200px]" />
+              <Input type="search" placeholder="Search courses..." className="pl-8 w-[120px] md:w-[200px]" />
             </div>
           </form>
           {isLoggedIn ? (

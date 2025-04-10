@@ -10,10 +10,12 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
+  SelectSearch
 } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { Calendar, BookOpen, Hash, Rocket } from "lucide-react";
+import { Calendar, BookOpen, Hash, Rocket, SearchIcon, Compass } from "lucide-react";
 
 export default function Search({ result }: { result: CourseResult[] }) {
   const [selectedSemester, setSelectedSemester] = useState("");
@@ -21,13 +23,6 @@ export default function Search({ result }: { result: CourseResult[] }) {
   const [selectedCourseNumber, setSelectedCourseNumber] = useState("");
 
   const router = useRouter();
-
-  addEventListener('keydown', (event) => {
-    if (event.key === 'Enter' && selectedSemester && selectedSubject && selectedCourseNumber) {
-      event.preventDefault();
-      handleSubmit();
-    }
-  });
 
   const semesters = useMemo(() => {
     return Array.from(
@@ -102,23 +97,22 @@ export default function Search({ result }: { result: CourseResult[] }) {
   }, [selectedSemester, selectedSubject, selectedCourseNumber, result, router]);
 
   return (
-    <div className="container mx-auto h-[75vh] flex flex-col items-center justify-center">
-      <div className="flex items-center justify-center p-10 text-2xl md:text-3xl">
-        <h1 className="font-bold">Select a class:</h1>
-      </div>
+    <div className="flex flex-col items-center justify-center w-full h-[75vh]">
+    <div className="mx-auto flex flex-col items-center justify-center">
       <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-4 flex-col md:flex-row">
       <Select
           onValueChange={handleSemesterChange}
         >
-          <SelectTrigger className="w-[200px] md:w-[220px] dark:border-white/30 border-black/30">
-            <Calendar className="h-[1rem] w-[1rem] rotate-0 scale-100 transition-all" />
+          <SelectTrigger className="w-48 md:w-56 dark:border-white/30 border-black/30 text-start">
+            <Calendar className="mr-2 h-4 w-4 rotate-0 scale-100 transition-all" />
             <SelectValue placeholder="Select a semester" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="w-48 md:w-56">
             <SelectGroup>
               <SelectLabel>Semesters</SelectLabel>
+              <SelectSearch className="h-[36px] w-[11.4rem] md:w-[13.4rem]" />
               {semesters.map((semester) => (
-                <SelectItem key={semester} value={semester}>
+                <SelectItem key={semester} value={semester} className="w-[11.4rem] md:w-[13.4rem]">
                   {semester}
                 </SelectItem>
               ))}
@@ -130,15 +124,16 @@ export default function Search({ result }: { result: CourseResult[] }) {
             onValueChange={handleSubjectChange}
             disabled={!selectedSemester}
         >
-          <SelectTrigger className="w-[200px] md:w-[220px] dark:border-white/30 border-black/30 ">
-            <BookOpen className="h-[1rem] w-[1rem] rotate-0 scale-100 transition-all" />
+          <SelectTrigger className="w-48 md:w-56 dark:border-white/30 border-black/30 text-start">
+            <BookOpen className="mr-2 h-4 w-4 rotate-0 scale-100 transition-all" />
             <SelectValue placeholder="Select a subject" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="w-48 md:w-56">
             <SelectGroup>
               <SelectLabel>Subjects</SelectLabel>
+              <SelectSearch className="h-[36px] w-[11.4rem] md:w-[13.4rem]" />
               {subjects.map((subject) => (
-                <SelectItem key={subject} value={subject}>
+                <SelectItem key={subject} value={subject} className="w-[11.4rem] md:w-[13.4rem]">
                   {subject}
                 </SelectItem>
               ))}
@@ -151,15 +146,16 @@ export default function Search({ result }: { result: CourseResult[] }) {
           disabled={!selectedSemester || !selectedSubject}
           value={selectedCourseNumber}
         >
-          <SelectTrigger className="w-[200px] md:w-[220px] dark:border-white/30 border-black/30">
-            <Hash className="h-[1rem] w-[1rem] rotate-0 scale-100 transition-all" />
+          <SelectTrigger className="w-48 md:w-56 dark:border-white/30 border-black/30 text-start">
+            <Hash className="mr-2 h-4 w-4 rotate-0 scale-100 transition-all" />
             <SelectValue placeholder="Select a course number" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="w-48 md:w-56">
             <SelectGroup>
               <SelectLabel>Course Numbers</SelectLabel>
+              <SelectSearch className="h-[36px] w-[11.4rem] md:w-[13.4rem]" />
               {courseNumbers.map((number) => (
-                <SelectItem key={number} value={number.toString()}>
+                <SelectItem key={number} value={number.toString()} className="w-[11.4rem] md:w-[13.4rem]">
                   {number}
                 </SelectItem>
               ))}
@@ -173,9 +169,25 @@ export default function Search({ result }: { result: CourseResult[] }) {
           className="w-[100px] flex justify-between"
         >
           <Rocket className="h-[1rem] w-[1rem] rotate-0 scale-100 transition-all" />
-          Submit
+          Search
         </Button>
       </div>
+    </div>
+    <div className="py-10 flex items-center text-muted-foreground">
+      <hr className="border w-24 md:w-48" />
+      <Compass className="h-6 w-6" />
+      <hr className="border w-24 md:w-48" />
+    </div>
+    <div className="mx-auto flex flex-col items-center justify-center">
+      <div className="flex items-center justify-center gap-x-4 gap-y-4 flex-col md:flex-row">
+        <form className="ml-auto flex-initial dark:border-white/30 border-black/30">
+          <div className="relative">
+            <SearchIcon className="absolute left-2.5 top-0 bottom-0 m-auto h-4 w-4" />
+            <Input type="search" placeholder="Search for courses and professors..." className="pl-8 w-[300px] md:w-[440px] dark:border-white/30 border-black/30" />
+          </div>
+        </form>
+      </div>
+    </div>
     </div>
   );
 }
