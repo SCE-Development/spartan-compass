@@ -7,6 +7,7 @@ import {
   professorsTable,
 } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
+import Link from "next/link";
 
 export default async function CoursePage({
   params,
@@ -19,15 +20,13 @@ export default async function CoursePage({
     .where(eq(coursesTable.id, Number(params.id)));
 
   const professorResult = await db
-    .select()
+    .select({
+      professor: professorsTable,
+    })
     .from(professorsCoursesTable)
     .where(eq(professorsCoursesTable.courseId, Number(params.id)))
-    .then((res) => {
-      return db
-        .select()
-        .from(professorsTable)
-        .where(eq(professorsTable.id, res[0].professorId));
-    });
+    .innerJoin(professorsTable, eq(professorsCoursesTable.professorId, professorsTable.id));
+
 
   return (
     <div className="container mx-auto p-4">
@@ -44,18 +43,28 @@ export default async function CoursePage({
               </div>
             </CardHeader>
             <CardContent className="mt-4">
-              {professorResult.map((professor) => (
-                <div key={professor.id}>
-                  <p className="text-lg font-semibold mb-2">{professor.name}</p>
-                  <p className="text-muted-foreground">
-                    {professor.department}
-                  </p>
-                  <div className="mt-2">
-                    {/* The actual rating is a placeholder, the professorsTable scheme has not been updated to have starRating as a field */}
-                    <StarRating rating={4.5} textColor="text-muted-foreground"/>
-                  </div>
-                </div>
-              ))}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {professorResult.map((result, index) => (
+                  <Card key={index} className="p-4">
+                    <CardHeader>
+                      <Link href={`/professors/${result.professor.id}`}>
+                        <CardTitle className="text-lg font-semibold hover:text-primary hover:underline">
+                          {result.professor.name}
+                        </CardTitle>
+                      </Link>
+                      <p className="text-muted-foreground">
+                        {result.professor.department}
+                      </p>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="mt-2">
+                        {/* The actual rating is a placeholder, the professorsTable scheme has not been updated to have starRating as a field */}
+                        <StarRating rating={4.5} textColor="text-muted-foreground" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             </CardContent>
           </Card>
         ))}

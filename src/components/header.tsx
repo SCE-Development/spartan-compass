@@ -45,17 +45,17 @@ export function Header({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen w-full flex-col">
       <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
-        <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
-          <Link href="/" className="flex items-center gap-2 text-lg font-semibold md:text-base">
-            <Compass className="h-6 w-6" />
-            <span className="whitespace-nowrap">Spartan Compass</span>
+        <nav className="flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
+          <Link href="/" className="flex items-center gap-2 font-semibold text-lg md:text-base compass-origin">
+            <Compass className="h-6 w-6 compass" />
+            <span className="hidden whitespace-nowrap md:flex">Spartan Compass</span>
           </Link>
         </nav>
-        <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-          <form className="ml-auto flex-1 sm:flex-initial">
+        <div className="flex w-full items-center gap-4 md:ml-auto">
+          <form className="ml-auto flex-initial">
             <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input type="search" placeholder="Search classes..." className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]" />
+              <Search className="absolute left-2.5 top-0 bottom-0 m-auto h-4 w-4 text-muted-foreground" />
+              <Input type="search" placeholder="Search courses..." className="pl-8 w-[120px] md:w-[200px]" />
             </div>
           </form>
           {isLoggedIn ? (
@@ -69,7 +69,7 @@ export function Header({ children }: { children: React.ReactNode }) {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => router.push("/dashboard")}>Settings</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/userprofile")}>Settings</DropdownMenuItem>
                 <DropdownMenuItem>Support</DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
