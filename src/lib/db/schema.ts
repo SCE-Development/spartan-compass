@@ -4,6 +4,7 @@ import {
   serial,
   text,
   integer,
+  real,
   primaryKey,
   timestamp,
 } from "drizzle-orm/pg-core";
@@ -20,10 +21,12 @@ export const reviewsTable = pgTable("reviews", {
 // Define the `professors` table with id, name, and department columns.
 // - `id` is a serial column used as the primary key.
 // - `name` and `department` are text columns that cannot be null.
+// - `avgRating` is a real column that stores the professor's average rating.
 export const professorsTable = pgTable("professors", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   department: text("department").notNull(),
+  avgRating: real("avg_rating"),
 });
 
 // Define the `courses` table with id, subject, courseNumber, and an optional description.

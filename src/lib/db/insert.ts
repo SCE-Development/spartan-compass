@@ -24,6 +24,7 @@ export async function insertProfessors() {
             const newProfessor = await db.insert(professorsTable).values({
                 name: fullName,
                 department: department,
+                avgRating: professor.avgRating ? Math.round(professor.avgRating * 10) / 10 : null,
             }).returning();
             console.log("Added: ", newProfessor);
         }
