@@ -14,7 +14,7 @@ async function main() {
 
   const professor = profData.edges[0].node;
   const reviews = await rmpFindProfessorReviews({cursor: "", count: sampleCount, professorId: professor.id});
-  console.log(`RMP scraped professor reviews for ${professor.firstName} ${professor.lastName}`, reviews);
+  console.log(`RMP scraped professor reviews for ${professor.firstName} ${professor.lastName}`, reviews.node.ratings.edges);
 
   console.log("Total professors scraped:", profData.edges.length);
   console.log("Total courses scraped:", classData.length);

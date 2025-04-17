@@ -7,6 +7,7 @@ query TeacherSearchResultsPageQuery($query: TeacherSearchQuery!, $cursor: String
       edges {
         node {
           id
+          legacyId
           avgRating
           numRatings
           firstName
@@ -26,25 +27,26 @@ query TeacherSearchResultsPageQuery($query: TeacherSearchQuery!, $cursor: String
 `;
 
 export type ProfessorDetails = {
-  id: string
-  firstName: string
-  lastName: string
-  department: string
-  avgRating: number
-  avgDifficulty: number
-  numRatings: number
-  wouldTakeAgainPercent: number
-}
+  id: string;
+  legacyId: number;
+  firstName: string;
+  lastName: string;
+  department: string;
+  avgRating: number;
+  avgDifficulty: number;
+  numRatings: number;
+  wouldTakeAgainPercent: number;
+};
 
 export type ProfessorsPage = {
   edges: Array<{
-    node: ProfessorDetails
-  }>
+    node: ProfessorDetails;
+  }>;
   pageInfo: {
-    endCursor: string
-    hasNextPage: boolean
-  }
-}
+    endCursor: string;
+    hasNextPage: boolean;
+  };
+};
 
 function variables(cursor: string, count: number) {
   return {
@@ -54,7 +56,7 @@ function variables(cursor: string, count: number) {
     },
     cursor: cursor,
     count: count,
-  }
+  };
 }
 
 /**
@@ -62,7 +64,10 @@ function variables(cursor: string, count: number) {
  * @param params.cursor specify first professor id of the page, set to empty string to return from the first professor
  * @param params.count specify count of entries to return on the page, max of 1000.
  */
-export async function rmpFindProfessorsPage(params: { cursor: string, count: number }) {
+export async function rmpFindProfessorsPage(params: {
+  cursor: string;
+  count: number;
+}) {
   const url = "https://www.ratemyprofessors.com/graphql";
   const body = JSON.stringify({
     query,
@@ -91,8 +96,11 @@ export async function rmpFindAllProfessors() {
   let hasNextPage = true;
 
   while (hasNextPage) {
-    const professors = await rmpFindProfessorsPage({cursor, count: batchSize});
-    allProfessors.push(...professors.edges.map(edge => edge.node));
+    const professors = await rmpFindProfessorsPage({
+      cursor,
+      count: batchSize,
+    });
+    allProfessors.push(...professors.edges.map((edge) => edge.node));
     cursor = professors.pageInfo.endCursor;
     hasNextPage = professors.pageInfo.hasNextPage;
   }

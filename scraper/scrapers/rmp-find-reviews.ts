@@ -1,4 +1,4 @@
-import {encodeBasicCredentials} from "arctic/dist/request";
+import { encodeBasicCredentials } from "arctic/dist/request";
 
 const query = `\
 query RatingsListQuery(
@@ -47,35 +47,35 @@ query RatingsListQuery(
 `;
 
 export type ProfessorRating = {
-  id: string
-  date: string
-  class: string
-  helpfulRating: number
-  difficultyRating: number
-  comment: string
-}
+  id: string;
+  date: string;
+  class: string;
+  helpfulRating: number;
+  difficultyRating: number;
+  comment: string;
+};
 
 export type ProfessorRatingsPage = {
   node: {
     ratings: {
       edges: Array<{
-        cursor: string
-        node: ProfessorRating
-      }>
+        cursor: string;
+        node: ProfessorRating;
+      }>;
       pageInfo: {
-        endCursor: string
-        hasNextPage: boolean
-      }
-    }
-  }
-}
+        endCursor: string;
+        hasNextPage: boolean;
+      };
+    };
+  };
+};
 
 function variables(cursor: string, count: number, professorId: string) {
   return {
     id: professorId,
     cursor,
     count,
-  }
+  };
 }
 
 /**
@@ -84,7 +84,11 @@ function variables(cursor: string, count: number, professorId: string) {
  * @param params.count specify count of entries to return on the page, max of 1000.
  * @param params.professorId specify the RMP professor id to fetch reviews for
  */
-export async function rmpFindProfessorReviews(params: { cursor: string, count: number, professorId: string }) {
+export async function rmpFindProfessorReviews(params: {
+  cursor: string;
+  count: number;
+  professorId: string;
+}) {
   const url = "https://www.ratemyprofessors.com/graphql";
   const body = JSON.stringify({
     query,
@@ -106,15 +110,19 @@ export async function rmpFindProfessorReviews(params: { cursor: string, count: n
   return data["data"] as ProfessorRatingsPage;
 }
 
-export async function fetchAllProfessorReviews(professorId: string) {
+export async function rmpFindAllProfessorReviews(professorId: string) {
   const batchSize = 1000;
   const allReviews: ProfessorRating[] = [];
   let cursor = "";
   let hasNextPage = true;
 
   while (hasNextPage) {
-    const data = await rmpFindProfessorReviews({cursor, count: batchSize, professorId});
-    allReviews.push(...data.node.ratings.edges.map(edge => edge.node));
+    const data = await rmpFindProfessorReviews({
+      cursor,
+      count: batchSize,
+      professorId,
+    });
+    allReviews.push(...data.node.ratings.edges.map((edge) => edge.node));
     cursor = data.node.ratings.pageInfo.endCursor;
     hasNextPage = data.node.ratings.pageInfo.hasNextPage;
   }

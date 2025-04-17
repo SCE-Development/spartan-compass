@@ -11,17 +11,35 @@ import { InferSelectModel, relations } from "drizzle-orm";
 
 export const reviewsTable = pgTable("reviews", {
   id: serial("id").primaryKey(),
+  rmpId: text("rmp_id"),
   rating: integer("rating").notNull(),
   review: text("review").notNull(),
-  courseId: integer("course_id").notNull().references(() => coursesTable.id),
-  professorId: integer("professor_id").notNull().references(() => professorsTable.id),
+  courseId: integer("course_id")
+    .notNull()
+    .references(() => coursesTable.id),
+  professorId: integer("professor_id")
+    .notNull()
+    .references(() => professorsTable.id),
 });
+
+export const reviewsRelations = relations(reviewsTable, ({ one }) => ({
+  course: one(coursesTable, {
+    fields: [reviewsTable.courseId],
+    references: [coursesTable.id],
+  }),
+  professor: one(professorsTable, {
+    fields: [reviewsTable.professorId],
+    references: [professorsTable.id],
+  }),
+}));
 
 // Define the `professors` table with id, name, and department columns.
 // - `id` is a serial column used as the primary key.
 // - `name` and `department` are text columns that cannot be null.
 export const professorsTable = pgTable("professors", {
   id: serial("id").primaryKey(),
+  rmpId: text("rmp_id"),
+  rmpLegacyId: integer("rmp_legacy_id"),
   name: text("name").notNull(),
   department: text("department").notNull(),
 });
@@ -32,7 +50,7 @@ export const professorsTable = pgTable("professors", {
 // - `description` is an optional text column.
 export const coursesTable = pgTable("courses", {
   id: serial("id").primaryKey(),
-  semester : text("semester").notNull(),
+  semester: text("semester").notNull(),
   title: text("title").notNull(),
   subject: text("subject").notNull(),
   courseNumber: text("course_number").notNull(),
@@ -85,7 +103,7 @@ export const sessionTable = pgTable("session", {
   id: text("id").primaryKey(),
   userId: integer("user_id")
     .notNull()
-    .references(() => userTable.id),  
+    .references(() => userTable.id),
   expiresAt: timestamp("expires_at", {
     withTimezone: true,
     mode: "date",
@@ -100,4 +118,3 @@ export type Session = InferSelectModel<typeof sessionTable>;
 // 	googleId: string;
 // 	name: string;
 // }
-
