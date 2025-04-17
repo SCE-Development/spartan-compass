@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -7,14 +7,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-
-export default async function Page({
+import ErrorToast from "@/components/error-toast";
+interface PageProps extends React.ComponentPropsWithoutRef<"div"> {
+  searchParams?: {
+    [key: string]: string | undefined;
+  }
+}
+export default function Page({
+  searchParams,
   className,
   ...props
-}: React.ComponentPropsWithoutRef<"div">) {
+}: PageProps) {
 	return (
-
 		<div className="flex min-h-[calc(100svh-64px)] flex-col items-center justify-center gap-6 p-6 md:p-10">
+      <ErrorToast error={searchParams?.error}/>      
       <div className="flex w-full max-w-sm flex-col gap-6">
 				<div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
