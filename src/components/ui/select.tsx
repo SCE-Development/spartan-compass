@@ -134,7 +134,7 @@ const SelectItem = React.forwardRef<
 ));
 SelectItem.displayName = SelectPrimitive.Item.displayName;
 
-const SelectSearch = ({ className }: { className?: string }) => (
+const SelectSearch = ({ className, onChange }: { className?: string, onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void }) => (
   <>
     <Input
       type="search"
@@ -142,7 +142,10 @@ const SelectSearch = ({ className }: { className?: string }) => (
       className={cn(
         "px-8",
         className
-      )} />
+      )} 
+      onKeyDown={e => e.stopPropagation()}
+      onChange={onChange}
+    />
     <SelectSeparator />
   </>
 )

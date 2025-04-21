@@ -21,6 +21,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
   const [selectedSemester, setSelectedSemester] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedCourseNumber, setSelectedCourseNumber] = useState("");
+  const [selectSearch, setSelectSearch] = useState("");
 
   const router = useRouter();
 
@@ -81,6 +82,14 @@ export default function Search({ result }: { result: CourseResult[] }) {
     setSelectedCourseNumber("");
   }, []);
 
+  const handleSelectSearch = useCallback((e: React.FormEvent<HTMLInputElement>) => {
+    setSelectSearch(e.currentTarget.value);
+  }, []);
+
+  const handleResetSelectSearch = useCallback((event?: Event) => {
+    if (event) setSelectSearch("");
+  }, []);
+
   const handleSubmit = useCallback(() => {
     // to handle our search, we'll redirect to the course page with the corresponding id
     if (selectedSemester && selectedSubject && selectedCourseNumber) {
@@ -107,15 +116,24 @@ export default function Search({ result }: { result: CourseResult[] }) {
             <Calendar className="mr-2 h-4 w-4 rotate-0 scale-100 transition-all" />
             <SelectValue placeholder="Select a semester" />
           </SelectTrigger>
-          <SelectContent className="w-48 md:w-56">
+          <SelectContent className="w-48 md:w-56" onCloseAutoFocus={handleResetSelectSearch}>
             <SelectGroup>
               <SelectLabel>Semesters</SelectLabel>
-              <SelectSearch className="h-[36px] w-[11.4rem] md:w-[13.4rem]" />
-              {semesters.map((semester) => (
-                <SelectItem key={semester} value={semester} className="w-[11.4rem] md:w-[13.4rem]">
-                  {semester}
-                </SelectItem>
-              ))}
+              <SelectSearch className="h-[36px] w-[11.4rem] md:w-[13.4rem]" onChange={handleSelectSearch} />
+              {(!selectSearch) ?
+                semesters.map((semester) => (
+                  <SelectItem key={semester} value={semester} className="w-[11.4rem] md:w-[13.4rem]">
+                    {semester}
+                  </SelectItem>
+                ))
+              :
+                semesters.filter((semester) => semester.toLowerCase().includes(selectSearch.toLowerCase())).map((semester) => (
+                  <SelectItem key={semester} value={semester} className="w-[11.4rem] md:w-[13.4rem]">
+                    {semester}
+                  </SelectItem>
+                ))
+              }
+
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -128,15 +146,23 @@ export default function Search({ result }: { result: CourseResult[] }) {
             <BookOpen className="mr-2 h-4 w-4 rotate-0 scale-100 transition-all" />
             <SelectValue placeholder="Select a subject" />
           </SelectTrigger>
-          <SelectContent className="w-48 md:w-56">
+          <SelectContent className="w-48 md:w-56" onCloseAutoFocus={handleResetSelectSearch}>
             <SelectGroup>
               <SelectLabel>Subjects</SelectLabel>
-              <SelectSearch className="h-[36px] w-[11.4rem] md:w-[13.4rem]" />
-              {subjects.map((subject) => (
-                <SelectItem key={subject} value={subject} className="w-[11.4rem] md:w-[13.4rem]">
-                  {subject}
-                </SelectItem>
-              ))}
+              <SelectSearch className="h-[36px] w-[11.4rem] md:w-[13.4rem]" onChange={handleSelectSearch} />
+              {(!selectSearch) ? 
+                subjects.map((subject) => (
+                  <SelectItem key={subject} value={subject} className="w-[11.4rem] md:w-[13.4rem]">
+                    {subject}
+                  </SelectItem>
+                ))
+              :
+                subjects.filter((subject) => subject.toLowerCase().includes(selectSearch.toLowerCase())).map((subject) => (
+                  <SelectItem key={subject} value={subject} className="w-[11.4rem] md:w-[13.4rem]">
+                    {subject}
+                  </SelectItem>
+                ))
+              }
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -150,15 +176,23 @@ export default function Search({ result }: { result: CourseResult[] }) {
             <Hash className="mr-2 h-4 w-4 rotate-0 scale-100 transition-all" />
             <SelectValue placeholder="Select a course number" />
           </SelectTrigger>
-          <SelectContent className="w-48 md:w-56">
+          <SelectContent className="w-48 md:w-56" onCloseAutoFocus={handleResetSelectSearch}>
             <SelectGroup>
               <SelectLabel>Course Numbers</SelectLabel>
-              <SelectSearch className="h-[36px] w-[11.4rem] md:w-[13.4rem]" />
-              {courseNumbers.map((number) => (
-                <SelectItem key={number} value={number.toString()} className="w-[11.4rem] md:w-[13.4rem]">
-                  {number}
-                </SelectItem>
-              ))}
+              <SelectSearch className="h-[36px] w-[11.4rem] md:w-[13.4rem]" onChange={handleSelectSearch} />
+              {(!selectSearch) ?
+                courseNumbers.map((number) => (
+                  <SelectItem key={number} value={number.toString()} className="w-[11.4rem] md:w-[13.4rem]">
+                    {number}
+                  </SelectItem>
+                ))
+              :
+                courseNumbers.filter((number) => number.toString().includes(selectSearch)).map((number) => (
+                  <SelectItem key={number} value={number.toString()} className="w-[11.4rem] md:w-[13.4rem]">
+                    {number}
+                  </SelectItem>
+                ))
+              }
             </SelectGroup>
           </SelectContent>
         </Select>
