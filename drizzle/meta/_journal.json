@@ -15,6 +15,13 @@
       "when": 1742255214297,
       "tag": "0001_dusty_carnage",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1745276803323,
+      "tag": "0002_parched_steve_rogers",
+      "breakpoints": true
     }
   ]
 }
