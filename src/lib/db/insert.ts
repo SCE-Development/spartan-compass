@@ -40,13 +40,18 @@ export async function insertProfessors() {
 }
 
 export async function insertReviews() {
-  const professors = await db.query.professorsTable.findMany({
-    with: {
-      id: true,
-      rmpId: true,
-    },
-    limit: 10,
-  });
+  // const professors = await db.query.professorsTable.findMany({
+  //   with: {
+  //     id: true,
+  //     rmpId: true,
+  //   },
+  //   limit: 10,
+  // });
+  const professors = await db.select({
+    id: professorsTable.id,
+    rmpId: professorsTable.rmpId,
+  }).from(professorsTable).limit(10);
+
   for (const professor of professors) {
     console.log("Inserting reviews for professor:", professor.id);
     await insertProfessorReviews(professor);
@@ -63,10 +68,27 @@ export async function insertProfessorReviews(professor: {
   );
   const reviews = await rmpFindAllProfessorReviews(professor.rmpId);
   for (const review of reviews) {
-    const course = await db.query.coursesTable.findFirst({
-      with: { id: true },
-      where: (course, { eq }) => eq(course.courseNumber, review.class),
-    });
+    const classRegex = /([A-Z]{2,4})\s*(\d{1,3}[A-Z]*)/;
+
+    const match = review.class.match(classRegex);
+    if (!match) {
+      console.error("RMP reviews: Couldn't parse class :", review.class);
+      continue;
+    }
+
+    const subject = match[1];
+    const courseNumber = match[2];
+    // const course = await db.query.coursesTable.findFirst({
+    //   with: { id: true },
+    //   where: (course, { eq }) => eq(course.subject, subject) && eq(course.courseNumber, courseNumber),
+    // });
+    const courses = await db.select({id: coursesTable.id}).from(coursesTable).where(
+      and(
+        eq(coursesTable.subject, subject),
+        eq(coursesTable.courseNumber, courseNumber),
+      ),
+    ).limit(1);
+    const course = courses.at(0);
     if (!course) {
       console.log("Course not found:", review.class);
       continue;
