@@ -10,19 +10,18 @@ import {
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import Link from "next/link";
-import { Package2, Menu, Search, CircleUser, Compass } from "lucide-react";
+import { Search, CircleUser, Compass } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
-import { deleteSessionTokenCookie, getCurrentSession, invalidateSession } from "@/lib/db/session";
-import { redirect, useRouter } from "next/navigation";
-import { ActionResult } from "next/dist/server/app-render/types";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import smartSearch from "@/app/actions";
 
 
 export function Header({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false); 
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     async function checkSession() {
@@ -42,6 +41,10 @@ export function Header({ children }: { children: React.ReactNode }) {
     router.push("/login"); // Redirecting to login page
   }
 
+  const handleSearch = useCallback(() => {
+      smartSearch(searchQuery);
+    }, [searchQuery]);
+
   return (
     <div className="flex min-h-screen w-full flex-col">
       <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
@@ -52,10 +55,14 @@ export function Header({ children }: { children: React.ReactNode }) {
           </Link>
         </nav>
         <div className="flex w-full items-center gap-4 md:ml-auto">
-          <form className="ml-auto flex-initial">
+          <form className="ml-auto flex-initial" onSubmit={(e) => {
+              e.preventDefault(); // Prevent page reload
+              handleSearch();
+            }}>
             <div className="relative">
               <Search className="absolute left-2.5 top-0 bottom-0 m-auto h-4 w-4 text-muted-foreground" />
-              <Input type="search" placeholder="Search courses..." className="pl-8 w-[120px] md:w-[200px]" />
+              <Input type="search" placeholder="Search courses..." className="pl-8 w-[120px] md:w-[200px]" value={searchQuery} // Bind state to input
+                onChange={(e) => setSearchQuery(e.target.value)}/>
             </div>
           </form>
           {isLoggedIn ? (
