@@ -13,6 +13,7 @@ import {
   SelectSearch
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Form, FormContent, FormItem, FormText } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Calendar, BookOpen, Hash, Rocket, SearchIcon, Compass } from "lucide-react";
@@ -21,7 +22,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
   const [selectedSemester, setSelectedSemester] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedCourseNumber, setSelectedCourseNumber] = useState("");
-  const [selectSearch, setSelectSearch] = useState("");
+  const [selectSearch, setSelectSearch] = useState(["", "", ""]);
   const [inputSearch, setInputSearch] = useState("");
 
   const router = useRouter();
@@ -83,13 +84,9 @@ export default function Search({ result }: { result: CourseResult[] }) {
     setSelectedCourseNumber("");
   }, []);
 
-  const handleSelectSearch = useCallback((e: React.FormEvent<HTMLInputElement>) => {
-    setSelectSearch(e.currentTarget.value);
-  }, []);
-
-  const handleResetSelectSearch = useCallback((event?: Event) => {
-    if (event) setSelectSearch("");
-  }, []);
+  const handleSelectSearch = useCallback((e: React.FormEvent<HTMLInputElement>, n: number) => {
+    setSelectSearch(selectSearch.map((item, index) => index === n ? e.currentTarget.value : item));
+  }, [selectSearch]);
 
   const handleSelectSubmit = useCallback(() => {
     // to handle our search, we'll redirect to the course page with the corresponding id
@@ -110,14 +107,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
     setInputSearch(e.currentTarget.value);
   }, []);
 
-  // addEventListener("keydown", (e) => {
-  //   if (e.key === "Enter") {
-  //     handleInputSubmit();
-  //   }
-  // });
-
   const handleInputSubmit = useCallback(() => {
-    // to handle our search, we'll redirect to the course page with the corresponding id
     if (inputSearch) {
       const selectedCourse = result.find((course) => course.title.toLowerCase().includes(inputSearch.toLowerCase()));
       if (selectedCourse) {
@@ -137,24 +127,23 @@ export default function Search({ result }: { result: CourseResult[] }) {
             <Calendar className="mr-2 h-4 w-4 rotate-0 scale-100 transition-all" />
             <SelectValue placeholder="Select a semester" />
           </SelectTrigger>
-          <SelectContent className="w-48 md:w-56" onCloseAutoFocus={handleResetSelectSearch}>
+          <SelectContent className="w-48 md:w-56">
             <SelectGroup>
               <SelectLabel>Semesters</SelectLabel>
-              <SelectSearch className="h-[36px] w-[11.4rem] md:w-[13.4rem]" onChange={handleSelectSearch} />
-              {(!selectSearch) ?
+              <SelectSearch className="h-[36px] w-[11.4rem] md:w-[13.4rem]" onChange={(e) => handleSelectSearch(e, 0)} />
+              {(!selectSearch[0]) ?
                 semesters.map((semester) => (
                   <SelectItem key={semester} value={semester} className="w-[11.4rem] md:w-[13.4rem]">
                     {semester}
                   </SelectItem>
                 ))
               :
-                semesters.filter((semester) => semester.toLowerCase().includes(selectSearch.toLowerCase())).map((semester) => (
+                semesters.filter((semester) => semester.toLowerCase().includes(selectSearch[0].toLowerCase())).map((semester) => (
                   <SelectItem key={semester} value={semester} className="w-[11.4rem] md:w-[13.4rem]">
                     {semester}
                   </SelectItem>
                 ))
               }
-
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -167,18 +156,18 @@ export default function Search({ result }: { result: CourseResult[] }) {
             <BookOpen className="mr-2 h-4 w-4 rotate-0 scale-100 transition-all" />
             <SelectValue placeholder="Select a subject" />
           </SelectTrigger>
-          <SelectContent className="w-48 md:w-56" onCloseAutoFocus={handleResetSelectSearch}>
+          <SelectContent className="w-48 md:w-56">
             <SelectGroup>
               <SelectLabel>Subjects</SelectLabel>
-              <SelectSearch className="h-[36px] w-[11.4rem] md:w-[13.4rem]" onChange={handleSelectSearch} />
-              {(!selectSearch) ? 
+              <SelectSearch className="h-[36px] w-[11.4rem] md:w-[13.4rem]" onChange={(e) => handleSelectSearch(e, 1)} />
+              {(!selectSearch[1]) ? 
                 subjects.map((subject) => (
                   <SelectItem key={subject} value={subject} className="w-[11.4rem] md:w-[13.4rem]">
                     {subject}
                   </SelectItem>
                 ))
               :
-                subjects.filter((subject) => subject.toLowerCase().includes(selectSearch.toLowerCase())).map((subject) => (
+                subjects.filter((subject) => subject.toLowerCase().includes(selectSearch[1].toLowerCase())).map((subject) => (
                   <SelectItem key={subject} value={subject} className="w-[11.4rem] md:w-[13.4rem]">
                     {subject}
                   </SelectItem>
@@ -197,18 +186,18 @@ export default function Search({ result }: { result: CourseResult[] }) {
             <Hash className="mr-2 h-4 w-4 rotate-0 scale-100 transition-all" />
             <SelectValue placeholder="Select a course number" />
           </SelectTrigger>
-          <SelectContent className="w-48 md:w-56" onCloseAutoFocus={handleResetSelectSearch}>
+          <SelectContent className="w-48 md:w-56">
             <SelectGroup>
               <SelectLabel>Course Numbers</SelectLabel>
-              <SelectSearch className="h-[36px] w-[11.4rem] md:w-[13.4rem]" onChange={handleSelectSearch} />
-              {(!selectSearch) ?
+              <SelectSearch className="h-[36px] w-[11.4rem] md:w-[13.4rem]" onChange={(e) => handleSelectSearch(e, 2)} />
+              {(!selectSearch[2]) ?
                 courseNumbers.map((number) => (
                   <SelectItem key={number} value={number.toString()} className="w-[11.4rem] md:w-[13.4rem]">
                     {number}
                   </SelectItem>
                 ))
               :
-                courseNumbers.filter((number) => number.toString().includes(selectSearch)).map((number) => (
+                courseNumbers.filter((number) => number.toString().includes(selectSearch[2])).map((number) => (
                   <SelectItem key={number} value={number.toString()} className="w-[11.4rem] md:w-[13.4rem]">
                     {number}
                   </SelectItem>
@@ -235,15 +224,29 @@ export default function Search({ result }: { result: CourseResult[] }) {
       <hr className="border w-24 md:w-48" />
     </div>
 
-    <div>{inputSearch}</div>
     <div className="mx-auto flex flex-col items-center justify-center">
-      <div className="flex items-center justify-center gap-x-4 gap-y-4 flex-col md:flex-row">
-        <form className="ml-auto flex-initial dark:border-white/30 border-black/30">
+      <div className="relative flex gap-x-4 gap-y-4 flex-col">
+        <Form className="w-[300px] md:w-[440px] ml-auto flex-initial dark:border-white/30 border-black/30">
           <div className="relative">
             <SearchIcon className="absolute left-2.5 top-0 bottom-0 m-auto h-4 w-4" />
-            <Input type="search" placeholder="Search for courses and professors..." className="pl-8 w-[300px] md:w-[440px] dark:border-white/30 border-black/30" onChange={handleInputSearch} onSubmit={handleInputSubmit} />
+            <Input type="search" placeholder="Search for courses and professors..." className="pl-8  dark:border-white/30 border-black/30" onChange={handleInputSearch} onSubmit={handleInputSubmit} />
           </div>
-        </form>
+        </Form>
+        <FormContent hidden={!inputSearch} className="w-[300px] md:w-[440px] top-[3rem]">
+          {(!inputSearch) ?
+            <div></div>
+          :
+            <div>
+              <FormText>{result.filter((course) => course.title.toLowerCase().includes(inputSearch.toLowerCase())).length} searched</FormText>
+            {result.filter((course) => course.title.toLowerCase().includes(inputSearch.toLowerCase())).map((course) => (
+              <FormItem key={course.title} className="h-[36px]" onClick={() => {setInputSearch(course.title); handleInputSubmit();}}>
+                {course.title}
+              </FormItem>
+            ))}
+            </div>
+          }
+        </FormContent>
+        
       </div>
     </div>
     </div>
