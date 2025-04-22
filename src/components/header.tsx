@@ -15,7 +15,7 @@ import Link from "next/link";
 import { Package2, Menu, Search, CircleUser, Compass } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
 import { deleteSessionTokenCookie, getCurrentSession, invalidateSession } from "@/lib/db/session";
-import { redirect, useRouter } from "next/navigation";
+import { redirect, usePathname, useRouter } from "next/navigation";
 import { ActionResult } from "next/dist/server/app-render/types";
 import { useEffect, useState } from "react";
 
@@ -23,6 +23,7 @@ import { useEffect, useState } from "react";
 export function Header({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false); 
+  const pathname = usePathname(); // Get the current path
 
   useEffect(() => {
     async function checkSession() {
@@ -52,12 +53,13 @@ export function Header({ children }: { children: React.ReactNode }) {
           </Link>
         </nav>
         <div className="flex w-full items-center gap-4 md:ml-auto">
-          <form className="ml-auto flex-initial">
+          {pathname === "/" && <span className="ml-auto flex-initial" ></span>}
+          {pathname !== "/" && <form className="ml-auto flex-initial">
             <div className="relative">
               <Search className="absolute left-2.5 top-0 bottom-0 m-auto h-4 w-4 text-muted-foreground" />
               <Input type="search" placeholder="Search courses..." className="pl-8 w-[120px] md:w-[200px]" />
             </div>
-          </form>
+          </form>}
           {isLoggedIn ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
