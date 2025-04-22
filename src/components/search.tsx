@@ -16,12 +16,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Calendar, BookOpen, Hash, Rocket, SearchIcon, Compass } from "lucide-react";
+import smartSearch from "@/app/actions";
 
 export default function Search({ result }: { result: CourseResult[] }) {
   const [selectedSemester, setSelectedSemester] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedCourseNumber, setSelectedCourseNumber] = useState("");
-
+  const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
 
   const semesters = useMemo(() => {
@@ -95,6 +96,10 @@ export default function Search({ result }: { result: CourseResult[] }) {
       }
     }
   }, [selectedSemester, selectedSubject, selectedCourseNumber, result, router]);
+
+  const handleSearch = useCallback(() => {
+    smartSearch(searchQuery);
+  }, [searchQuery]);
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-[75vh]">
@@ -180,11 +185,19 @@ export default function Search({ result }: { result: CourseResult[] }) {
     </div>
     <div className="mx-auto flex flex-col items-center justify-center">
       <div className="flex items-center justify-center gap-x-4 gap-y-4 flex-col md:flex-row">
-        <form className="ml-auto flex-initial dark:border-white/30 border-black/30">
+        <form className="ml-auto flex-initial dark:border-white/30 border-black/30" onSubmit={(e) => {
+              e.preventDefault(); // Prevent page reload
+              handleSearch();
+            }}>
           <div className="relative">
             <SearchIcon className="absolute left-2.5 top-0 bottom-0 m-auto h-4 w-4" />
-            <Input type="search" placeholder="Search for courses and professors..." className="pl-8 w-[300px] md:w-[440px] dark:border-white/30 border-black/30" />
-          </div>
+            <Input
+                type="search"
+                placeholder="Search for courses and professors..."
+                className="pl-8 w-[300px] md:w-[440px] dark:border-white/30 border-black/30"
+                value={searchQuery} // Bind state to input
+                onChange={(e) => setSearchQuery(e.target.value)} // Update state on change
+              />          </div>
         </form>
       </div>
     </div>
