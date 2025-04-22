@@ -22,6 +22,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedCourseNumber, setSelectedCourseNumber] = useState("");
   const [selectSearch, setSelectSearch] = useState("");
+  const [inputSearch, setInputSearch] = useState("");
 
   const router = useRouter();
 
@@ -90,7 +91,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
     if (event) setSelectSearch("");
   }, []);
 
-  const handleSubmit = useCallback(() => {
+  const handleSelectSubmit = useCallback(() => {
     // to handle our search, we'll redirect to the course page with the corresponding id
     if (selectedSemester && selectedSubject && selectedCourseNumber) {
       const selectedCourse = result.find(
@@ -104,6 +105,26 @@ export default function Search({ result }: { result: CourseResult[] }) {
       }
     }
   }, [selectedSemester, selectedSubject, selectedCourseNumber, result, router]);
+
+  const handleInputSearch = useCallback((e: React.FormEvent<HTMLInputElement>) => {
+    setInputSearch(e.currentTarget.value);
+  }, []);
+
+  // addEventListener("keydown", (e) => {
+  //   if (e.key === "Enter") {
+  //     handleInputSubmit();
+  //   }
+  // });
+
+  const handleInputSubmit = useCallback(() => {
+    // to handle our search, we'll redirect to the course page with the corresponding id
+    if (inputSearch) {
+      const selectedCourse = result.find((course) => course.title.toLowerCase().includes(inputSearch.toLowerCase()));
+      if (selectedCourse) {
+        router.push(`/courses/${selectedCourse.id}`);
+      }
+    }
+  }, [inputSearch, result, router]);
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-[75vh]">
@@ -198,7 +219,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
         </Select>
 
         <Button
-          onClick={handleSubmit}
+          onClick={handleSelectSubmit}
           disabled={!selectedSemester || !selectedSubject || !selectedCourseNumber}
           className="w-[100px] flex justify-between"
         >
@@ -207,17 +228,20 @@ export default function Search({ result }: { result: CourseResult[] }) {
         </Button>
       </div>
     </div>
+
     <div className="py-10 flex items-center text-muted-foreground">
       <hr className="border w-24 md:w-48" />
       <Compass className="h-6 w-6" />
       <hr className="border w-24 md:w-48" />
     </div>
+
+    <div>{inputSearch}</div>
     <div className="mx-auto flex flex-col items-center justify-center">
       <div className="flex items-center justify-center gap-x-4 gap-y-4 flex-col md:flex-row">
         <form className="ml-auto flex-initial dark:border-white/30 border-black/30">
           <div className="relative">
             <SearchIcon className="absolute left-2.5 top-0 bottom-0 m-auto h-4 w-4" />
-            <Input type="search" placeholder="Search for courses and professors..." className="pl-8 w-[300px] md:w-[440px] dark:border-white/30 border-black/30" />
+            <Input type="search" placeholder="Search for courses and professors..." className="pl-8 w-[300px] md:w-[440px] dark:border-white/30 border-black/30" onChange={handleInputSearch} onSubmit={handleInputSubmit} />
           </div>
         </form>
       </div>
