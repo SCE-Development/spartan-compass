@@ -13,15 +13,16 @@ import { Input } from "./ui/input";
 import Link from "next/link";
 import { Search, CircleUser, Compass } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
-import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import smartSearch from "@/app/actions";
+import { usePathname, useRouter } from "next/navigation";
 
 
 export function Header({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false); 
   const [searchQuery, setSearchQuery] = useState("");
+  const pathname = usePathname(); // Get the current path
 
   useEffect(() => {
     async function checkSession() {
@@ -55,7 +56,8 @@ export function Header({ children }: { children: React.ReactNode }) {
           </Link>
         </nav>
         <div className="flex w-full items-center gap-4 md:ml-auto">
-          <form className="ml-auto flex-initial" onSubmit={(e) => {
+          {pathname === "/" && <span className="ml-auto flex-initial" ></span>}
+          {pathname !== "/" && <form className="ml-auto flex-initial" onSubmit={(e) => {
               e.preventDefault(); // Prevent page reload
               handleSearch();
             }}>
@@ -64,7 +66,7 @@ export function Header({ children }: { children: React.ReactNode }) {
               <Input type="search" placeholder="Search courses..." className="pl-8 w-[120px] md:w-[200px]" value={searchQuery} // Bind state to input
                 onChange={(e) => setSearchQuery(e.target.value)}/>
             </div>
-          </form>
+          </form>}
           {isLoggedIn ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
