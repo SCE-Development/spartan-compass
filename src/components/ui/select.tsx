@@ -39,7 +39,7 @@ const SelectScrollUpButton = React.forwardRef<
   <SelectPrimitive.ScrollUpButton
     ref={ref}
     className={cn(
-      "flex cursor-default items-center justify-center py-1",
+      "flex absolute top-0 w-full cursor-default bg-background items-center justify-center py-1 z-50",
       className,
     )}
     {...props}
@@ -56,7 +56,7 @@ const SelectScrollDownButton = React.forwardRef<
   <SelectPrimitive.ScrollDownButton
     ref={ref}
     className={cn(
-      "flex cursor-default items-center justify-center py-1",
+      "flex absolute bottom-0 w-full cursor-default bg-background items-center justify-center py-1 z-50",
       className,
     )}
     {...props}
@@ -64,8 +64,7 @@ const SelectScrollDownButton = React.forwardRef<
     <ChevronDown className="h-4 w-4" />
   </SelectPrimitive.ScrollDownButton>
 ));
-SelectScrollDownButton.displayName =
-  SelectPrimitive.ScrollDownButton.displayName;
+SelectScrollDownButton.displayName = SelectPrimitive.ScrollDownButton.displayName;
 
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
@@ -140,7 +139,7 @@ const SelectSearch = ({ className, onChange }: { className?: string, onChange?: 
       type="search"
       placeholder="Search..."
       className={cn(
-        "px-8",
+        "px-8 sticky top-[1.50rem] bg-background z-40",
         className
       )} 
       onKeyDown={e => e.stopPropagation()}

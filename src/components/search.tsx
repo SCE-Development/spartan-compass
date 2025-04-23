@@ -13,7 +13,7 @@ import {
   SelectSearch
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Form, FormContent, FormItem, FormText } from "@/components/ui/form";
+import { Form, FormContent, FormItem } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Calendar, BookOpen, Hash, Rocket, SearchIcon, Compass } from "lucide-react";
@@ -88,6 +88,11 @@ export default function Search({ result }: { result: CourseResult[] }) {
     setSelectSearch(selectSearch.map((item, index) => index === n ? e.currentTarget.value : item));
   }, [selectSearch]);
 
+  const handleResetSelectSearch = useCallback((n: number) => {
+    //setSelectSearch(["", "", ""]);
+    setSelectSearch(selectSearch.map((item, index) => index === n ? "" : item));
+  }, [selectSearch]);
+
   const handleSelectSubmit = useCallback(() => {
     // to handle our search, we'll redirect to the course page with the corresponding id
     if (selectedSemester && selectedSubject && selectedCourseNumber) {
@@ -127,7 +132,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
             <Calendar className="mr-2 h-4 w-4 rotate-0 scale-100 transition-all" />
             <SelectValue placeholder="Select a semester" />
           </SelectTrigger>
-          <SelectContent className="w-48 md:w-56">
+          <SelectContent className="w-48 md:w-56" onCloseAutoFocus={() => handleResetSelectSearch(0)}>
             <SelectGroup>
               <SelectLabel>Semesters</SelectLabel>
               <SelectSearch className="h-[36px] w-[11.4rem] md:w-[13.4rem]" onChange={(e) => handleSelectSearch(e, 0)} />
@@ -156,8 +161,8 @@ export default function Search({ result }: { result: CourseResult[] }) {
             <BookOpen className="mr-2 h-4 w-4 rotate-0 scale-100 transition-all" />
             <SelectValue placeholder="Select a subject" />
           </SelectTrigger>
-          <SelectContent className="w-48 md:w-56">
-            <SelectGroup>
+          <SelectContent className="w-48 md:w-56" onCloseAutoFocus={() => handleResetSelectSearch(1)}>
+            <SelectGroup className="relative">
               <SelectLabel>Subjects</SelectLabel>
               <SelectSearch className="h-[36px] w-[11.4rem] md:w-[13.4rem]" onChange={(e) => handleSelectSearch(e, 1)} />
               {(!selectSearch[1]) ? 
@@ -186,7 +191,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
             <Hash className="mr-2 h-4 w-4 rotate-0 scale-100 transition-all" />
             <SelectValue placeholder="Select a course number" />
           </SelectTrigger>
-          <SelectContent className="w-48 md:w-56">
+          <SelectContent className="w-48 md:w-56" onCloseAutoFocus={() => handleResetSelectSearch(2)}>
             <SelectGroup>
               <SelectLabel>Course Numbers</SelectLabel>
               <SelectSearch className="h-[36px] w-[11.4rem] md:w-[13.4rem]" onChange={(e) => handleSelectSearch(e, 2)} />
@@ -234,16 +239,20 @@ export default function Search({ result }: { result: CourseResult[] }) {
         </Form>
         <FormContent hidden={!inputSearch} className="w-[300px] md:w-[440px] top-[3rem]">
           {(!inputSearch) ?
-            <div></div>
+            <></>
           :
-            <div>
-              <FormText>{result.filter((course) => course.title.toLowerCase().includes(inputSearch.toLowerCase())).length} searched</FormText>
-            {result.filter((course) => course.title.toLowerCase().includes(inputSearch.toLowerCase())).map((course) => (
-              <FormItem key={course.title} className="h-[36px]" onClick={() => {setInputSearch(course.title); handleInputSubmit();}}>
-                {course.title}
-              </FormItem>
-            ))}
-            </div>
+            (result.filter((course) => course.title.toLowerCase().includes(inputSearch.toLowerCase())).length <= 50) ?
+              result.filter((course) => course.title.toLowerCase().includes(inputSearch.toLowerCase())).map((course) => (
+                <FormItem key={course.title} className="h-[36px]" onClick={() => {setInputSearch(course.title); handleInputSubmit();}}>
+                  {course.title}
+                </FormItem>
+              ))
+            :
+              result.filter((course) => course.title.toLowerCase().includes(inputSearch.toLowerCase())).slice(0, 6).map((course) => (
+                <FormItem key={course.title} className="h-[36px]" onClick={() => {setInputSearch(course.title); handleInputSubmit();}}>
+                  {course.title}
+                </FormItem>
+              ))
           }
         </FormContent>
         
