@@ -9,26 +9,22 @@ import {
   DropdownMenuItem,
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
 import Link from "next/link";
-import { Search, CircleUser, Compass } from "lucide-react";
+import { CircleUser, Compass } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
-import { useCallback, useEffect, useState } from "react";
-import smartSearch from "@/app/actions";
-import { usePathname, useRouter } from "next/navigation";
-
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import SmartSearch from "./smart-search";
 
 export function Header({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false); 
-  const [searchQuery, setSearchQuery] = useState("");
-  const pathname = usePathname(); // Get the current path
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     async function checkSession() {
       const response = await fetch("/api/session/validate");
-      const { session } = await response.json(); 
-      setIsLoggedIn(!!session); 
+      const { session } = await response.json();
+      setIsLoggedIn(!!session);
     }
     checkSession();
   }, []);
@@ -42,35 +38,30 @@ export function Header({ children }: { children: React.ReactNode }) {
     router.push("/login"); // Redirecting to login page
   }
 
-  const handleSearch = useCallback(() => {
-      smartSearch(searchQuery);
-    }, [searchQuery]);
-
   return (
     <div className="flex min-h-screen w-full flex-col">
       <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
         <nav className="flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
-          <Link href="/" className="flex items-center gap-2 font-semibold text-lg md:text-base compass-origin">
+          <Link
+            href="/"
+            className="flex items-center gap-2 font-semibold text-lg md:text-base compass-origin"
+          >
             <Compass className="h-6 w-6 compass" />
-            <span className="hidden whitespace-nowrap md:flex">Spartan Compass</span>
+            <span className="hidden whitespace-nowrap md:flex">
+              Spartan Compass
+            </span>
           </Link>
         </nav>
         <div className="flex w-full items-center gap-4 md:ml-auto">
-          {pathname === "/" && <span className="ml-auto flex-initial" ></span>}
-          {pathname !== "/" && <form className="ml-auto flex-initial" onSubmit={(e) => {
-              e.preventDefault(); // Prevent page reload
-              handleSearch();
-            }}>
-            <div className="relative">
-              <Search className="absolute left-2.5 top-0 bottom-0 m-auto h-4 w-4 text-muted-foreground" />
-              <Input type="search" placeholder="Search courses..." className="pl-8 w-[120px] md:w-[200px]" value={searchQuery} // Bind state to input
-                onChange={(e) => setSearchQuery(e.target.value)}/>
-            </div>
-          </form>}
+          <SmartSearch type="half" />
           {isLoggedIn ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="secondary" size="icon" className="rounded-full">
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  className="rounded-full"
+                >
                   <CircleUser className="h-5 w-5" />
                   <span className="sr-only">Toggle user menu</span>
                 </Button>
@@ -78,16 +69,24 @@ export function Header({ children }: { children: React.ReactNode }) {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => router.push("/userprofile")}>Settings</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/userprofile")}>
+                  Settings
+                </DropdownMenuItem>
                 <DropdownMenuItem>Support</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}>
+                  Logout
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="secondary" size="icon" className="rounded-full">
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  className="rounded-full"
+                >
                   <CircleUser className="h-5 w-5" />
                   <span className="sr-only">Toggle user menu</span>
                 </Button>
@@ -95,7 +94,9 @@ export function Header({ children }: { children: React.ReactNode }) {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Account Options</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleSignIn}>Sign In</DropdownMenuItem>
+                <DropdownMenuItem onClick={handleSignIn}>
+                  Sign In
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           )}
