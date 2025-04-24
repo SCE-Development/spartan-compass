@@ -55,7 +55,7 @@ export default function SmartSearch({ type }: { type: "full" | "half" }) {
           )}
           onChange={(e) => handleQueryChange(e)}
         />
-        {result && result.data && (
+        {result && result.type !== "empty" && (
           <div className="absolute mt-2 w-full rounded-md border bg-background">
             {result.type === "combined" && (
               <>
