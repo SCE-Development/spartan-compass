@@ -77,7 +77,14 @@ export default function SmartSearch({ type }: { type: "full" | "half" }) {
                 )}
                 {result.data.professors.length > 0 && (
                   <div>
-                    <h3 className="p-2 font-bold">Professors</h3>
+                    <h3
+                      className={cn(
+                        "font-bold p-2",
+                        type === "half" ? "text-sm" : "",
+                      )}
+                    >
+                      Professors
+                    </h3>
                     {result.data.professors.map((professor) => (
                       <div
                         key={professor.id}
