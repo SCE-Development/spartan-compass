@@ -54,8 +54,8 @@ export function Header({ children }: { children: React.ReactNode }) {
           </Link>
         </nav>
         <div className="flex w-full items-center gap-4 md:ml-auto">
-          {pathname !== "/" && <SmartSearch type="half" />}
-          {pathname === "/" && <span className="ml-auto flex-initial"></span>}
+          {pathname !== "/" && pathname !== "/search" && <SmartSearch type="half" />}
+          {pathname === "/" || pathname === "/search" && <span className="ml-auto flex-initial"></span>}
           {isLoggedIn ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

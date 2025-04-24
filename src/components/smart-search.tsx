@@ -2,7 +2,7 @@
 
 import { Input } from "@/components/ui/input";
 import { SearchIcon } from "lucide-react";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import smartSearch from "@/app/actions";
 import { cn } from "@/lib/utils";
 import { Course, Professor } from "@/lib/db/schema";
@@ -25,7 +25,7 @@ export type SearchResult =
       data: [];
     };
 
-export default function SmartSearch({ type }: { type: "full" | "half" }) {
+export default function SmartSearch({ type }: { type: "page" | "full" | "half" }) {
   const [result, setResult] = useState<SearchResult | null>(null);
 
   function handleQueryChange(e: ChangeEvent<HTMLInputElement>) {
@@ -40,21 +40,34 @@ export default function SmartSearch({ type }: { type: "full" | "half" }) {
     window.location.href = basePath + id;
   }
 
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault(); // Prevent default form submission behavior
+    const form = e.target as HTMLFormElement;
+    const input = form.querySelector("input[type='search']") as HTMLInputElement;
+    if (input) {
+      window.location.href = "/search?query=" + input.value;
+    }
+  }
+
   return (
     <div className="ml-auto flex-initial">
       <div className="relative">
-        <SearchIcon className="absolute left-2.5 top-0 bottom-0 m-auto h-4 w-4" />
-        <Input
-          type="search"
-          placeholder={`Search ${type === "full" ? "for courses and professors" : ""}`}
-          className={cn(
-            "pl-8",
-            type === "full"
-              ? "w-[300px] md:w-[440px]"
-              : "w-[120px] md:w-[200px]",
-          )}
-          onChange={(e) => handleQueryChange(e)}
-        />
+        <form onSubmit={(e) => handleSubmit(e)}>
+          <SearchIcon className="absolute left-2.5 top-0 bottom-0 m-auto h-4 w-4" />
+          <Input
+            type="search"
+            placeholder={`Search ${(type === "full" || type === "page") ? "for courses and professors" : ""}`}
+            className={cn(
+              "pl-8",
+              type === "page"
+                ? "w-[400px] md:w-[600px]" // Longer width for "page" type
+                : type === "full"
+                ? "w-[300px] md:w-[440px]"
+                : "w-[120px] md:w-[200px]",
+            )}
+            onChange={(e) => handleQueryChange(e)}
+          />
+        </form>
         {result && result.type !== "empty" && (
           <div className="absolute mt-2 w-full rounded-md border bg-background">
             {result.type === "combined" && (
