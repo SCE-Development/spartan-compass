@@ -27,7 +27,7 @@ export default function SmartSearch({ type }: { type: "full" | "half" }) {
         <SearchIcon className="absolute left-2.5 top-0 bottom-0 m-auto h-4 w-4" />
         <Input
           type="search"
-          placeholder="Search for courses and professors..."
+          placeholder={`Search ${type === "full" ? "Courses and Professors" : ""}`}
           className={cn(
             "pl-8",
             type === "full"
@@ -44,7 +44,9 @@ export default function SmartSearch({ type }: { type: "full" | "half" }) {
                 className=" p-2 cursor-pointer hover:bg-primary"
                 onClick={() => handleClick(course.id)}
               >
-                <p>{`${course.subject} ${course.courseNumber} - ${course.title}`}</p>
+                <p
+                  className={cn(type === "half" ? "text-sm" : "")}
+                >{`${course.subject} ${course.courseNumber} - ${course.title}`}</p>
               </div>
             ))}
           </div>
