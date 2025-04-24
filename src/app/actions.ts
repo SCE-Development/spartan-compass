@@ -1,6 +1,6 @@
 "use server";
 
-import { sql } from "drizzle-orm";
+import { sql, desc, getTableColumns } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { coursesTable, professorsTable } from "@/lib/db/schema";
 import { SearchResult } from "@/components/smart-search";
@@ -13,22 +13,43 @@ export default async function smartSearch(term: string): Promise<SearchResult> {
   }
 
   const formattedTerm = trimmedTerm.replace(/\s+/g, " & ") + ":*";
-  await db.execute(sql`select to_tsvector('english', ${term})`);
 
-  // Search in coursesTable
-  const courseResults = await db.select().from(coursesTable).where(sql`(
+  // Search in coursesTable with ranking
+  const courseMatchQuery = sql`(
     setweight(to_tsvector('english', ${coursesTable.subject}), 'A') ||
     setweight(to_tsvector('english', ${coursesTable.courseNumber}), 'A') || 
     setweight(to_tsvector('english', ${coursesTable.title}), 'B') ||
     setweight(to_tsvector('english', ${coursesTable.description}), 'C') ||
     setweight(to_tsvector('english', ${coursesTable.semester}), 'D')
-  ) @@ to_tsquery('english', ${formattedTerm})`);
+  )`;
+  const courseResults = await db
+    .select({
+      ...getTableColumns(coursesTable),
+      rank: sql`ts_rank(${courseMatchQuery}, to_tsquery('english', ${formattedTerm}))`,
+      rankCd: sql`ts_rank_cd(${courseMatchQuery}, to_tsquery('english', ${formattedTerm}))`,
+    })
+    .from(coursesTable)
+    .where(sql`${courseMatchQuery} @@ to_tsquery('english', ${formattedTerm})`)
+    .orderBy((t) => desc(t.rank))
+    .limit(5);
 
-  // Search in professorsTable
-  const professorResults = await db.select().from(professorsTable).where(sql`(
+  // Search in professorsTable with ranking
+  const professorMatchQuery = sql`(
     setweight(to_tsvector('english', ${professorsTable.name}), 'A') ||
     setweight(to_tsvector('english', ${professorsTable.department}), 'B')
-  ) @@ to_tsquery('english', ${formattedTerm})`);
+  )`;
+  const professorResults = await db
+    .select({
+      ...getTableColumns(professorsTable),
+      rank: sql`ts_rank(${professorMatchQuery}, to_tsquery('english', ${formattedTerm}))`,
+      rankCd: sql`ts_rank_cd(${professorMatchQuery}, to_tsquery('english', ${formattedTerm}))`,
+    })
+    .from(professorsTable)
+    .where(
+      sql`${professorMatchQuery} @@ to_tsquery('english', ${formattedTerm})`,
+    )
+    .orderBy((t) => desc(t.rank))
+    .limit(5);
 
   if (courseResults.length === 0 && professorResults.length === 0) {
     return { type: "none", data: [] };
