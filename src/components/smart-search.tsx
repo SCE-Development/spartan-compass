@@ -37,7 +37,7 @@ export default function SmartSearch({ type }: { type: "full" | "half" }) {
           onChange={(e) => handleQueryChange(e)}
         />
         {result.length > 0 && (
-          <div className="absolute mt-2 w-full rounded-md border">
+          <div className="absolute mt-2 w-full rounded-md border bg-background">
             {result.map((course) => (
               <div
                 key={course.id}
