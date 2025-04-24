@@ -14,7 +14,6 @@ export default async function smartSearch(term: string): Promise<SearchResult> {
 
   const formattedTerm = trimmedTerm.replace(/\s+/g, " & ") + ":*";
 
-  // Search in coursesTable with ranking
   const courseMatchQuery = sql`(
     setweight(to_tsvector('english', ${coursesTable.subject}), 'A') ||
     setweight(to_tsvector('english', ${coursesTable.courseNumber}), 'A') || 
@@ -33,7 +32,6 @@ export default async function smartSearch(term: string): Promise<SearchResult> {
     .orderBy((t) => desc(t.rank))
     .limit(5);
 
-  // Search in professorsTable with ranking
   const professorMatchQuery = sql`(
     setweight(to_tsvector('english', ${professorsTable.name}), 'A') ||
     setweight(to_tsvector('english', ${professorsTable.department}), 'B')
@@ -55,7 +53,6 @@ export default async function smartSearch(term: string): Promise<SearchResult> {
     return { type: "none", data: [] };
   }
 
-  // Combine results into a unified structure
   return {
     type: "combined",
     data: {
