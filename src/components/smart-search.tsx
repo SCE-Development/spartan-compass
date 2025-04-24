@@ -1,63 +1,55 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { Search, SearchIcon } from "lucide-react";
-import { useCallback, useState } from "react";
+import { SearchIcon } from "lucide-react";
+import { ChangeEvent, useState } from "react";
 import smartSearch from "@/app/actions";
-import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { Course } from "@/lib/db/schema";
 
 export default function SmartSearch({ type }: { type: "full" | "half" }) {
-  const [query, setQuery] = useState("");
-  const pathname = usePathname();
+  const [result, setResult] = useState<Course[]>([]);
 
-  const handleSearch = useCallback(() => {
-    smartSearch(query);
-  }, [query]);
+  function handleQueryChange(e: ChangeEvent<HTMLInputElement>) {
+    return smartSearch(e.target.value).then((res) => {
+      console.log(res);
+      setResult(res);
+    });
+  }
+
+  function handleClick(courseId: number) {
+    window.location.href = "/courses/" + courseId;
+  }
+
   return (
-    <>
-      {type === "full" && (
-        <form
-          className="ml-auto flex-initial dark:border-white/30 border-black/30"
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSearch();
-          }}
-        >
-          <div className="relative">
-            <SearchIcon className="absolute left-2.5 top-0 bottom-0 m-auto h-4 w-4" />
-            <Input
-              type="search"
-              placeholder="Search for courses and professors..."
-              className="pl-8 w-[300px] md:w-[440px] "
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />{" "}
+    <div className="ml-auto flex-initial">
+      <div className="relative">
+        <SearchIcon className="absolute left-2.5 top-0 bottom-0 m-auto h-4 w-4" />
+        <Input
+          type="search"
+          placeholder="Search for courses and professors..."
+          className={cn(
+            "pl-8",
+            type === "full"
+              ? "w-[300px] md:w-[440px]"
+              : "w-[120px] md:w-[200px]",
+          )}
+          onChange={(e) => handleQueryChange(e)}
+        />
+        {result.length > 0 && (
+          <div className="absolute mt-2 w-full rounded-md border">
+            {result.map((course) => (
+              <div
+                key={course.id}
+                className=" p-2 cursor-pointer hover:bg-primary"
+                onClick={() => handleClick(course.id)}
+              >
+                <p>{`${course.subject} ${course.courseNumber} - ${course.title}`}</p>
+              </div>
+            ))}
           </div>
-        </form>
-      )}
-      {type === "half" && pathname !== "/" && (
-        <form
-          className="ml-auto flex-initial"
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSearch();
-          }}
-        >
-          <div className="relative">
-            <Search className="absolute left-2.5 top-0 bottom-0 m-auto h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search courses..."
-              className="pl-8 w-[120px] md:w-[200px]"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-          </div>
-        </form>
-      )}
-      {type === "half" && pathname === "/" && (
-        <span className="ml-auto flex-initial"></span>
-      )}
-    </>
+        )}
+      </div>
+    </div>
   );
 }

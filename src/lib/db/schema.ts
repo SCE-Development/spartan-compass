@@ -94,6 +94,7 @@ export const sessionTable = pgTable("session", {
 
 export type User = InferSelectModel<typeof userTable>;
 export type Session = InferSelectModel<typeof sessionTable>;
+export type Course = InferSelectModel<typeof coursesTable>;
 
 // interface UserInterface{
 // 	id: number;

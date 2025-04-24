@@ -13,12 +13,13 @@ import Link from "next/link";
 import { CircleUser, Compass } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import SmartSearch from "./smart-search";
 
 export function Header({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     async function checkSession() {
@@ -53,7 +54,8 @@ export function Header({ children }: { children: React.ReactNode }) {
           </Link>
         </nav>
         <div className="flex w-full items-center gap-4 md:ml-auto">
-          <SmartSearch type="half" />
+          {pathname !== "/" && <SmartSearch type="half" />}
+          {pathname === "/" && <span className="ml-auto flex-initial"></span>}
           {isLoggedIn ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
