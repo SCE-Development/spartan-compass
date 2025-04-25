@@ -28,6 +28,7 @@ const main = async () => {
     const courses = [
       {
         id: 1,
+        semester: "Fall 2025",
         title: "Calculus",
         subject: "MATH",
         courseNumber: 106,
@@ -35,6 +36,7 @@ const main = async () => {
       },
       {
         id: 2,
+        semester: "Fall 2025",
         title: "Biology",
         subject: "SCI",
         courseNumber: 105,
@@ -42,6 +44,7 @@ const main = async () => {
       },
       {
         id: 3,
+        semester: "Fall 2025",
         title: "World War II",
         subject: "HIST",
         courseNumber: 101,
@@ -49,6 +52,7 @@ const main = async () => {
       },
       {
         id: 4,
+        semester: "Fall 2025",
         title: "Algebra",
         subject: "MATH",
         courseNumber: 102,
@@ -56,6 +60,7 @@ const main = async () => {
       },
       {
         id: 5,
+        semester: "Fall 2025",
         title: "Chemistry",
         subject: "SCI",
         courseNumber: 113,
@@ -63,6 +68,7 @@ const main = async () => {
       },
       {
         id: 6,
+        semester: "Fall 2025",
         title: "World War I",
         subject: "HIST",
         courseNumber: 121,
@@ -70,6 +76,7 @@ const main = async () => {
       },
       {
         id: 7,
+        semester: "Fall 2025",
         title: "Advanced Calculus",
         subject: "MATH",
         courseNumber: 201,
@@ -77,6 +84,7 @@ const main = async () => {
       },
       {
         id: 8,
+        semester: "Fall 2025",
         title: "Advanced Biology",
         subject: "SCI",
         courseNumber: 241,
@@ -84,6 +92,7 @@ const main = async () => {
       },
       {
         id: 9,
+        semester: "Fall 2025",
         title: "The Civil War",
         subject: "HIST",
         courseNumber: 220,
@@ -91,6 +100,7 @@ const main = async () => {
       },
       {
         id: 10,
+        semester: "Fall 2025",
         title: "Introduction to Programming",
         subject: "COMPSCI",
         courseNumber: 101,
@@ -98,6 +108,7 @@ const main = async () => {
       },
       {
         id: 11,
+        semester: "Fall 2025",
         title: "Engineering Principles",
         subject: "ENG",
         courseNumber: 102,
