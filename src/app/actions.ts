@@ -29,8 +29,7 @@ export default async function smartSearch(term: string): Promise<SearchResult> {
     })
     .from(coursesTable)
     .where(sql`${courseMatchQuery} @@ to_tsquery('english', ${formattedTerm})`)
-    .orderBy((t) => desc(t.rank))
-    .limit(5);
+    .orderBy((t) => desc(t.rank));
 
   const professorMatchQuery = sql`(
     setweight(to_tsvector('english', ${professorsTable.name}), 'A') ||
@@ -46,8 +45,7 @@ export default async function smartSearch(term: string): Promise<SearchResult> {
     .where(
       sql`${professorMatchQuery} @@ to_tsquery('english', ${formattedTerm})`,
     )
-    .orderBy((t) => desc(t.rank))
-    .limit(5);
+    .orderBy((t) => desc(t.rank));
 
   if (courseResults.length === 0 && professorResults.length === 0) {
     return { type: "none", data: [] };
