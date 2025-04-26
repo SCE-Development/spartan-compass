@@ -38,8 +38,8 @@ export const reviewsRelations = relations(reviewsTable, ({ one }) => ({
 // - `name` and `department` are text columns that cannot be null.
 export const professorsTable = pgTable("professors", {
   id: serial("id").primaryKey(),
-  rmpId: text("rmp_id"),
-  rmpLegacyId: integer("rmp_legacy_id"),
+  rmpId: text("rmp_id").notNull(),
+  rmpLegacyId: integer("rmp_legacy_id").notNull(),
   name: text("name").notNull(),
   department: text("department").notNull(),
 });

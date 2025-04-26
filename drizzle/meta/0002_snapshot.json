@@ -1,5 +1,5 @@
 {
-  "id": "16389d3f-c4a4-4b3b-9fb9-44ff8a04b20d",
+  "id": "0593d76c-1790-4ad8-a8e3-ece81f00865e",
   "prevId": "e9e12574-57a7-4d05-97f5-387313759d8f",
   "version": "7",
   "dialect": "postgresql",
@@ -121,13 +121,13 @@
           "name": "rmp_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "rmp_legacy_id": {
           "name": "rmp_legacy_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "name": {
           "name": "name",

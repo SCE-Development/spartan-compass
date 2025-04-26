@@ -24,6 +24,8 @@ If you are going to do the tutorial in the wiki, finish the tutorial before proc
 5. `npm run db:migrate`
 6. `npm run db:seed`
 
+[//]: # (TODO: replace readme seed instructions)
+
 Run `npm run db:studio` to access the database at `http://local.drizzle.studio`
 
 > [!WARNING]

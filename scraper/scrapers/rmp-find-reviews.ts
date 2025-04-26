@@ -55,13 +55,15 @@ export type ProfessorRating = {
   comment: string;
 };
 
+export type ProfessorRatingEdge = {
+  cursor: string;
+  node: ProfessorRating;
+}
+
 export type ProfessorRatingsPage = {
   node: {
     ratings: {
-      edges: Array<{
-        cursor: string;
-        node: ProfessorRating;
-      }>;
+      edges: Array<ProfessorRatingEdge>;
       pageInfo: {
         endCursor: string;
         hasNextPage: boolean;

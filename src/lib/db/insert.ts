@@ -12,7 +12,6 @@ import {
   reviewsTable,
 } from "./schema";
 import { rmpFindAllProfessorReviews } from "../../../scraper/scrapers/rmp-find-reviews";
-import assert from "node:assert";
 
 export async function insertProfessors() {
   const existingProfessors = await db.select().from(professorsTable);
@@ -34,7 +33,7 @@ export async function insertProfessors() {
           department: department,
         })
         .returning();
-      // console.log("Added: ", newProfessor);
+      console.debug("Added: ", newProfessor);
     }
   }
 }
@@ -47,11 +46,13 @@ export async function insertReviews() {
   //   },
   //   limit: 10,
   // });
+  // TODO: figure out a way to insert just the reviews that don't already exist
   const professors = await db.select({
     id: professorsTable.id,
     rmpId: professorsTable.rmpId,
   }).from(professorsTable).limit(10);
 
+  // TODO: this can easily be done in parallel but would need to figure out something about rate limits
   for (const professor of professors) {
     console.log("Inserting reviews for professor:", professor.id);
     await insertProfessorReviews(professor);
@@ -60,17 +61,13 @@ export async function insertReviews() {
 
 export async function insertProfessorReviews(professor: {
   id: number;
-  rmpId: string | null;
+  rmpId: string;
 }) {
-  assert(
-    professor.rmpId !== null,
-    "Professor must have an RMP ID to scrape reviews",
-  );
   const reviews = await rmpFindAllProfessorReviews(professor.rmpId);
   for (const review of reviews) {
-    const classRegex = /([A-Z]{2,4})\s*(\d{1,3}[A-Z]*)/;
+    const classRegex = /([A-Z]{2,4})[-\s]*(\d{1,3}[A-Z]*)/;
 
-    const match = review.class.match(classRegex);
+    const match = review.class.toUpperCase().match(classRegex);
     if (!match) {
       console.error("RMP reviews: Couldn't parse class :", review.class);
       continue;
@@ -78,10 +75,6 @@ export async function insertProfessorReviews(professor: {
 
     const subject = match[1];
     const courseNumber = match[2];
-    // const course = await db.query.coursesTable.findFirst({
-    //   with: { id: true },
-    //   where: (course, { eq }) => eq(course.subject, subject) && eq(course.courseNumber, courseNumber),
-    // });
     const courses = await db.select({id: coursesTable.id}).from(coursesTable).where(
       and(
         eq(coursesTable.subject, subject),
@@ -196,24 +189,26 @@ export async function insertCourses() {
 
 const main = async () => {
   // First insert implementation
-  // try {
-  // reset everything
-  // await db.delete(reviewsTable);
-  // await db.delete(professorsCoursesTable);
-  // await db.delete(professorsTable);
-  // await db.delete(coursesTable);
-  // await db.execute(sql`ALTER SEQUENCE professors_id_seq RESTART WITH 1;`);
-  // await db.execute(sql`ALTER SEQUENCE courses_id_seq RESTART WITH 1;`);
-  //actual adding done here
-  console.log("Adding to database");
-  // await insertProfessors();
-  // await insertCourses();
-  await insertReviews();
-  console.log("Complete, ctrl + c to exit");
-  // } catch (error) {
-  //   console.error(error);
-  //   throw new Error("Error adding to database");
-  // }
+  try {
+    // reset everything
+    await db.delete(reviewsTable);
+    await db.delete(professorsCoursesTable);
+    await db.delete(professorsTable);
+    await db.delete(coursesTable);
+    await db.execute(sql`ALTER SEQUENCE professors_id_seq RESTART WITH 1;`);
+    await db.execute(sql`ALTER SEQUENCE courses_id_seq RESTART WITH 1;`);
+    //actual adding done here
+    console.log("Adding to database");
+    await insertProfessors();
+    await insertCourses();
+    await insertReviews();
+    console.log("Complete");
+    process.exit(0);
+  } catch (error) {
+    console.error(error);
+    console.error("Error adding to database");
+    process.exit(1);
+  }
 };
 
 main();
