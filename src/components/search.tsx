@@ -27,8 +27,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
   const semesters = useMemo(() => {
     return Array.from(
       new Set(
-        result
-        .map((course) => course.semester.replace('-', ' ').toUpperCase())
+        result.map((course) => course.semester.toUpperCase())
       ))
       .sort((a, b) => {
         const monthPriority: Record<string, number> = {
@@ -46,7 +45,9 @@ export default function Search({ result }: { result: CourseResult[] }) {
     return Array.from(
       new Set(
         result
-        .filter((course) => course.semester === selectedSemester.replace(' ', '-').toLowerCase())
+        .filter((course) => 
+          course.semester.toLowerCase() === selectedSemester.toLowerCase()
+        )
         .map((course) => course.subject)
       ));
   }, [result, selectedSemester]);
@@ -55,7 +56,10 @@ export default function Search({ result }: { result: CourseResult[] }) {
     return Array.from(
       new Set(
         result
-        .filter((course) => course.semester === selectedSemester.replace(' ', '-').toLowerCase() && (!selectedSubject || course.subject === selectedSubject))
+        .filter((course) => 
+          course.semester.toLowerCase() === selectedSemester.toLowerCase() && 
+          (!selectedSubject || course.subject === selectedSubject)
+        )
         .map((course) => course.courseNumber)
       )
     ).sort((a, b) => {
@@ -86,7 +90,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
     if (selectedSemester && selectedSubject && selectedCourseNumber) {
       const selectedCourse = result.find(
         (course) =>
-          course.semester === selectedSemester.replace(' ', '-').toLowerCase() &&
+          course.semester.toLowerCase() === selectedSemester.toLowerCase() &&
           course.subject === selectedSubject &&
           course.courseNumber === selectedCourseNumber
       );
