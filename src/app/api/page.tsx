@@ -1,5 +1,10 @@
 import { getCurrentSession } from "@/lib/db/session";
 import { redirect } from "next/navigation";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: "Spartan Compass | API",
+};
 
 async function Page() {
 	const { user } = await getCurrentSession();

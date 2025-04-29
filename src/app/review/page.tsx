@@ -1,8 +1,12 @@
 import ReviewInput from "@/components/review-input";
-
+import { Metadata } from "next";
 import { db } from "@/lib/db";
 import { coursesTable, professorsCoursesTable, professorsTable } from "@/lib/db/schema";
 import { asc, eq } from "drizzle-orm";
+
+export const metadata: Metadata = {
+  title: "Spartan Compass | Write a Review",
+};
 
 const getCourses = async () => {
     return db

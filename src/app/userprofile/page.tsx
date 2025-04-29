@@ -2,6 +2,12 @@ import React from 'react';
 import UserInfo from './userInfo';
 import { getCurrentSession } from '@/lib/db/session';
 import { redirect } from 'next/navigation';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Spartan Compass | User Profile",
+};
+
 export default async function UserProfile() {
   const { user } = await getCurrentSession();
   if (user === null) {
