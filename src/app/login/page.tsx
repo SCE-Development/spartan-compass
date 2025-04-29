@@ -8,6 +8,12 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import ErrorToast from "@/components/error-toast";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Spartan Compass | Login",
+};
+
 interface PageProps extends React.ComponentPropsWithoutRef<"div"> {
   searchParams?: {
     [key: string]: string | undefined;

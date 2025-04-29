@@ -4,6 +4,25 @@ import { db } from "@/lib/db"
 import { coursesTable, professorsCoursesTable, professorsTable } from "@/lib/db/schema"
 import { eq } from "drizzle-orm"
 import Link from "next/link"
+import { Metadata } from "next"
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const professorResult = await db
+    .select()
+    .from(professorsTable)
+    .where(eq(professorsTable.id, Number(params.id)))
+
+  if (professorResult.length > 0) {
+    const professor = professorResult[0];
+    return {
+      title: `Spartan Compass | ${professor.name}`,
+    };
+  }
+  
+  return {
+    title: 'Spartan Compass | Professor',
+  };
+}
 
 export default async function ProfessorPage({ params }: { params: { id: string } }) {
   const professorResult = await db

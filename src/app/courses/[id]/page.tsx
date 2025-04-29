@@ -8,6 +8,25 @@ import {
 } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import Link from "next/link";
+import { Metadata } from "next";
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const courseResult = await db
+    .select()
+    .from(coursesTable)
+    .where(eq(coursesTable.id, Number(params.id)));
+
+  if (courseResult.length > 0) {
+    const course = courseResult[0];
+    return {
+      title: `Spartan Compass | ${course.subject} ${course.courseNumber}`,
+    };
+  }
+  
+  return {
+    title: 'Spartan Compass | Course',
+  };
+}
 
 export default async function CoursePage({
   params,
