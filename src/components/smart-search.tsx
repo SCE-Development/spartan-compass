@@ -99,7 +99,7 @@ export default function SmartSearch({
           <div
             className={cn(
               "absolute mt-2 w-full rounded-md bg-background",
-              type === "page" ? "" : "border",
+              type === "page" ? "" : "border max-h-96 overflow-auto",
             )}
           >
             {type === "page" && <br />}
