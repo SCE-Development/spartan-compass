@@ -18,8 +18,7 @@ export default async function smartSearch(term: string): Promise<SearchResult> {
     setweight(to_tsvector('english', ${coursesTable.subject}), 'A') ||
     setweight(to_tsvector('english', ${coursesTable.courseNumber}), 'A') || 
     setweight(to_tsvector('english', ${coursesTable.title}), 'B') ||
-    setweight(to_tsvector('english', ${coursesTable.description}), 'C') ||
-    setweight(to_tsvector('english', ${coursesTable.semester}), 'D')
+    setweight(to_tsvector('english', ${coursesTable.semester}), 'C')
   )`;
   const courseResults = await db
     .select({
