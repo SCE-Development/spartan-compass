@@ -10,10 +10,10 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-  SelectSearch
+  SelectSearch,
+  SelectSeparator
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Form, FormContent, FormItem } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Calendar, BookOpen, Hash, Rocket, SearchIcon, Compass } from "lucide-react";
@@ -23,7 +23,6 @@ export default function Search({ result }: { result: CourseResult[] }) {
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedCourseNumber, setSelectedCourseNumber] = useState("");
   const [selectSearch, setSelectSearch] = useState(["", "", ""]);
-  const [inputSearch, setInputSearch] = useState("");
 
   const router = useRouter();
 
@@ -89,7 +88,6 @@ export default function Search({ result }: { result: CourseResult[] }) {
   }, [selectSearch]);
 
   const handleResetSelectSearch = useCallback((n: number) => {
-    //setSelectSearch(["", "", ""]);
     setSelectSearch(selectSearch.map((item, index) => index === n ? "" : item));
   }, [selectSearch]);
 
@@ -108,19 +106,6 @@ export default function Search({ result }: { result: CourseResult[] }) {
     }
   }, [selectedSemester, selectedSubject, selectedCourseNumber, result, router]);
 
-  const handleInputSearch = useCallback((e: React.FormEvent<HTMLInputElement>) => {
-    setInputSearch(e.currentTarget.value);
-  }, []);
-
-  const handleInputSubmit = useCallback(() => {
-    if (inputSearch) {
-      const selectedCourse = result.find((course) => course.title.toLowerCase().includes(inputSearch.toLowerCase()));
-      if (selectedCourse) {
-        router.push(`/courses/${selectedCourse.id}`);
-      }
-    }
-  }, [inputSearch, result, router]);
-
   return (
     <div className="flex flex-col items-center justify-center w-full h-[75vh]">
     <div className="mx-auto flex flex-col items-center justify-center">
@@ -136,6 +121,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
             <SelectGroup>
               <SelectLabel>Semesters</SelectLabel>
               <SelectSearch className="h-[36px] w-[11.4rem] md:w-[13.4rem]" onChange={(e) => handleSelectSearch(e, 0)} />
+              <SelectSeparator />
               {(!selectSearch[0]) ?
                 semesters.map((semester) => (
                   <SelectItem key={semester} value={semester} className="w-[11.4rem] md:w-[13.4rem]">
@@ -165,6 +151,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
             <SelectGroup className="relative">
               <SelectLabel>Subjects</SelectLabel>
               <SelectSearch className="h-[36px] w-[11.4rem] md:w-[13.4rem]" onChange={(e) => handleSelectSearch(e, 1)} />
+              <SelectSeparator />
               {(!selectSearch[1]) ? 
                 subjects.map((subject) => (
                   <SelectItem key={subject} value={subject} className="w-[11.4rem] md:w-[13.4rem]">
@@ -195,15 +182,16 @@ export default function Search({ result }: { result: CourseResult[] }) {
             <SelectGroup>
               <SelectLabel>Course Numbers</SelectLabel>
               <SelectSearch className="h-[36px] w-[11.4rem] md:w-[13.4rem]" onChange={(e) => handleSelectSearch(e, 2)} />
+              <SelectSeparator />
               {(!selectSearch[2]) ?
                 courseNumbers.map((number) => (
-                  <SelectItem key={number} value={number.toString()} className="w-[11.4rem] md:w-[13.4rem]">
+                  <SelectItem key={number} value={number} className="w-[11.4rem] md:w-[13.4rem]">
                     {number}
                   </SelectItem>
                 ))
               :
-                courseNumbers.filter((number) => number.toString().includes(selectSearch[2])).map((number) => (
-                  <SelectItem key={number} value={number.toString()} className="w-[11.4rem] md:w-[13.4rem]">
+                courseNumbers.filter((number) => number.includes(selectSearch[2])).map((number) => (
+                  <SelectItem key={number} value={number} className="w-[11.4rem] md:w-[13.4rem]">
                     {number}
                   </SelectItem>
                 ))
@@ -231,31 +219,12 @@ export default function Search({ result }: { result: CourseResult[] }) {
 
     <div className="mx-auto flex flex-col items-center justify-center">
       <div className="relative flex gap-x-4 gap-y-4 flex-col">
-        <Form className="w-[300px] md:w-[440px] ml-auto flex-initial dark:border-white/30 border-black/30">
+        <form className="ml-auto flex-initial dark:border-white/30 border-black/30">
           <div className="relative">
             <SearchIcon className="absolute left-2.5 top-0 bottom-0 m-auto h-4 w-4" />
-            <Input type="search" placeholder="Search for courses and professors..." className="pl-8  dark:border-white/30 border-black/30" onChange={handleInputSearch} onSubmit={handleInputSubmit} />
+            <Input type="search" placeholder="Search for courses and professors..." className="pl-8 w-[300px] md:w-[440px] dark:border-white/30 border-black/30" />
           </div>
-        </Form>
-        <FormContent hidden={!inputSearch} className="w-[300px] md:w-[440px] top-[3rem]">
-          {(!inputSearch) ?
-            <></>
-          :
-            (result.filter((course) => course.title.toLowerCase().includes(inputSearch.toLowerCase())).length <= 50) ?
-              result.filter((course) => course.title.toLowerCase().includes(inputSearch.toLowerCase())).map((course) => (
-                <FormItem key={course.title} className="h-[36px]" onClick={() => {setInputSearch(course.title); handleInputSubmit();}}>
-                  {course.title}
-                </FormItem>
-              ))
-            :
-              result.filter((course) => course.title.toLowerCase().includes(inputSearch.toLowerCase())).slice(0, 6).map((course) => (
-                <FormItem key={course.title} className="h-[36px]" onClick={() => {setInputSearch(course.title); handleInputSubmit();}}>
-                  {course.title}
-                </FormItem>
-              ))
-          }
-        </FormContent>
-        
+        </form>
       </div>
     </div>
     </div>
