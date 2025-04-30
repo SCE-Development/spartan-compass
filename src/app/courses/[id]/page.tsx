@@ -77,8 +77,14 @@ export default async function CoursePage({
                     </CardHeader>
                     <CardContent>
                       <div className="mt-2">
-                        {/* The actual rating is a placeholder, the professorsTable scheme has not been updated to have starRating as a field */}
-                        <StarRating rating={4.5} textColor="text-muted-foreground" />
+                        {result.professor.avgRating ? (
+                          <StarRating
+                            rating={result.professor.avgRating}
+                            textColor="text-muted-foreground"
+                          />
+                        ) : (
+                          <span className="text-sm italic text-muted-foreground">No rating</span>
+                        )}
                       </div>
                     </CardContent>
                   </Card>
