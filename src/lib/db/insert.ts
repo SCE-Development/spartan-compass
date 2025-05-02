@@ -13,26 +13,15 @@ function normalizeName(name: string): string {
     return name
     .toLowerCase()
     .replace(/\./g, '')
-    .replace(/\s+/g, ' ')
+    .replace(/\s+/g, '')
     .trim();
 }
 
 function isSameProfessor(courseProfessor: string, rmpProfessor: {firstName: string, lastName: string}): boolean {
-    const courseParts = normalizeName(courseProfessor).split(' ');
-    const rmpFullName = normalizeName(`${rmpProfessor.firstName} ${rmpProfessor.lastName}`);
-    const rmpParts = rmpFullName.split(' ');
-
-    if (rmpParts.length === 2) {
-        const courseFirst = courseParts[0];
-        const courseLast = courseParts[courseParts.length - 1];
-        const rmpFirst = rmpParts[0];
-        const rmpLast = rmpParts[1];
-
-        return courseFirst === rmpFirst && courseLast === rmpLast;
-    }
-    else {
-        return normalizeName(courseProfessor) === rmpFullName;
-    }
+   const course = normalizeName(courseProfessor);
+   const rmp = normalizeName (`${rmpProfessor.firstName}${rmpProfessor.lastName}`);
+   
+   return course.includes(rmp) || rmp.includes(course);
 }
    
 
@@ -70,8 +59,8 @@ export async function insertCourses() {
 
             //check if professor for course exists
             const existingProfessor = allProfessors.find((p) => isSameProfessor(professor, {
-                firstName: p.name.split(' ')[0],
-                lastName: p.name.split(' ').slice(-1)[0],
+               firstName: p.name,
+               lastName: "",
             }));
         
             //if professor does not exist for course don't add and continue
