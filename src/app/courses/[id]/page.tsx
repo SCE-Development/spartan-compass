@@ -56,10 +56,6 @@ export default async function CoursePage({
               <CardTitle className="text-4xl">{`${course.title} (${course.subject} ${course.courseNumber})`}</CardTitle>
               <p className="text-primary-foreground">{course.description}</p>
 
-              <div className="mt-2">
-                {/* The actual rating is a placeholder, the coursesTable scheme has not been updated to have starRating as a field */}
-                <StarRating rating={4.5} textColor="text-primary-foreground" />
-              </div>
             </CardHeader>
             <CardContent className="mt-4">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
