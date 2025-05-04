@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
       title: `Spartan Compass | ${professor.name}`,
     };
   }
-  
+
   return {
     title: 'Spartan Compass | Professor',
   };
@@ -45,8 +45,10 @@ export default async function ProfessorPage({ params }: { params: { id: string }
               <CardTitle className="text-4xl">{professor.name}</CardTitle>
               <p className="text-primary-foreground">{professor.department}</p>
               <div className="mt-2">
-                {/* The actual rating is a placeholder, the professorsTable scheme has not been updated to have starRating as a field */}
-                <StarRating rating={4.5} textColor="text-primary-foreground" />
+                {professor.avgRating === null ?
+                  <>No ratings yet</> :
+                  <StarRating rating={professor.avgRating} textColor="text-primary-foreground" />
+                }
               </div>
             </CardHeader>
             <CardContent className="mt-4">
@@ -63,12 +65,6 @@ export default async function ProfessorPage({ params }: { params: { id: string }
                             </CardTitle>
                           </Link>
                         </CardHeader>
-                        <CardContent>
-                          <div className="mt-2">
-                            {/* The actual rating is a placeholder, the professorsTable scheme has not been updated to have starRating as a field */}
-                            <StarRating rating={4.5} textColor="text-muted-foreground" />
-                          </div>
-                        </CardContent>
                       </Card>
                     ))}
                   </div>
