@@ -14,21 +14,16 @@ export default async function smartSearch(term: string): Promise<SearchResult> {
 
   const formattedTerm = trimmedTerm.replace(/\s+/g, " & ") + ":*";
 
-  const courseMatchQuery = sql`(
-    setweight(to_tsvector('english', ${coursesTable.subject}), 'A') ||
-    setweight(to_tsvector('english', ${coursesTable.courseNumber}), 'A') || 
-    setweight(to_tsvector('english', ${coursesTable.title}), 'B') ||
-    setweight(to_tsvector('english', ${coursesTable.semester}), 'C')
-  )`;
-  const courseResults = await db
+   const courseResults = await db
     .select({
       ...getTableColumns(coursesTable),
-      rank: sql`ts_rank(${courseMatchQuery}, to_tsquery('english', ${formattedTerm}))`,
-      rankCd: sql`ts_rank_cd(${courseMatchQuery}, to_tsquery('english', ${formattedTerm}))`,
+      rank: sql`ts_rank(${coursesTable.searchVector}, ${formattedTerm})`,
+      rankCd: sql`ts_rank_cd(${coursesTable.searchVector}, ${formattedTerm})`,
     })
     .from(coursesTable)
-    .where(sql`${courseMatchQuery} @@ to_tsquery('english', ${formattedTerm})`)
+    .where(sql`${coursesTable.searchVector} @@ ${formattedTerm}`)
     .orderBy((t) => desc(t.rank));
+
 
   const professorMatchQuery = sql`(
     setweight(to_tsvector('english', ${professorsTable.name}), 'A') ||
@@ -37,13 +32,12 @@ export default async function smartSearch(term: string): Promise<SearchResult> {
   const professorResults = await db
     .select({
       ...getTableColumns(professorsTable),
-      rank: sql`ts_rank(${professorMatchQuery}, to_tsquery('english', ${formattedTerm}))`,
-      rankCd: sql`ts_rank_cd(${professorMatchQuery}, to_tsquery('english', ${formattedTerm}))`,
+      rank: sql`ts_rank(${professorsTable.searchVector}, ${formattedTerm})`,
+      rankCd: sql`ts_rank_cd(${professorsTable.searchVector}, ${formattedTerm})`,
     })
     .from(professorsTable)
-    .where(
-      sql`${professorMatchQuery} @@ to_tsquery('english', ${formattedTerm})`,
-    )
+    .where(sql`${professorsTable.searchVector} @@ ${formattedTerm}`)
+
     .orderBy((t) => desc(t.rank));
 
   if (courseResults.length === 0 && professorResults.length === 0) {

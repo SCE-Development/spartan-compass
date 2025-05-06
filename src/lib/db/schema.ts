@@ -7,8 +7,16 @@ import {
   real,
   primaryKey,
   timestamp,
+  index,
 } from "drizzle-orm/pg-core";
-import { InferSelectModel, relations } from "drizzle-orm";
+import { InferSelectModel, relations, SQL, sql } from "drizzle-orm";
+import { customType } from 'drizzle-orm/pg-core'
+
+export const tsvector = customType<{ data: string; driverData: string }>({
+  dataType() {
+    return `tsvector`;
+  },
+});
 
 export const reviewsTable = pgTable("reviews", {
   id: serial("id").primaryKey(),
@@ -27,7 +35,21 @@ export const professorsTable = pgTable("professors", {
   name: text("name").notNull(),
   department: text("department").notNull(),
   avgRating: real("avg_rating"),
-});
+  searchVector: tsvector("search_vector")
+  .notNull()
+  .generatedAlwaysAs(
+    (): SQL =>
+      sql`setweight(to_tsvector('english', ${professorsTable.name}), 'A') ||
+          setweight(to_tsvector('english', ${professorsTable.department}), 'B')`
+  ),
+},  (table) => ({
+  indexes: [
+    index("professor_search_vector_idx").using(
+      "gin",
+      table.searchVector
+    ),
+  ],
+}));
 
 // Define the `courses` table with id, subject, courseNumber, and an optional description.
 // - `id` is a serial column and primary key.
@@ -40,7 +62,27 @@ export const coursesTable = pgTable("courses", {
   subject: text("subject").notNull(),
   courseNumber: text("course_number").notNull(),
   description: text("description"),
-});
+  searchVector: tsvector("search_vector")
+  .notNull()
+  .generatedAlwaysAs(
+    (): SQL =>
+      sql`setweight(to_tsvector('english', ${coursesTable.subject}), 'A') ||
+          setweight(to_tsvector('english', ${coursesTable.courseNumber}), 'A') ||
+          setweight(to_tsvector('english', ${coursesTable.title}), 'B') ||
+          setweight(to_tsvector('english', ${coursesTable.semester}), 'C')`
+  ),
+},
+  (table) => ({
+    indexes: [
+      index("course_search_vector_idx").using(
+        "gin",
+        table.searchVector
+      ),
+    ],
+  })
+);
+
+
 
 // Define a join table `professors_courses` to establish a many-to-many relationship
 // between `professors` and `courses` through `professorId` and `courseId`.
