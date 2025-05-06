@@ -1,0 +1,48 @@
+name: spartan-compass
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/app.Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: &db_url postgres://postgres:postgres@db:5432/postgres
+    env_file:
+      - ../.env
+    depends_on:
+      migrator:
+        condition: service_completed_successfully
+
+  migrator:
+    build:
+      context: ..
+      dockerfile: docker/migrator.Dockerfile
+    restart: on-failure:3
+    environment:
+      DATABASE_URL: *db_url
+    env_file:
+      - ../.env
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  data:
