@@ -9,6 +9,19 @@ import {
     reviewsTable,
   } from "./schema";
 
+function normalizeName(name: string): string {
+    return name
+    .toLowerCase()
+    .replace(/\./g, '')
+    .replace(/\s+/g, '')
+    .trim();
+}
+
+function isSameProfessor(courseProfessor: string, rmpProfessor: {firstName: string}): boolean {
+    const course = normalizeName(courseProfessor);
+    const rmp = normalizeName(rmpProfessor.firstName);
+    return course.includes(rmp) || rmp.includes(course);
+}
 
 export async function insertProfessors() {
     const existingProfessors = await db.select().from(professorsTable);
@@ -36,22 +49,23 @@ export async function insertCourses() {
     let added = 0;
     let alreadyExists = 0;
     let professorNotFound = 0;
+    const allProfessors = await db.select().from(professorsTable);
     for (const course of courses) {
         try {
             const semester = getSemester();
             const { title, subject, courseNumber, professor } = course;
 
             //check if professor for course exists
-            const existingProfessor = await db.select().from(professorsTable)
-                .where(eq(sql`LOWER(${professorsTable.name})`, professor.toLowerCase()))
-                .limit(1);
+            const existingProfessor = allProfessors.find((p) => isSameProfessor(professor, {
+                firstName: p.name
+            }));
             //if professor does not exist for course don't add and continue
-            if (existingProfessor.length === 0) {
+            if (!existingProfessor) {
                 console.error(`Professor ${professor} not found for ${subject}${courseNumber}`);
                 professorNotFound++;
                 continue;
             }
-            const professorId = existingProfessor[0].id;
+            const professorId = existingProfessor.id;
 
             //check if course already exists in the courses table
             const existingCourse = await db.select().from(coursesTable)
