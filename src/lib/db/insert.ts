@@ -17,9 +17,9 @@ function normalizeName(name: string): string {
     .trim();
 }
 
-function isSameProfessor(courseProfessor: string, rmpProfessor: {firstName: string, lastName: string}): boolean {
+function isSameProfessor(courseProfessor: string, rmpProfessor: {firstName: string}): boolean {
    const course = normalizeName(courseProfessor);
-   const rmp = normalizeName (`${rmpProfessor.firstName}${rmpProfessor.lastName}`);
+   const rmp = normalizeName(rmpProfessor.firstName);
    
    return course.includes(rmp) || rmp.includes(course);
 }
@@ -59,8 +59,7 @@ export async function insertCourses() {
 
             //check if professor for course exists
             const existingProfessor = allProfessors.find((p) => isSameProfessor(professor, {
-               firstName: p.name,
-               lastName: "",
+               firstName: p.name
             }));
         
             //if professor does not exist for course don't add and continue
