@@ -146,7 +146,8 @@ const main = async () => {
         console.log("Adding to database")
         await insertProfessors()
         await insertCourses()
-        console.log("Complete, ctrl + c to exit")
+        console.log("Completed adding to database")
+        process.exit(0);
     } catch (error) {
         console.error(error);
         throw new Error("Error adding to database");

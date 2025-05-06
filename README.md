@@ -36,3 +36,28 @@ Run `npm run db:studio` to access the database at `http://local.drizzle.studio`
 1. `npm install`
 
 Run `npm run dev` to start the dev server at `http://localhost:3000`
+
+## Running in Production (Docker)
+
+The [production compose file](docker/compose.prod.yml) consists of the following parts ran in this order:
+1. db - postgres container
+2. migrator - runs drizzle migrator and can be manually used to scrape data
+3. app - the actual app container that runs nextjs
+
+To start:
+```shell
+docker compose -f docker/compose.prod.yml up
+```
+
+To manually run the scraper once:
+```shell
+docker compose -f docker/compose.prod.yml run migrator bun run db:insert:bun
+```
+
+### Env Setup
+
+For reference, see [.env.example](.env.example)
+
+Production requires the following changes:
+- `DATABASE_URL` needs to be set to the postgres container instead of localhost 
+- `NEXT_PUBLIC_SITE_URL` needs to be set to `https://{domain}`
