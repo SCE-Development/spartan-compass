@@ -25,6 +25,8 @@ const getCourses = async () => {
 
 export type CourseResult = Awaited<ReturnType<typeof getCourses>>[number];
 
+export const dynamic = "force-dynamic"; // This page will always be re-rendered on the server
+
 export default async function Page() {
     const result = await getCourses();
     return (
