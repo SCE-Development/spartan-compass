@@ -1,9 +1,10 @@
 'use client'
-import {useState} from 'react';
+import { useState } from 'react';
 import { PencilIcon } from 'lucide-react';
 import { Button} from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { addBasePath } from "next/dist/client/add-base-path";
 interface UserInfoProps {
   user: string
 }
@@ -13,7 +14,7 @@ const UserInfo:React.FC<UserInfoProps> = ({user}) => {
   const [username, setUsername] = useState(user)
 
   const handleUpdateName = async () => {
-    const response = await fetch('/api/session/update', {
+    const response = await fetch(addBasePath('/api/session/update'), {
       method: 'PUT',
       body: JSON.stringify({name: newUserName}),
       headers: {

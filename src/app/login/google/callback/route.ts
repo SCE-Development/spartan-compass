@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { decodeIdToken } from "arctic";
 import type { OAuth2Tokens } from "arctic";
 import { createUser, getUserFromGoogleId } from "@/lib/db/user";
+import { addBasePath } from "next/dist/client/add-base-path";
 
 export async function GET(request: Request): Promise<Response> {
 	const url = new URL(request.url);
@@ -41,14 +42,14 @@ export async function GET(request: Request): Promise<Response> {
 
 	const googleUserId = claims.sub;
 	const username = claims.name;
-	
+
 	// Check if the email is SJSU email
 	const email = claims.email;
 	if (!email || !email.trim().endsWith("@sjsu.edu")) {
 		return new Response(null, {
 			status: 302,
 			headers: {
-				Location: '/login?error=invalid_email'
+				Location: addBasePath("/login?error=invalid_email"),
 			}
 		});
 	}
@@ -63,7 +64,7 @@ export async function GET(request: Request): Promise<Response> {
 		return new Response(null, {
 			status: 302,
 			headers: {
-				Location: "/"
+				Location: addBasePath("/"),
 			}
 		});
 	}
@@ -77,7 +78,7 @@ export async function GET(request: Request): Promise<Response> {
 	return new Response(null, {
 		status: 302,
 		headers: {
-			Location: "/"
+			Location: addBasePath("/"),
 		}
 	});
 }

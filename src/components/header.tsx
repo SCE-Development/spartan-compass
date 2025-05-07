@@ -15,6 +15,7 @@ import { ThemeToggle } from "./theme-toggle";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import SmartSearch from "./smart-search";
+import { addBasePath } from "next/dist/client/add-base-path";
 
 export function Header({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -23,7 +24,7 @@ export function Header({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     async function checkSession() {
-      const response = await fetch("/api/session/validate");
+      const response = await fetch(addBasePath("/api/session/validate"));
       const { session } = await response.json();
       setIsLoggedIn(!!session);
     }
@@ -31,7 +32,7 @@ export function Header({ children }: { children: React.ReactNode }) {
   }, []);
 
   async function handleLogout() {
-    await fetch("/api/session/logout", { method: "POST" }); // Logging out user
+    await fetch(addBasePath("/api/session/logout"), { method: "POST" }); // Logging out user
     setIsLoggedIn(false); // Update state to logged out
   }
 

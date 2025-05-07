@@ -9,6 +9,7 @@ import {
 import { Metadata } from "next";
 import ErrorToastLogin from "./ErrorToastLogin";
 import { Suspense } from "react";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Spartan Compass | Login",
@@ -30,7 +31,7 @@ export default function Page() {
             <CardContent>
               <div className="grid gap-6">
                 <div className="flex flex-col gap-4">
-                  <a href="/login/google">
+                  <Link href="/login/google">
                     <Button
                       variant="outline"
                       className="w-full flex flex-row gap-2"
@@ -47,7 +48,7 @@ export default function Page() {
                       </svg>
                       <p>Login with Google</p>
                     </Button>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </CardContent>
