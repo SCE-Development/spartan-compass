@@ -24,11 +24,6 @@ export default async function smartSearch(term: string): Promise<SearchResult> {
     .where(sql`${coursesTable.searchVector} @@ ${formattedTerm}`)
     .orderBy((t) => desc(t.rank));
 
-
-  const professorMatchQuery = sql`(
-    setweight(to_tsvector('english', ${professorsTable.name}), 'A') ||
-    setweight(to_tsvector('english', ${professorsTable.department}), 'B')
-  )`;
   const professorResults = await db
     .select({
       ...getTableColumns(professorsTable),

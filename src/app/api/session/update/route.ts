@@ -13,6 +13,7 @@ export async function PUT(req:NextRequest) {
     return NextResponse.json({ error: "Missing name or user session not found"}, {status: 400})
 
   } catch(error) {
+    console.error("Error updating user name:", error);
     return NextResponse.json({error: "Invalid request"}, {status: 500})
   }
 

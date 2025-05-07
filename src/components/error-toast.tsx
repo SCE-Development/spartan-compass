@@ -25,6 +25,7 @@ export default function ErrorToast({error, ...props}: CustomToastProps) {
       ...props
     })
   }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[error])
   return (
     <Toaster/>

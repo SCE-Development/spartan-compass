@@ -26,12 +26,19 @@ export async function GET(request: Request): Promise<Response> {
 	try {
 		tokens = await google.validateAuthorizationCode(code, codeVerifier);
 	} catch (e) {
+		console.error("Error validating authorization code:", e);
 		// Invalid code or client credentials
 		return new Response(null, {
 			status: 400
 		});
 	}
-	const claims = decodeIdToken(tokens.idToken());
+	interface Claims {
+		sub: string;
+		email: string;
+		name: string;
+	}
+	const claims = decodeIdToken(tokens.idToken()) as Claims;
+
 	const googleUserId = claims.sub;
 	const username = claims.name;
 	

@@ -1,5 +1,4 @@
 import { Google } from "arctic";
-import jwt from "jsonwebtoken";
 
 export const google = new Google(
 	process.env.GOOGLE_CLIENT_ID ?? "default_client_id",

@@ -31,7 +31,7 @@ const main = async () => {
         semester: "Fall 2025",
         title: "Calculus",
         subject: "MATH",
-        courseNumber: 106,
+        courseNumber: "106",
         description: "An introductory course to calculus",
       },
       {
@@ -39,7 +39,7 @@ const main = async () => {
         semester: "Fall 2025",
         title: "Biology",
         subject: "SCI",
-        courseNumber: 105,
+        courseNumber: "105",
         description: "An introductory course to biology",
       },
       {
@@ -47,7 +47,7 @@ const main = async () => {
         semester: "Fall 2025",
         title: "World War II",
         subject: "HIST",
-        courseNumber: 101,
+        courseNumber: "101",
         description: "A course about World War II",
       },
       {
@@ -55,7 +55,7 @@ const main = async () => {
         semester: "Fall 2025",
         title: "Algebra",
         subject: "MATH",
-        courseNumber: 102,
+        courseNumber: "102",
         description: "An introductory course to algebra",
       },
       {
@@ -63,7 +63,7 @@ const main = async () => {
         semester: "Fall 2025",
         title: "Chemistry",
         subject: "SCI",
-        courseNumber: 113,
+        courseNumber: "113",
         description: "An introductory course to chemistry",
       },
       {
@@ -71,7 +71,7 @@ const main = async () => {
         semester: "Fall 2025",
         title: "World War I",
         subject: "HIST",
-        courseNumber: 121,
+        courseNumber: "121",
         description: "A course about World War I",
       },
       {
@@ -79,7 +79,7 @@ const main = async () => {
         semester: "Fall 2025",
         title: "Advanced Calculus",
         subject: "MATH",
-        courseNumber: 201,
+        courseNumber: "201",
         description: "An advanced course in calculus",
       },
       {
@@ -87,7 +87,7 @@ const main = async () => {
         semester: "Fall 2025",
         title: "Advanced Biology",
         subject: "SCI",
-        courseNumber: 241,
+        courseNumber: "241",
         description: "An advanced course in biology",
       },
       {
@@ -95,7 +95,7 @@ const main = async () => {
         semester: "Fall 2025",
         title: "The Civil War",
         subject: "HIST",
-        courseNumber: 220,
+        courseNumber: "220",
         description: "A course about The Civil War",
       },
       {
@@ -103,7 +103,7 @@ const main = async () => {
         semester: "Fall 2025",
         title: "Introduction to Programming",
         subject: "COMPSCI",
-        courseNumber: 101,
+        courseNumber: "101",
         description: "An introductory course to programming",
       },
       {
@@ -111,7 +111,7 @@ const main = async () => {
         semester: "Fall 2025",
         title: "Engineering Principles",
         subject: "ENG",
-        courseNumber: 102,
+        courseNumber: "102",
         description: "Fundamentals of engineering",
       },
     ];
