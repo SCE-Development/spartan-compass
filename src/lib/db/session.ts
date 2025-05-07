@@ -7,6 +7,7 @@ import { cookies } from "next/headers";
 
 import type { User, Session } from "./schema.js";
 import { cache } from "react";
+import {addBasePath} from "next/dist/client/add-base-path";
 
 export function generateSessionToken(): string {
 	const bytes = new Uint8Array(20);
@@ -63,7 +64,7 @@ export function setSessionTokenCookie(token: string, expiresAt: Date): void {
 		sameSite: "lax",
 		secure: process.env.NODE_ENV === "production",
 		expires: expiresAt,
-		path: "/"
+		path: addBasePath("/")
 	});
 }
 
@@ -73,7 +74,7 @@ export function deleteSessionTokenCookie(): void {
 		sameSite: "lax",
 		secure: process.env.NODE_ENV === "production",
 		maxAge: 0,
-		path: "/"
+		path: addBasePath("/")
 	});
 }
 
