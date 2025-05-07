@@ -1,3 +1,4 @@
+import { addBasePath } from "next/dist/client/add-base-path";
 import { NextResponse } from "next/server";
 
 import type { NextRequest } from "next/server";
@@ -10,7 +11,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 			// Only extend cookie expiration on GET requests since we can be sure
 			// a new session wasn't set when handling the request.
 			response.cookies.set("session", token, {
-				path: "/",
+				path: addBasePath("/"),
 				maxAge: 60 * 60 * 24 * 30,
 				sameSite: "lax",
 				httpOnly: true,
