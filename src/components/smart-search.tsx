@@ -6,6 +6,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import smartSearch from "@/app/actions";
 import { cn } from "@/lib/utils";
 import { Course, Professor } from "@/lib/db/schema";
+import Link from "next/link";
 
 // Updated SearchResult type to handle combined results
 export type SearchResult =
@@ -46,11 +47,6 @@ export default function SmartSearch({
     return smartSearch(term).then((res) => {
       setResult(res);
     });
-  }
-
-  function handleClick(id: number, resultType: "course" | "professor") {
-    const basePath = resultType === "course" ? "/courses/" : "/professors/";
-    window.location.href = basePath + id;
   }
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -121,15 +117,13 @@ export default function SmartSearch({
                       Courses
                     </h3>
                     {result.data.courses.map((course) => (
-                      <div
-                        key={course.id}
-                        className="p-2 cursor-pointer hover:bg-primary"
-                        onClick={() => handleClick(course.id, "course")}
-                      >
-                        <p
-                          className={cn(type === "half" ? "text-sm" : "")}
-                        >{`${course.subject} ${course.courseNumber} - ${course.title}`}</p>
-                      </div>
+                      <Link key={course.id} href={"/courses/" + course.id}>
+                        <div className="p-2 hover:bg-primary">
+                          <p className={cn(type === "half" ? "text-sm" : "")}>
+                            {`${course.subject} ${course.courseNumber} - ${course.title}`}
+                          </p>
+                        </div>
+                      </Link>
                     ))}
                   </div>
                 )}
@@ -149,15 +143,13 @@ export default function SmartSearch({
                       Professors
                     </h3>
                     {result.data.professors.map((professor) => (
-                      <div
-                        key={professor.id}
-                        className="p-2 cursor-pointer hover:bg-primary"
-                        onClick={() => handleClick(professor.id, "professor")}
-                      >
-                        <p
-                          className={cn(type === "half" ? "text-sm" : "")}
-                        >{`${professor.name} - ${professor.department}`}</p>
-                      </div>
+                      <Link key={professor.id} href={`/professors/${professor.id}`}>
+                        <div className="p-2 hover:bg-primary">
+                          <p className={cn(type === "half" ? "text-sm" : "")}>
+                            {`${professor.name} - ${professor.department}`}
+                          </p>
+                        </div>
+                      </Link>
                     ))}
                   </div>
                 )}
