@@ -2,11 +2,12 @@
 
 import { Input } from "@/components/ui/input";
 import { SearchIcon } from "lucide-react";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import smartSearch from "@/app/actions";
 import { cn } from "@/lib/utils";
 import { Course, Professor } from "@/lib/db/schema";
 import Link from "next/link";
+import { addBasePath } from "next/dist/client/add-base-path";
 
 // Updated SearchResult type to handle combined results
 export type SearchResult =
@@ -34,30 +35,15 @@ export default function SmartSearch({
   const [result, setResult] = useState<SearchResult | null>(null);
   const [inputValue, setInputValue] = useState<string>("");
 
+  async function updateResult(value: string) {
+    const result = await smartSearch(value);
+    setResult(result);
+  }
+
   function handleQueryChange(e: ChangeEvent<HTMLInputElement>) {
     const value = e.target.value;
     setInputValue(value);
-    return smartSearch(value).then((res) => {
-      setResult(res);
-    });
-  }
-
-  function handlePageQueryChange(term: string) {
-    setInputValue(term);
-    return smartSearch(term).then((res) => {
-      setResult(res);
-    });
-  }
-
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const form = e.target as HTMLFormElement;
-    const input = form.querySelector(
-      "input[type='search']",
-    ) as HTMLInputElement;
-    if (input) {
-      window.location.href = "/search?query=" + input.value;
-    }
+    updateResult(value);
   }
 
   useEffect(() => {
@@ -65,18 +51,20 @@ export default function SmartSearch({
     const urlParams = new URLSearchParams(window.location.search);
     const query = urlParams.get("query");
     if (query) {
-      setInputValue(query);
-      handlePageQueryChange(query);
+      updateResult(query);
     }
   }, []);
 
   return (
     <div className="ml-auto flex-initial">
       <div className="relative">
-        <form onSubmit={(e) => handleSubmit(e)}>
+        {/*TODO: change to Form component when upgrading to next 15*/}
+        {/*https://nextjs.org/docs/app/api-reference/components/form*/}
+        <form method="get" action={addBasePath("/search")}>
           <SearchIcon className="absolute left-2.5 top-0 bottom-0 m-auto h-4 w-4" />
           <Input
             type="search"
+            name="query"
             value={inputValue}
             placeholder={`Search ${type === "full" || type === "page" ? "for courses and professors" : ""}`}
             className={cn(
@@ -87,7 +75,7 @@ export default function SmartSearch({
                   ? "w-[300px] md:w-[440px]"
                   : "w-[120px] md:w-[200px]",
             )}
-            onChange={(e) => handleQueryChange(e)}
+            onChange={handleQueryChange}
           />
         </form>
 
