@@ -4,12 +4,11 @@
     "ignoreUnknown": false,
     "ignore": [
       "**/pnpm-lock.yaml",
-      "drizzle/migrations",
+      "drizzle/**",
       "lib/editor/react-renderer.tsx",
       "node_modules",
       ".next",
-      "public",
-      ".vercel"
+      "public"
     ]
   },
   "vcs": {
