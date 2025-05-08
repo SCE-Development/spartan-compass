@@ -1,16 +1,18 @@
-import { StarRating } from "@/components/star-rating";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { db } from "@/lib/db";
+import { StarRating } from '@/components/star-rating';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { db } from '@/lib/db';
 import {
   coursesTable,
   professorsCoursesTable,
   professorsTable,
-} from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
-import Link from "next/link";
-import { Metadata } from "next";
+} from '@/lib/db/schema';
+import { eq } from 'drizzle-orm';
+import Link from 'next/link';
+import { Metadata } from 'next';
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: { params: { id: string } }): Promise<Metadata> {
   const courseResult = await db
     .select()
     .from(coursesTable)
@@ -22,7 +24,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
       title: `Spartan Compass | ${course.subject} ${course.courseNumber}`,
     };
   }
-  
+
   return {
     title: 'Spartan Compass | Course',
   };
@@ -44,8 +46,10 @@ export default async function CoursePage({
     })
     .from(professorsCoursesTable)
     .where(eq(professorsCoursesTable.courseId, Number(params.id)))
-    .innerJoin(professorsTable, eq(professorsCoursesTable.professorId, professorsTable.id));
-
+    .innerJoin(
+      professorsTable,
+      eq(professorsCoursesTable.professorId, professorsTable.id),
+    );
 
   return (
     <div className="container mx-auto p-4">
@@ -55,7 +59,6 @@ export default async function CoursePage({
             <CardHeader className="bg-primary text-primary-foreground">
               <CardTitle className="text-4xl">{`${course.title} (${course.subject} ${course.courseNumber})`}</CardTitle>
               <p className="text-primary-foreground">{course.description}</p>
-
             </CardHeader>
             <CardContent className="mt-4">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -79,7 +82,9 @@ export default async function CoursePage({
                             textColor="text-muted-foreground"
                           />
                         ) : (
-                          <span className="text-sm italic text-muted-foreground">No rating</span>
+                          <span className="text-sm italic text-muted-foreground">
+                            No rating
+                          </span>
                         )}
                       </div>
                     </CardContent>

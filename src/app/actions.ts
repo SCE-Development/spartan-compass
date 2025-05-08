@@ -1,20 +1,20 @@
-"use server";
+'use server';
 
-import { sql, desc, getTableColumns } from "drizzle-orm";
-import { db } from "@/lib/db";
-import { coursesTable, professorsTable } from "@/lib/db/schema";
-import { SearchResult } from "@/components/smart-search";
+import { sql, desc, getTableColumns } from 'drizzle-orm';
+import { db } from '@/lib/db';
+import { coursesTable, professorsTable } from '@/lib/db/schema';
+import { SearchResult } from '@/components/smart-search';
 
 export default async function smartSearch(term: string): Promise<SearchResult> {
   const trimmedTerm = term.trim();
 
   if (trimmedTerm.length < 3) {
-    return { type: "empty", data: [] };
+    return { type: 'empty', data: [] };
   }
 
-  const formattedTerm = trimmedTerm.replace(/\s+/g, " & ") + ":*";
+  const formattedTerm = trimmedTerm.replace(/\s+/g, ' & ') + ':*';
 
-   const courseResults = await db
+  const courseResults = await db
     .select({
       ...getTableColumns(coursesTable),
       rank: sql`ts_rank(${coursesTable.searchVector}, ${formattedTerm})`,
@@ -36,11 +36,11 @@ export default async function smartSearch(term: string): Promise<SearchResult> {
     .orderBy((t) => desc(t.rank));
 
   if (courseResults.length === 0 && professorResults.length === 0) {
-    return { type: "none", data: [] };
+    return { type: 'none', data: [] };
   }
 
   return {
-    type: "combined",
+    type: 'combined',
     data: {
       courses: courseResults,
       professors: professorResults,
