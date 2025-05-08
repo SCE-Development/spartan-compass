@@ -46,7 +46,7 @@ The [production compose file](docker/compose.prod.yml) consists of the following
 
 To start:
 ```shell
-docker compose up docker/compose.prod.yml
+docker compose -f docker/compose.prod.yml up
 ```
 
 To manually run the scraper once:
@@ -60,4 +60,4 @@ For reference, see [.env.example](.env.example)
 
 Production requires the following changes:
 - `DATABASE_URL` needs to be set to the postgres container instead of localhost 
-- `ORIGIN` needs to be set to `https://{domain}`
+- `NEXT_PUBLIC_SITE_URL` needs to be set to `https://{domain}`
