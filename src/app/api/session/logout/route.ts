@@ -1,5 +1,9 @@
-import { NextResponse } from "next/server";
-import { deleteSessionTokenCookie, getCurrentSession, invalidateSession } from "@/lib/db/session";
+import { NextResponse } from 'next/server';
+import {
+  deleteSessionTokenCookie,
+  getCurrentSession,
+  invalidateSession,
+} from '@/lib/db/session';
 
 export async function POST() {
   const { session } = await getCurrentSession();

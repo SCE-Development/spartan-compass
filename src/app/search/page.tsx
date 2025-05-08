@@ -1,4 +1,4 @@
-import SmartSearch from "@/components/smart-search";
+import SmartSearch from '@/components/smart-search';
 
 export default function Page() {
   return (

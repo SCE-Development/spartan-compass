@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { Star, StarHalf } from "lucide-react";
+import { Star, StarHalf } from 'lucide-react';
 
 interface StarRatingProps {
   rating: number;
@@ -19,7 +19,7 @@ export function StarRating({ rating, textColor }: StarRatingProps) {
       {hasHalfStar && (
         <StarHalf className="w-5 h-5 fill-yellow-400 text-yellow-400" />
       )}
-      <span className={"ml-2 text-sm " + textColor}>
+      <span className={'ml-2 text-sm ' + textColor}>
         {rating.toFixed(1)} / 5
       </span>
     </div>

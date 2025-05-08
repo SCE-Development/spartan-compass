@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState, useMemo, useCallback } from "react";
-import { CourseResult } from "@/app/page";
+import { useState, useMemo, useCallback } from 'react';
+import { CourseResult } from '@/app/page';
 import {
   Select,
   SelectContent,
@@ -11,22 +11,22 @@ import {
   SelectTrigger,
   SelectValue,
   SelectSearch,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-import { Calendar, BookOpen, Hash, Rocket, Compass } from "lucide-react";
-import SmartSearch from "./smart-search";
+} from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
+import { Calendar, BookOpen, Hash, Rocket, Compass } from 'lucide-react';
+import SmartSearch from './smart-search';
 
 export default function Search({ result }: { result: CourseResult[] }) {
-  const [selectedSemester, setSelectedSemester] = useState("");
-  const [selectedSubject, setSelectedSubject] = useState("");
-  const [selectedCourseNumber, setSelectedCourseNumber] = useState("");
+  const [selectedSemester, setSelectedSemester] = useState('');
+  const [selectedSubject, setSelectedSubject] = useState('');
+  const [selectedCourseNumber, setSelectedCourseNumber] = useState('');
   const router = useRouter();
 
   const semesters = useMemo(() => {
     return Array.from(
       new Set(
-        result.map((course) => course.semester.replace("-", " ").toUpperCase()),
+        result.map((course) => course.semester.replace('-', ' ').toUpperCase()),
       ),
     )
       .sort((a, b) => {
@@ -36,9 +36,9 @@ export default function Search({ result }: { result: CourseResult[] }) {
           FALL: 2,
           WINTER: 3,
         };
-        return monthPriority[a.split(" ")[0]] - monthPriority[b.split(" ")[0]];
+        return monthPriority[a.split(' ')[0]] - monthPriority[b.split(' ')[0]];
       })
-      .sort((a, b) => a.split(" ")[1].localeCompare(b.split(" ")[1]));
+      .sort((a, b) => a.split(' ')[1].localeCompare(b.split(' ')[1]));
   }, [result]);
 
   const subjects = useMemo(() => {
@@ -48,7 +48,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
           .filter(
             (course) =>
               course.semester ===
-              selectedSemester.replace(" ", "-").toLowerCase(),
+              selectedSemester.replace(' ', '-').toLowerCase(),
           )
           .map((course) => course.subject),
       ),
@@ -62,7 +62,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
           .filter(
             (course) =>
               course.semester ===
-                selectedSemester.replace(" ", "-").toLowerCase() &&
+                selectedSemester.replace(' ', '-').toLowerCase() &&
               (!selectedSubject || course.subject === selectedSubject),
           )
           .map((course) => course.courseNumber),
@@ -81,13 +81,13 @@ export default function Search({ result }: { result: CourseResult[] }) {
 
   const handleSemesterChange = useCallback((value: string) => {
     setSelectedSemester(value);
-    setSelectedSubject("");
-    setSelectedCourseNumber("");
+    setSelectedSubject('');
+    setSelectedCourseNumber('');
   }, []);
 
   const handleSubjectChange = useCallback((value: string) => {
     setSelectedSubject(value);
-    setSelectedCourseNumber("");
+    setSelectedCourseNumber('');
   }, []);
 
   const handleSubmit = useCallback(() => {
@@ -96,7 +96,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
       const selectedCourse = result.find(
         (course) =>
           course.semester ===
-            selectedSemester.replace(" ", "-").toLowerCase() &&
+            selectedSemester.replace(' ', '-').toLowerCase() &&
           course.subject === selectedSubject &&
           course.courseNumber === selectedCourseNumber,
       );
