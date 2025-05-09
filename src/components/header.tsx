@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   DropdownMenu,
@@ -7,15 +7,15 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuItem,
-} from "./ui/dropdown-menu";
-import { Button } from "./ui/button";
-import Link from "next/link";
-import { CircleUser, Compass } from "lucide-react";
-import { ThemeToggle } from "./theme-toggle";
-import { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import SmartSearch from "./smart-search";
-import { addBasePath } from "next/dist/client/add-base-path";
+} from './ui/dropdown-menu';
+import { Button } from './ui/button';
+import Link from 'next/link';
+import { CircleUser, Compass } from 'lucide-react';
+import { ThemeToggle } from './theme-toggle';
+import { useEffect, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import SmartSearch from './smart-search';
+import { addBasePath } from 'next/dist/client/add-base-path';
 
 export function Header({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -24,7 +24,7 @@ export function Header({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     async function checkSession() {
-      const response = await fetch(addBasePath("/api/session/validate"));
+      const response = await fetch(addBasePath('/api/session/validate'));
       const { session } = await response.json();
       setIsLoggedIn(!!session);
     }
@@ -32,12 +32,12 @@ export function Header({ children }: { children: React.ReactNode }) {
   }, []);
 
   async function handleLogout() {
-    await fetch(addBasePath("/api/session/logout"), { method: "POST" }); // Logging out user
+    await fetch(addBasePath('/api/session/logout'), { method: 'POST' }); // Logging out user
     setIsLoggedIn(false); // Update state to logged out
   }
 
   async function handleSignIn() {
-    router.push("/login"); // Redirecting to login page
+    router.push('/login'); // Redirecting to login page
   }
 
   return (
@@ -55,10 +55,10 @@ export function Header({ children }: { children: React.ReactNode }) {
           </Link>
         </nav>
         <div className="flex w-full items-center gap-4 md:ml-auto">
-          {pathname !== "/" && pathname !== "/search" && (
+          {pathname !== '/' && pathname !== '/search' && (
             <SmartSearch type="half" />
           )}
-          {(pathname === "/" || pathname === "/search") && (
+          {(pathname === '/' || pathname === '/search') && (
             <span className="ml-auto flex-initial"></span>
           )}
           {isLoggedIn ? (
@@ -76,7 +76,7 @@ export function Header({ children }: { children: React.ReactNode }) {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => router.push("/userprofile")}>
+                <DropdownMenuItem onClick={() => router.push('/userprofile')}>
                   Settings
                 </DropdownMenuItem>
                 <DropdownMenuItem>Support</DropdownMenuItem>

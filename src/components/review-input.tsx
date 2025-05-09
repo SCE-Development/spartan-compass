@@ -1,32 +1,32 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { Star } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from 'react';
+import { Star } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { CourseResult } from "@/app/review/page";
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { CourseResult } from '@/app/review/page';
 
 export default function Search({ result }: { result: CourseResult[] }) {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
-  const [review, setReview] = useState("");
-  const [selectedProfessor, setSelectedProfessor] = useState("");
-  const [selectedCourse, setSelectedCourse] = useState("");
+  const [review, setReview] = useState('');
+  const [selectedProfessor, setSelectedProfessor] = useState('');
+  const [selectedCourse, setSelectedCourse] = useState('');
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [filteredCourses, setFilteredCourses] = useState<any[]>([]);
   const professors = result.map((item) => ({
@@ -44,7 +44,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
       const courses = result
         .filter((item) => item.professorId === Number(selectedProfessor))
         .map((item) => ({
-          displayName: item.courseSubject + " " + item.courseNumber,
+          displayName: item.courseSubject + ' ' + item.courseNumber,
           id: item.courseId,
         }));
       setFilteredCourses(courses);
@@ -78,10 +78,10 @@ export default function Search({ result }: { result: CourseResult[] }) {
                 <SelectContent>
                   {uniqueProfessors.map((professor) => (
                     <SelectItem
-                      value={String(professor?.id) || ""}
-                      key={professor?.id || ""}
+                      value={String(professor?.id) || ''}
+                      key={professor?.id || ''}
                     >
-                      {professor?.name || ""}
+                      {professor?.name || ''}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -100,7 +100,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
                 <SelectContent>
                   {filteredCourses.map((course) => (
                     <SelectItem
-                      value={String(course?.id) || ""}
+                      value={String(course?.id) || ''}
                       key={course.id}
                     >
                       {course.displayName}
@@ -119,8 +119,8 @@ export default function Search({ result }: { result: CourseResult[] }) {
                   key={star}
                   className={`w-6 h-6 cursor-pointer transition-colors ${
                     star <= (hover || rating)
-                      ? "fill-yellow-400 text-yellow-400"
-                      : "text-gray-300"
+                      ? 'fill-yellow-400 text-yellow-400'
+                      : 'text-gray-300'
                   }`}
                   onClick={() => setRating(star)}
                   onMouseEnter={() => setHover(star)}

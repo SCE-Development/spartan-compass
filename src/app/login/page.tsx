@@ -1,18 +1,18 @@
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Metadata } from "next";
-import ErrorToastLogin from "./ErrorToastLogin";
-import { Suspense } from "react";
-import Link from "next/link";
+} from '@/components/ui/card';
+import { Metadata } from 'next';
+import ErrorToastLogin from './ErrorToastLogin';
+import { Suspense } from 'react';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: "Spartan Compass | Login",
+  title: 'Spartan Compass | Login',
 };
 
 export default function Page() {

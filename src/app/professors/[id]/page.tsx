@@ -1,16 +1,22 @@
-import { StarRating } from "@/components/star-rating"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { db } from "@/lib/db"
-import { coursesTable, professorsCoursesTable, professorsTable } from "@/lib/db/schema"
-import { eq } from "drizzle-orm"
-import Link from "next/link"
-import { Metadata } from "next"
+import { StarRating } from '@/components/star-rating';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { db } from '@/lib/db';
+import {
+  coursesTable,
+  professorsCoursesTable,
+  professorsTable,
+} from '@/lib/db/schema';
+import { eq } from 'drizzle-orm';
+import Link from 'next/link';
+import { Metadata } from 'next';
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: { params: { id: string } }): Promise<Metadata> {
   const professorResult = await db
     .select()
     .from(professorsTable)
-    .where(eq(professorsTable.id, Number(params.id)))
+    .where(eq(professorsTable.id, Number(params.id)));
 
   if (professorResult.length > 0) {
     const professor = professorResult[0];
@@ -24,17 +30,22 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   };
 }
 
-export default async function ProfessorPage({ params }: { params: { id: string } }) {
+export default async function ProfessorPage({
+  params,
+}: { params: { id: string } }) {
   const professorResult = await db
     .select()
     .from(professorsTable)
-    .where(eq(professorsTable.id, Number(params.id)))
+    .where(eq(professorsTable.id, Number(params.id)));
 
   const courseResult = await db
     .select()
     .from(professorsCoursesTable)
     .where(eq(professorsCoursesTable.professorId, Number(params.id)))
-    .innerJoin(coursesTable, eq(professorsCoursesTable.courseId, coursesTable.id));
+    .innerJoin(
+      coursesTable,
+      eq(professorsCoursesTable.courseId, coursesTable.id),
+    );
 
   return (
     <div className="container mx-auto p-4">
@@ -45,10 +56,14 @@ export default async function ProfessorPage({ params }: { params: { id: string }
               <CardTitle className="text-4xl">{professor.name}</CardTitle>
               <p className="text-primary-foreground">{professor.department}</p>
               <div className="mt-2">
-                {professor.avgRating === null ?
-                  <>No ratings yet</> :
-                  <StarRating rating={professor.avgRating} textColor="text-primary-foreground" />
-                }
+                {professor.avgRating === null ? (
+                  <>No ratings yet</>
+                ) : (
+                  <StarRating
+                    rating={professor.avgRating}
+                    textColor="text-primary-foreground"
+                  />
+                )}
               </div>
             </CardHeader>
             <CardContent className="mt-4">
@@ -61,7 +76,9 @@ export default async function ProfessorPage({ params }: { params: { id: string }
                         <CardHeader>
                           <Link href={`/courses/${result.courses.id}`}>
                             <CardTitle className="text-lg font-semibold hover:text-primary hover:underline">
-                              {result.courses.subject} {result.courses.courseNumber}: {result.courses.title}
+                              {result.courses.subject}{' '}
+                              {result.courses.courseNumber}:{' '}
+                              {result.courses.title}
                             </CardTitle>
                           </Link>
                         </CardHeader>
@@ -79,6 +96,5 @@ export default async function ProfessorPage({ params }: { params: { id: string }
         ))}
       </div>
     </div>
-  )
+  );
 }
-
