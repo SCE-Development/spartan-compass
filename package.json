@@ -19,7 +19,8 @@
     "db:insert": "tsx ./src/lib/db/insert.ts",
     "db:insert:bun": "bun ./src/lib/db/insert.ts",
     "scraper:test": "tsx ./scraper/test.ts",
-    "scraper:test:bun": "bun ./scraper/test.ts"
+    "scraper:test:bun": "bun ./scraper/test.ts",
+    "preinstall": "npx only-allow bun"
   },
   "dependencies": {
     "arctic": "^2.3.4",
