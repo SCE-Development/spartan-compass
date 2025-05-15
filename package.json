@@ -23,9 +23,11 @@
     "preinstall": "npx only-allow bun"
   },
   "dependencies": {
+    "@radix-ui/react-popover": "^1.1.13",
     "arctic": "^2.3.4",
     "axios": "^1.9.0",
     "cheerio": "^1.0.0",
+    "cmdk": "^1.1.1",
     "dotenv": "^16.5.0",
     "drizzle-kit": "^0.31.1",
     "drizzle-orm": "^0.43.1",
