@@ -10,9 +10,10 @@ import { eq } from 'drizzle-orm';
 import Link from 'next/link';
 import { Metadata } from 'next';
 
-export async function generateMetadata({
-  params,
-}: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata(props: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const params = await props.params;
   const courseResult = await db
     .select()
     .from(coursesTable)
