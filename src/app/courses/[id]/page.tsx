@@ -30,11 +30,14 @@ export async function generateMetadata({
   };
 }
 
+interface RouteContext {
+  params: Promise<{ id: string }>;
+}
+
 export default async function CoursePage({
-  params,
-}: {
-  params: { id: string };
-}) {
+  params: paramsPromise,
+}: RouteContext) {
+  const params = await paramsPromise;
   const courseResult = await db
     .select()
     .from(coursesTable)

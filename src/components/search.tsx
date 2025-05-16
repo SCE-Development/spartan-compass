@@ -1,16 +1,18 @@
 'use client';
 
 import { useState, useMemo, useCallback } from 'react';
+import { cn } from '@/lib/utils';
 import { CourseResult } from '@/app/page';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
   SelectLabel,
+  SelectSeparator,
   SelectTrigger,
   SelectValue,
-  SelectSearch,
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
@@ -105,6 +107,17 @@ export default function Search({ result }: { result: CourseResult[] }) {
       }
     }
   }, [selectedSemester, selectedSubject, selectedCourseNumber, result, router]);
+
+  const SelectSearch = ({ className }: { className?: string }) => (
+    <>
+      <Input
+        type="search"
+        placeholder="Search..."
+        className={cn('px-8', className)}
+      />
+      <SelectSeparator />
+    </>
+  );
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-[75vh]">
