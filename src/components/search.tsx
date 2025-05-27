@@ -1,19 +1,8 @@
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { CourseResult } from '@/app/page';
-import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectSeparator,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import {
   Command,
   CommandEmpty,
@@ -95,16 +84,13 @@ export default function Search({ result }: { result: CourseResult[] }) {
     });
   }, [result, selectedSemester, selectedSubject]);
 
-  // const handleSemesterChange = useCallback((value: string) => {
-  //   setSelectedSemester(value);
-  //   setSelectedSubject('');
-  //   setSelectedCourseNumber('');
-  // }, []);
-
-  // const handleSubjectChange = useCallback((value: string) => {
-  //   setSelectedSubject(value);
-  //   setSelectedCourseNumber('');
-  // }, []);
+  // Use for query params, TODO: add query param search and get
+  // useEffect(() => {
+  //   router.replace(`?quickSearch=${selectedSemester.replace(' ', '')}+${selectedSubject}+${selectedCourseNumber}`);
+  //   setSelectedSemester(selectedSemester);
+  //   setSelectedSubject(selectedSubject);
+  //   setSelectedCourseNumber(selectedCourseNumber);
+  // })
 
   const handleSubmit = useCallback(() => {
     // to handle our search, we'll redirect to the course page with the corresponding id
@@ -122,93 +108,10 @@ export default function Search({ result }: { result: CourseResult[] }) {
     }
   }, [selectedSemester, selectedSubject, selectedCourseNumber, result, router]);
 
-  const SelectSearch = ({ className }: { className?: string }) => (
-    <>
-      <Input
-        type="search"
-        placeholder="Search..."
-        className={cn('px-8', className)}
-      />
-      <SelectSeparator />
-    </>
-  );
-
   return (
     <div className="flex flex-col items-center justify-center w-full h-[75vh]">
       <div className="mx-auto flex flex-col items-center justify-center">
         <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-4 flex-col md:flex-row">
-          {/* <Select onValueChange={handleSemesterChange}>
-            <SelectTrigger className="w-48 md:w-56 dark:border-white/30 border-black/30 text-start">
-              <Calendar className="mr-2 h-4 w-4 rotate-0 scale-100 transition-all" />
-              <SelectValue placeholder="Select a semester" />
-            </SelectTrigger>
-            <SelectContent className="w-48 md:w-56">
-              <SelectGroup>
-                <SelectLabel>Semesters</SelectLabel>
-                
-                {semesters.map((semester) => (
-                  <SelectItem
-                    key={semester}
-                    value={semester}
-                    className="w-[11.4rem] md:w-[13.4rem]"
-                  >
-                    {semester}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select> */}
-
-          {/* <Select
-            onValueChange={handleSubjectChange}
-            disabled={!selectedSemester}
-          >
-            <SelectTrigger className="w-48 md:w-56 dark:border-white/30 border-black/30 text-start">
-              <BookOpen className="mr-2 h-4 w-4 rotate-0 scale-100 transition-all" />
-              <SelectValue placeholder="Select a subject" />
-            </SelectTrigger>
-            <SelectContent className="w-48 md:w-56">
-              <SelectGroup>
-                <SelectLabel>Subjects</SelectLabel>
-                
-                {subjects.map((subject) => (
-                  <SelectItem
-                    key={subject}
-                    value={subject}
-                    className="w-[11.4rem] md:w-[13.4rem]"
-                  >
-                    {subject}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select> */}
-
-          {/* <Select
-            onValueChange={setSelectedCourseNumber}
-            disabled={!selectedSemester || !selectedSubject}
-            value={selectedCourseNumber}
-          >
-            <SelectTrigger className="w-48 md:w-56 dark:border-white/30 border-black/30 text-start">
-              <Hash className="mr-2 h-4 w-4 rotate-0 scale-100 transition-all" />
-              <SelectValue placeholder="Select a course number" />
-            </SelectTrigger>
-            <SelectContent className="w-48 md:w-56">
-              <SelectGroup>
-                <SelectLabel>Course Numbers</SelectLabel>
-                <SelectSearch className="h-[36px] w-[11.4rem] md:w-[13.4rem]" />
-                {courseNumbers.map((number) => (
-                  <SelectItem
-                    key={number}
-                    value={number.toString()}
-                    className="w-[11.4rem] md:w-[13.4rem]"
-                  >
-                    {number}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select> */}
 
           <Popover open={open[0]} onOpenChange={(openthis) => setOpen([openthis, open[1], open[2]])}>
             <PopoverTrigger asChild>
@@ -216,16 +119,23 @@ export default function Search({ result }: { result: CourseResult[] }) {
                 variant="outline"
                 role="combobox"
                 aria-expanded={open[0]}
-                className="w-[200px] justify-between"
+                className="relative w-[200px] justify-start"
               >
-                <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <div className='flex-grow overflow-hidden text-left'>{selectedSemester ? selectedSemester : "Select semester"}</div>
+                <ChevronDown
+                  className={cn(
+                    "h-4 w-4 shrink-0 opacity-50",
+                    selectedSemester ? "rotate-0 md:rotate-270" : "rotate-90 md:rotate-0",
+                  )}
+                />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-[200px] p-0">
               <Command>
-                <CommandInput placeholder="Search course number..." />
+                <CommandInput placeholder="Search semester..." />
                 <CommandList>
-                  <CommandEmpty>No course numbers found.</CommandEmpty>
+                  <CommandEmpty>No semesters found.</CommandEmpty>
                   <CommandGroup>
                     {semesters.map((semester) => (
                       <CommandItem
@@ -238,7 +148,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
                       >
                         <Check
                           className={cn(
-                            "mr-2 h-4 w-4",
+                            "ml-2 h-4 w-4",
                             selectedSemester === semester ? "opacity-100" : "opacity-0"
                           )}
                         />
@@ -251,20 +161,27 @@ export default function Search({ result }: { result: CourseResult[] }) {
             </PopoverContent>
           </Popover>
 
-          <Popover open={open[1]} onOpenChange={(openthis) => setOpen([open[0], openthis, open[2]])}>
+          <Popover open={open[1]} onOpenChange={(openthis) => (selectedSemester) ? setOpen([open[0], openthis, open[2]]) : setOpen([open[0], false, open[2]])}>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 role="combobox"
                 aria-expanded={open[1]}
-                className="w-[200px] justify-between"
+                className="relative w-[200px] justify-start"
               >
-                <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                <BookOpen className="h-4 w-4 text-muted-foreground" />
+                <div className='flex-grow overflow-hidden text-left'>{selectedSubject ? selectedSubject : "Select subject"}</div>
+                <ChevronDown
+                  className={cn(
+                    "h-4 w-4 shrink-0 opacity-50",
+                    !selectedSemester ? "rotate-180 md:rotate-90" : selectedSubject ? "rotate-0 md:rotate-270" : "rotate-90 md:rotate-0",
+                  )}
+                />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-[200px] p-0">
               <Command>
-                <CommandInput placeholder="Search course number..." />
+                <CommandInput placeholder="Search subject..." />
                 <CommandList>
                   <CommandEmpty>No subjects found.</CommandEmpty>
                   <CommandGroup>
@@ -279,7 +196,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
                       >
                         <Check
                           className={cn(
-                            "mr-2 h-4 w-4",
+                            "ml-2 h-4 w-4",
                             selectedSubject === subject ? "opacity-100" : "opacity-0"
                           )}
                         />
@@ -292,15 +209,23 @@ export default function Search({ result }: { result: CourseResult[] }) {
             </PopoverContent>
           </Popover>
 
-          <Popover open={open[2]} onOpenChange={(openthis) => setOpen([open[0], open[1], openthis])}>
+          <Popover open={open[2]} onOpenChange={(openthis) => (selectedSubject) ? setOpen([open[0], open[1], openthis]) : setOpen([open[0], open[1], false])}>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 role="combobox"
                 aria-expanded={open[2]}
-                className="w-[200px] justify-between"
+                className="relative w-[200px] justify-start"
               >
-                <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                <Hash className="h-4 w-4 text-muted-foreground" />
+                
+                <div className='flex-grow overflow-hidden text-left'>{selectedCourseNumber ? selectedCourseNumber : "Select course number"}</div>
+                <ChevronDown
+                  className={cn(
+                    "h-4 w-4 shrink-0 opacity-50",
+                    !selectedSubject ? "rotate-180 md:rotate-90" : selectedCourseNumber ? "rotate-0 md:rotate-270" : "rotate-90 md:rotate-0",
+                  )}
+                />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-[200px] p-0">
@@ -320,7 +245,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
                       >
                         <Check
                           className={cn(
-                            "mr-2 h-4 w-4",
+                            "ml-2 h-4 w-4",
                             selectedCourseNumber === number ? "opacity-100" : "opacity-0"
                           )}
                         />
