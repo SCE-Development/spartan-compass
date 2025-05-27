@@ -10,9 +10,10 @@ import { eq } from 'drizzle-orm';
 import Link from 'next/link';
 import { Metadata } from 'next';
 
-export async function generateMetadata({
-  params,
-}: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata(props: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const params = await props.params;
   const courseResult = await db
     .select()
     .from(coursesTable)
@@ -30,11 +31,14 @@ export async function generateMetadata({
   };
 }
 
+interface RouteContext {
+  params: Promise<{ id: string }>;
+}
+
 export default async function CoursePage({
-  params,
-}: {
-  params: { id: string };
-}) {
+  params: paramsPromise,
+}: RouteContext) {
+  const params = await paramsPromise;
   const courseResult = await db
     .select()
     .from(coursesTable)

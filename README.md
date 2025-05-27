@@ -58,7 +58,7 @@ docker compose -f docker/compose.prod.yml up
 To manually run the scraper once:
 
 ```shell
-docker compose -f docker/compose.prod.yml run migrator bun run db:insert:bun
+docker compose -f docker/compose.prod.yml run migrator bun run db:insert
 ```
 
 ### Env Setup

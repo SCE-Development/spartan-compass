@@ -6,9 +6,10 @@ import { eq } from 'drizzle-orm';
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
-  const courseId = Number(params.id);
+  const { id } = await params;
+  const courseId = Number(id);
 
   try {
     const courses = await db

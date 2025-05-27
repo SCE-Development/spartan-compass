@@ -12,14 +12,14 @@ export async function GET(): Promise<Response> {
     'email',
   ]);
 
-  cookies().set('google_oauth_state', state, {
+  (await cookies()).set('google_oauth_state', state, {
     path: addBasePath('/'),
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     maxAge: 60 * 10, // 10 minutes
     sameSite: 'lax',
   });
-  cookies().set('google_code_verifier', codeVerifier, {
+  (await cookies()).set('google_code_verifier', codeVerifier, {
     path: addBasePath('/'),
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
