@@ -1,9 +1,10 @@
 # syntax=docker.io/docker/dockerfile:1
 
-FROM oven/bun:1-alpine AS base
+FROM oven/bun:1-alpine AS basebun
+FROM node:24-alpine AS base
 
 # Install dependencies only when needed
-FROM base AS deps
+FROM basebun AS deps
 WORKDIR /app
 
 # Install dependencies (including dev dependencies) for building
@@ -21,7 +22,7 @@ COPY .. .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN bun run build
+RUN npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
@@ -49,4 +50,4 @@ EXPOSE $PORT
 # https://nextjs.org/docs/pages/api-reference/config/next-config-js/output
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["bun", "./server.js"]
+CMD ["node", "./server.js"]
