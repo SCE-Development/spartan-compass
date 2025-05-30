@@ -119,7 +119,8 @@ export default function Search({ result }: { result: CourseResult[] }) {
                 variant="outline"
                 role="combobox"
                 aria-expanded={open[0]}
-                className="relative w-[200px] justify-start"
+                disabled={false}
+                className="relative w-[200px] justify-start disabled:cursor-not-allowed"
               >
                 <Calendar className="h-4 w-4 text-muted-foreground" />
                 <div className='flex-grow overflow-hidden text-left'>{selectedSemester ? selectedSemester : "Select semester"}</div>
@@ -144,6 +145,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
                         onSelect={(currentValue) => {
                           setSelectedSemester(currentValue === selectedSemester ? "" : currentValue)
                           setOpen([false, open[1], open[2]])
+                          setSelectedSubject('')
                         }}
                       >
                         <Check
@@ -161,13 +163,14 @@ export default function Search({ result }: { result: CourseResult[] }) {
             </PopoverContent>
           </Popover>
 
-          <Popover open={open[1]} onOpenChange={(openthis) => (selectedSemester) ? setOpen([open[0], openthis, open[2]]) : setOpen([open[0], false, open[2]])}>
+          <Popover open={open[1]} onOpenChange={(openthis) => setOpen([open[0], openthis, open[2]])}>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 role="combobox"
                 aria-expanded={open[1]}
-                className="relative w-[200px] justify-start"
+                disabled={!selectedSemester}
+                className="relative w-[200px] justify-start disabled:cursor-not-allowed"
               >
                 <BookOpen className="h-4 w-4 text-muted-foreground" />
                 <div className='flex-grow overflow-hidden text-left'>{selectedSubject ? selectedSubject : "Select subject"}</div>
@@ -192,6 +195,7 @@ export default function Search({ result }: { result: CourseResult[] }) {
                         onSelect={(currentValue) => {
                           setSelectedSubject(currentValue === selectedSubject ? "" : currentValue)
                           setOpen([open[0], false, open[2]])
+                          setSelectedCourseNumber('')
                         }}
                       >
                         <Check
@@ -209,16 +213,16 @@ export default function Search({ result }: { result: CourseResult[] }) {
             </PopoverContent>
           </Popover>
 
-          <Popover open={open[2]} onOpenChange={(openthis) => (selectedSubject) ? setOpen([open[0], open[1], openthis]) : setOpen([open[0], open[1], false])}>
+          <Popover open={open[2]} onOpenChange={(openthis) => setOpen([open[0], open[1], openthis])}>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 role="combobox"
                 aria-expanded={open[2]}
-                className="relative w-[200px] justify-start"
+                disabled={!selectedSubject}
+                className="relative w-[200px] justify-start disabled:cursor-not-allowed"
               >
                 <Hash className="h-4 w-4 text-muted-foreground" />
-                
                 <div className='flex-grow overflow-hidden text-left'>{selectedCourseNumber ? selectedCourseNumber : "Select course number"}</div>
                 <ChevronDown
                   className={cn(
