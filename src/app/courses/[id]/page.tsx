@@ -87,7 +87,7 @@ export default async function CoursePage({
                           />
                         ) : (
                           <span className="text-sm italic text-muted-foreground">
-                            No rating
+                            No ratings yet
                           </span>
                         )}
                       </div>

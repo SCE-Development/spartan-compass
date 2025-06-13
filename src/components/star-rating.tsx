@@ -20,7 +20,7 @@ export function StarRating({ rating, textColor }: StarRatingProps) {
         <StarHalf className="w-5 h-5 fill-yellow-400 text-yellow-400" />
       )}
       <span className={'ml-2 text-sm ' + textColor}>
-        {rating.toFixed(1)} / 5
+        {rating.toFixed(1)} / 5.0
       </span>
     </div>
   );

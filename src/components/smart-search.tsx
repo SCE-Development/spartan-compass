@@ -89,7 +89,7 @@ export default function SmartSearch({
             {type === 'page' && <br />}
 
             {result.type === 'combined' && (
-              <>
+              <div className='p-1'>
                 {result.data.courses.length > 0 && (
                   <div>
                     <h3
@@ -105,8 +105,8 @@ export default function SmartSearch({
                       Courses
                     </h3>
                     {result.data.courses.map((course) => (
-                      <Link key={course.id} href={'/courses/' + course.id}>
-                        <div className="p-2 hover:bg-primary">
+                      <Link key={course.id} href={`/courses/${course.id}`}>
+                        <div className="hover:bg-accent rounded-sm px-2 py-1.5">
                           <p className={cn(type === 'half' ? 'text-sm' : '')}>
                             {`${course.subject} ${course.courseNumber} - ${course.title}`}
                           </p>
@@ -131,11 +131,8 @@ export default function SmartSearch({
                       Professors
                     </h3>
                     {result.data.professors.map((professor) => (
-                      <Link
-                        key={professor.id}
-                        href={`/professors/${professor.id}`}
-                      >
-                        <div className="p-2 hover:bg-primary">
+                      <Link key={professor.id} href={`/professors/${professor.id}`}>
+                        <div className="hover:bg-accent rounded-sm px-2 py-1.5">
                           <p className={cn(type === 'half' ? 'text-sm' : '')}>
                             {`${professor.name} - ${professor.department}`}
                           </p>
@@ -144,7 +141,7 @@ export default function SmartSearch({
                     ))}
                   </div>
                 )}
-              </>
+              </div>
             )}
             {result.type === 'none' && (
               <div className="p-2 text-center text-sm text-muted-foreground">
