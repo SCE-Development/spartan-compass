@@ -16,9 +16,9 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:drop": "drizzle-kit drop --config drizzle.config.ts",
-    "db:seed": "bun ./src/lib/db/seed.ts",
-    "db:insert": "bun ./src/lib/db/insert.ts",
-    "scraper:test": "bun ./scraper/test.ts",
+    "db:seed": "tsx ./src/lib/db/seed.ts",
+    "db:insert": "tsx ./src/lib/db/insert.ts",
+    "scraper:test": "tsx ./scraper/test.ts",
     "preinstall": "npx only-allow bun"
   },
   "dependencies": {
@@ -28,7 +28,8 @@
     "dotenv": "^16.5.0",
     "drizzle-kit": "^0.31.1",
     "drizzle-orm": "^0.43.1",
-    "postgres": "^3.4.5"
+    "postgres": "^3.4.5",
+    "tsx": "^4.20.3"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
