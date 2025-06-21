@@ -1,3 +1,4 @@
+version: '3.7'
 name: spartan-compass
 
 networks:
@@ -7,9 +8,7 @@ networks:
 
 services:
   compass-app:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile
+    image: ghcr.io/sce-development/spartan-compass:latest
     restart: unless-stopped
     environment:
       DATABASE_URL: postgres://postgres:postgres@compass-db:5432/postgres
