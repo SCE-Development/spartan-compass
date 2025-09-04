@@ -89,7 +89,7 @@ export default function SmartSearch({
             {type === 'page' && <br />}
 
             {result.type === 'combined' && (
-              <div className='p-1'>
+              <div className="p-1">
                 {result.data.courses.length > 0 && (
                   <div>
                     <h3
@@ -131,7 +131,10 @@ export default function SmartSearch({
                       Professors
                     </h3>
                     {result.data.professors.map((professor) => (
-                      <Link key={professor.id} href={`/professors/${professor.id}`}>
+                      <Link
+                        key={professor.id}
+                        href={`/professors/${professor.id}`}
+                      >
                         <div className="hover:bg-accent rounded-sm px-2 py-1.5">
                           <p className={cn(type === 'half' ? 'text-sm' : '')}>
                             {`${professor.name} - ${professor.department}`}
