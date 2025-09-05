@@ -16,7 +16,7 @@ WORKDIR /app
 
 # Install production dependencies for db and scraper
 COPY package.json bun.lock ./
-RUN bun install --production --frozen-lockfile
+RUN bun install --production
 
 # Rebuild the source code only when needed
 FROM base AS builder
