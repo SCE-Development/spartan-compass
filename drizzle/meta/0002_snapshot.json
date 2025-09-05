@@ -1,6 +1,6 @@
 {
-  "id": "288ea541-9796-4a52-8000-4658387831e3",
-  "prevId": "e9df0b00-d626-433e-8949-f6d02578eb1e",
+  "id": "9e668695-9c6f-4b8c-9ac8-90095b3d6107",
+  "prevId": "e9e12574-57a7-4d05-97f5-387313759d8f",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -12,6 +12,12 @@
           "name": "id",
           "type": "serial",
           "primaryKey": true,
+          "notNull": true
+        },
+        "semester": {
+          "name": "semester",
+          "type": "text",
+          "primaryKey": false,
           "notNull": true
         },
         "title": {
@@ -28,7 +34,7 @@
         },
         "course_number": {
           "name": "course_number",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -122,6 +128,12 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "avg_rating": {
+          "name": "avg_rating",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},

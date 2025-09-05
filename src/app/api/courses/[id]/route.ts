@@ -1,14 +1,15 @@
 // app/api/courses/[id]/route.ts
-import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
-import { coursesTable } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { NextResponse } from 'next/server';
+import { db } from '@/lib/db';
+import { coursesTable } from '@/lib/db/schema';
+import { eq } from 'drizzle-orm';
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> },
 ) {
-  const courseId = Number(params.id);
+  const { id } = await params;
+  const courseId = Number(id);
 
   try {
     const courses = await db
@@ -23,7 +24,7 @@ export async function GET(
       .where(eq(coursesTable.id, courseId));
 
     if (courses.length === 0) {
-      return NextResponse.json({ error: "Course not found" }, { status: 404 });
+      return NextResponse.json({ error: 'Course not found' }, { status: 404 });
     }
 
     // Ensure courseNumber is always a string
@@ -36,6 +37,9 @@ export async function GET(
     return NextResponse.json(formattedCourse);
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 }

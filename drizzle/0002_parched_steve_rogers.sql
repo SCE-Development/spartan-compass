@@ -1,0 +1,1 @@
+ALTER TABLE "professors" ADD COLUMN "avg_rating" real;

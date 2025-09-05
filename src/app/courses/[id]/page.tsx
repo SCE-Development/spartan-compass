@@ -6,17 +6,40 @@ import {
   coursesTable,
   professorsCoursesTable,
   professorsTable,
-} from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
-import Link from "next/link";
+} from '@/lib/db/schema';
+import { eq } from 'drizzle-orm';
+import Link from 'next/link';
+import { Metadata } from 'next';
+
+export async function generateMetadata(props: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const params = await props.params;
+  const courseResult = await db
+    .select()
+    .from(coursesTable)
+    .where(eq(coursesTable.id, Number(params.id)));
+
+  if (courseResult.length > 0) {
+    const course = courseResult[0];
+    return {
+      title: `Spartan Compass | ${course.subject} ${course.courseNumber}`,
+    };
+  }
+
+  return {
+    title: 'Spartan Compass | Course',
+  };
+}
+
+interface RouteContext {
+  params: Promise<{ id: string }>;
+}
 
 export default async function CoursePage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const courseId = Number(params.id);
-  const professorId = 1;
+  params: paramsPromise,
+}: RouteContext) {
+  const params = await paramsPromise;
   const courseResult = await db
     .select()
     .from(coursesTable)
@@ -28,8 +51,10 @@ export default async function CoursePage({
     })
     .from(professorsCoursesTable)
     .where(eq(professorsCoursesTable.courseId, Number(params.id)))
-    .innerJoin(professorsTable, eq(professorsCoursesTable.professorId, professorsTable.id));
-
+    .innerJoin(
+      professorsTable,
+      eq(professorsCoursesTable.professorId, professorsTable.id),
+    );
 
   return (
     <div className="container mx-auto p-4">
@@ -39,11 +64,6 @@ export default async function CoursePage({
             <CardHeader className="bg-primary text-primary-foreground">
               <CardTitle className="text-4xl">{`${course.title} (${course.subject} ${course.courseNumber})`}</CardTitle>
               <p className="text-primary-foreground">{course.description}</p>
-
-              <div className="mt-2">
-                {/* The actual rating is a placeholder, the coursesTable scheme has not been updated to have starRating as a field */}
-                <StarRating rating={4.5} textColor="text-primary-foreground" />
-              </div>
             </CardHeader>
             <CardContent className="mt-4">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -61,8 +81,16 @@ export default async function CoursePage({
                     </CardHeader>
                     <CardContent>
                       <div className="mt-2">
-                        {/* The actual rating is a placeholder, the professorsTable scheme has not been updated to have starRating as a field */}
-                        <StarRating rating={4.5} textColor="text-muted-foreground" />
+                        {result.professor.avgRating ? (
+                          <StarRating
+                            rating={result.professor.avgRating}
+                            textColor="text-muted-foreground"
+                          />
+                        ) : (
+                          <span className="text-sm italic text-muted-foreground">
+                            No ratings yet
+                          </span>
+                        )}
                       </div>
                     </CardContent>
                   </Card>
