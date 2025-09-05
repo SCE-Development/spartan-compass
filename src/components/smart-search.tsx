@@ -9,12 +9,11 @@ import {
   CommandEmpty,
   CommandSeparator,
 } from '@/components/ui/command';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import smartSearch from '@/app/actions';
 import { cn } from '@/lib/utils';
 import { Course, Professor } from '@/lib/db/schema';
 import Link from 'next/link';
-import { addBasePath } from 'next/dist/client/add-base-path';
 
 // Updated SearchResult type to handle combined results
 export type SearchResult =
@@ -49,7 +48,6 @@ export default function SmartSearch({
 
   function handleInputChange(value: string) {
     setInputValue(value);
-    updateResult(value);
   }
 
   useEffect(() => {
@@ -60,6 +58,14 @@ export default function SmartSearch({
       updateResult(query);
     }
   }, []);
+
+  useEffect(() => {
+    const getData = setTimeout(() => {
+      updateResult(inputValue);
+      console.log('Fetching data...');
+    }, 300);
+    return () => clearTimeout(getData);
+  }, [inputValue]);
 
   return (
     <div className="ml-auto flex-initial">
@@ -83,7 +89,7 @@ export default function SmartSearch({
           <CommandList
             className={cn(
               'absolute w-full rounded-md bg-background border',
-              type === 'half' ? 'mt-12' : "mt-[40px]"
+              type === 'half' ? 'mt-12' : 'mt-[40px]',
             )}
           >
             {result && result.type === 'combined' && (
