@@ -1,11 +1,19 @@
-import ReviewInput from "@/components/review-input";
+import ReviewInput from '@/components/review-input';
+import { Metadata } from 'next';
+import { db } from '@/lib/db';
+import {
+  coursesTable,
+  professorsCoursesTable,
+  professorsTable,
+} from '@/lib/db/schema';
+import { asc, eq } from 'drizzle-orm';
 
-import { db } from "@/lib/db";
-import { coursesTable, professorsCoursesTable, professorsTable } from "@/lib/db/schema";
-import { asc, eq } from "drizzle-orm";
+export const metadata: Metadata = {
+  title: 'Spartan Compass | Write a Review',
+};
 
 const getCourses = async () => {
-    return db
+  return db
     .select({
       courseNumber: coursesTable.courseNumber,
       courseSubject: coursesTable.subject,
@@ -14,19 +22,27 @@ const getCourses = async () => {
       professorId: professorsTable.id,
     })
     .from(professorsCoursesTable)
-    .innerJoin(coursesTable, eq(professorsCoursesTable.courseId, coursesTable.id))
-    .innerJoin(professorsTable, eq(professorsCoursesTable.professorId, professorsTable.id))
-    .orderBy(asc(professorsCoursesTable.professorId))
+    .innerJoin(
+      coursesTable,
+      eq(professorsCoursesTable.courseId, coursesTable.id),
+    )
+    .innerJoin(
+      professorsTable,
+      eq(professorsCoursesTable.professorId, professorsTable.id),
+    )
+    .orderBy(asc(professorsCoursesTable.professorId));
 };
 
 export type CourseResult = Awaited<ReturnType<typeof getCourses>>[number];
 
+export const dynamic = 'force-dynamic'; // This page will always be re-rendered on the server
+
 export default async function Page() {
-    const result = await getCourses();
-    return (
-        <div>
-            <br />
-            <ReviewInput result={result}/>
-        </div>
-    )
+  const result = await getCourses();
+  return (
+    <div>
+      <br />
+      <ReviewInput result={result} />
+    </div>
+  );
 }

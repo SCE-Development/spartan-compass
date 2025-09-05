@@ -1,21 +1,53 @@
-import { StarRating } from "@/components/star-rating"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { db } from "@/lib/db"
-import { coursesTable, professorsCoursesTable, professorsTable } from "@/lib/db/schema"
-import { eq } from "drizzle-orm"
-import Link from "next/link"
+import { StarRating } from '@/components/star-rating';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { db } from '@/lib/db';
+import {
+  coursesTable,
+  professorsCoursesTable,
+  professorsTable,
+} from '@/lib/db/schema';
+import { eq } from 'drizzle-orm';
+import Link from 'next/link';
+import { Metadata } from 'next';
 
-export default async function ProfessorPage({ params }: { params: { id: string } }) {
+export async function generateMetadata(props: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const params = await props.params;
   const professorResult = await db
     .select()
     .from(professorsTable)
-    .where(eq(professorsTable.id, Number(params.id)))
+    .where(eq(professorsTable.id, Number(params.id)));
+
+  if (professorResult.length > 0) {
+    const professor = professorResult[0];
+    return {
+      title: `Spartan Compass | ${professor.name}`,
+    };
+  }
+
+  return {
+    title: 'Spartan Compass | Professor',
+  };
+}
+
+export default async function ProfessorPage(props: {
+  params: Promise<{ id: string }>;
+}) {
+  const params = await props.params;
+  const professorResult = await db
+    .select()
+    .from(professorsTable)
+    .where(eq(professorsTable.id, Number(params.id)));
 
   const courseResult = await db
     .select()
     .from(professorsCoursesTable)
     .where(eq(professorsCoursesTable.professorId, Number(params.id)))
-    .innerJoin(coursesTable, eq(professorsCoursesTable.courseId, coursesTable.id));
+    .innerJoin(
+      coursesTable,
+      eq(professorsCoursesTable.courseId, coursesTable.id),
+    );
 
   return (
     <div className="container mx-auto p-4">
@@ -26,8 +58,14 @@ export default async function ProfessorPage({ params }: { params: { id: string }
               <CardTitle className="text-4xl">{professor.name}</CardTitle>
               <p className="text-primary-foreground">{professor.department}</p>
               <div className="mt-2">
-                {/* The actual rating is a placeholder, the professorsTable scheme has not been updated to have starRating as a field */}
-                <StarRating rating={4.5} textColor="text-primary-foreground" />
+                {professor.avgRating === null ? (
+                  <>No ratings yet</>
+                ) : (
+                  <StarRating
+                    rating={professor.avgRating}
+                    textColor="text-primary-foreground"
+                  />
+                )}
               </div>
             </CardHeader>
             <CardContent className="mt-4">
@@ -40,16 +78,12 @@ export default async function ProfessorPage({ params }: { params: { id: string }
                         <CardHeader>
                           <Link href={`/courses/${result.courses.id}`}>
                             <CardTitle className="text-lg font-semibold hover:text-primary hover:underline">
-                              {result.courses.subject} {result.courses.courseNumber}: {result.courses.title}
+                              {result.courses.subject}{' '}
+                              {result.courses.courseNumber}:{' '}
+                              {result.courses.title}
                             </CardTitle>
                           </Link>
                         </CardHeader>
-                        <CardContent>
-                          <div className="mt-2">
-                            {/* The actual rating is a placeholder, the professorsTable scheme has not been updated to have starRating as a field */}
-                            <StarRating rating={4.5} textColor="text-muted-foreground" />
-                          </div>
-                        </CardContent>
                       </Card>
                     ))}
                   </div>
@@ -64,6 +98,5 @@ export default async function ProfessorPage({ params }: { params: { id: string }
         ))}
       </div>
     </div>
-  )
+  );
 }
-

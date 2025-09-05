@@ -1,0 +1,13 @@
+docker/
+!docker/entrypoint.sh
+.dockerignore
+node_modules
+npm-debug.log
+README.md
+.next
+.git
+.github
+
+data
+redis-data
+redisinsight-data

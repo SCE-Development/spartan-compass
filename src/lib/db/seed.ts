@@ -1,118 +1,118 @@
-import { db } from ".";
+import { db } from '.';
 import {
   professorsTable,
   coursesTable,
   professorsCoursesTable,
   reviewsTable,
-} from "./schema";
+} from './schema';
 
 const main = async () => {
   try {
-    console.log("Seeding database");
+    console.log('Seeding database');
     await db.delete(reviewsTable);
     await db.delete(professorsCoursesTable);
     await db.delete(professorsTable);
     await db.delete(coursesTable);
 
-    console.log("Inserting data");
+    console.log('Inserting data');
     const professors = [
-      { id: 1, name: "John Smith", department: "Mathematics" },
-      { id: 2, name: "Jane Doe", department: "Science" },
-      { id: 3, name: "Bob Johnson", department: "History" },
-      { id: 4, name: "Alice Williams", department: "Mathematics" },
-      { id: 5, name: "Charlie Brown", department: "Science" },
-      { id: 6, name: "David Davis", department: "History" },
-      { id: 7, name: "Eva Green", department: "Computer Science" },
-      { id: 8, name: "Michael Brown", department: "Engineering" },
+      { id: 1, name: 'John Smith', department: 'Mathematics' },
+      { id: 2, name: 'Jane Doe', department: 'Science' },
+      { id: 3, name: 'Bob Johnson', department: 'History' },
+      { id: 4, name: 'Alice Williams', department: 'Mathematics' },
+      { id: 5, name: 'Charlie Brown', department: 'Science' },
+      { id: 6, name: 'David Davis', department: 'History' },
+      { id: 7, name: 'Eva Green', department: 'Computer Science' },
+      { id: 8, name: 'Michael Brown', department: 'Engineering' },
     ];
     const courses = [
       {
         id: 1,
-        semester: "Fall 2025",
-        title: "Calculus",
-        subject: "MATH",
-        courseNumber: 106,
-        description: "An introductory course to calculus",
+        semester: 'Fall 2025',
+        title: 'Calculus',
+        subject: 'MATH',
+        courseNumber: '106',
+        description: 'An introductory course to calculus',
       },
       {
         id: 2,
-        semester: "Fall 2025",
-        title: "Biology",
-        subject: "SCI",
-        courseNumber: 105,
-        description: "An introductory course to biology",
+        semester: 'Fall 2025',
+        title: 'Biology',
+        subject: 'SCI',
+        courseNumber: '105',
+        description: 'An introductory course to biology',
       },
       {
         id: 3,
-        semester: "Fall 2025",
-        title: "World War II",
-        subject: "HIST",
-        courseNumber: 101,
-        description: "A course about World War II",
+        semester: 'Fall 2025',
+        title: 'World War II',
+        subject: 'HIST',
+        courseNumber: '101',
+        description: 'A course about World War II',
       },
       {
         id: 4,
-        semester: "Fall 2025",
-        title: "Algebra",
-        subject: "MATH",
-        courseNumber: 102,
-        description: "An introductory course to algebra",
+        semester: 'Fall 2025',
+        title: 'Algebra',
+        subject: 'MATH',
+        courseNumber: '102',
+        description: 'An introductory course to algebra',
       },
       {
         id: 5,
-        semester: "Fall 2025",
-        title: "Chemistry",
-        subject: "SCI",
-        courseNumber: 113,
-        description: "An introductory course to chemistry",
+        semester: 'Fall 2025',
+        title: 'Chemistry',
+        subject: 'SCI',
+        courseNumber: '113',
+        description: 'An introductory course to chemistry',
       },
       {
         id: 6,
-        semester: "Fall 2025",
-        title: "World War I",
-        subject: "HIST",
-        courseNumber: 121,
-        description: "A course about World War I",
+        semester: 'Fall 2025',
+        title: 'World War I',
+        subject: 'HIST',
+        courseNumber: '121',
+        description: 'A course about World War I',
       },
       {
         id: 7,
-        semester: "Fall 2025",
-        title: "Advanced Calculus",
-        subject: "MATH",
-        courseNumber: 201,
-        description: "An advanced course in calculus",
+        semester: 'Fall 2025',
+        title: 'Advanced Calculus',
+        subject: 'MATH',
+        courseNumber: '201',
+        description: 'An advanced course in calculus',
       },
       {
         id: 8,
-        semester: "Fall 2025",
-        title: "Advanced Biology",
-        subject: "SCI",
-        courseNumber: 241,
-        description: "An advanced course in biology",
+        semester: 'Fall 2025',
+        title: 'Advanced Biology',
+        subject: 'SCI',
+        courseNumber: '241',
+        description: 'An advanced course in biology',
       },
       {
         id: 9,
-        semester: "Fall 2025",
-        title: "The Civil War",
-        subject: "HIST",
-        courseNumber: 220,
-        description: "A course about The Civil War",
+        semester: 'Fall 2025',
+        title: 'The Civil War',
+        subject: 'HIST',
+        courseNumber: '220',
+        description: 'A course about The Civil War',
       },
       {
         id: 10,
-        semester: "Fall 2025",
-        title: "Introduction to Programming",
-        subject: "COMPSCI",
-        courseNumber: 101,
-        description: "An introductory course to programming",
+        semester: 'Fall 2025',
+        title: 'Introduction to Programming',
+        subject: 'COMPSCI',
+        courseNumber: '101',
+        description: 'An introductory course to programming',
       },
       {
         id: 11,
-        semester: "Fall 2025",
-        title: "Engineering Principles",
-        subject: "ENG",
-        courseNumber: 102,
-        description: "Fundamentals of engineering",
+        semester: 'Fall 2025',
+        title: 'Engineering Principles',
+        subject: 'ENG',
+        courseNumber: '102',
+        description: 'Fundamentals of engineering',
       },
     ];
     const professorsCourses = [
@@ -138,27 +138,27 @@ const main = async () => {
       {
         id: 1,
         rating: 4,
-        review: "Great course, would recommend",
+        review: 'Great course, would recommend',
         courseId: 1,
         professorId: 1,
       },
       {
         id: 2,
         rating: 2,
-        review: "Terrible course, would not reccommend",
+        review: 'Terrible course, would not reccommend',
         courseId: 4,
         professorId: 1,
-      }
-    ]
+      },
+    ];
 
     await db.insert(professorsTable).values(professors);
     await db.insert(coursesTable).values(courses);
     await db.insert(professorsCoursesTable).values(professorsCourses);
     await db.insert(reviewsTable).values(reviews);
-    console.log("Database seeded, press Ctrl+C to exit");
+    console.log('Database seeded, press Ctrl+C to exit');
   } catch (error) {
     console.error(error);
-    throw new Error("Error seeding database");
+    throw new Error('Error seeding database');
   }
 };
 
