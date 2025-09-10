@@ -5,18 +5,19 @@ export function getSemester(): string {
   const currentMonth = new Date().getMonth(); // JavaScript months are 0-based
   const currentYear = new Date().getFullYear();
 
-  if (currentMonth >= 3 && currentMonth < 8) {
+  if (currentMonth >= 3 && currentMonth <= 8) {
     return `fall-${currentYear}`;
-  } else if (currentMonth >= 0 && currentMonth <= 2) {
-    return `spring-${currentYear}`;
-  } else {
+  } else if (currentMonth >= 9 && currentMonth <= 12) {
     return `spring-${currentYear + 1}`;
+  } else {
+    return `spring-${currentYear}`;
   }
 }
 
 export async function fetchAllCourses() {
   const semester = getSemester();
   const url = `https://www.sjsu.edu/classes/schedules/${semester}.php`;
+  console.log(url);
 
   try {
     const response = await axios.get(url);
@@ -33,8 +34,16 @@ export async function fetchAllCourses() {
           const title = cells.eq(3).text().trim();
           const subject = cells.eq(0).text().trim().split(' ')[0];
           const courseNumber = cells.eq(0).text().trim().split(' ')[1];
+          const classNumber = cells.eq(1).text().trim();
+          const units = cells.eq(5).text().trim();
+          const type = cells.eq(6).text().trim();
+          const days = cells.eq(7).text().trim();
+          const time = cells.eq(8).text().trim();
           // courses sometimes have two professors listed in a course so dealt with it by splitting with / and adding two professors_courses with both professors listed
           const rawProfessor = cells.eq(9).text().trim();
+          const location = cells.eq(10).text().trim();
+          const dates = cells.eq(11).text().trim();
+          const openSeats = cells.eq(12).text().trim();
 
           const professors = [
             ...new Set(
@@ -57,6 +66,14 @@ export async function fetchAllCourses() {
               title,
               subject,
               courseNumber,
+              classNumber,
+              units,
+              type,
+              days,
+              time,
+              location,
+              dates,
+              openSeats,
               professor,
             };
             const courseString = JSON.stringify(course);
@@ -74,7 +91,7 @@ export async function fetchAllCourses() {
       return [];
     }
   } catch (error) {
-    console.error('Error: Unable to fetch data. ${error}');
+    console.error(`Error: Unable to fetch data. ${error}`);
     return [];
   }
 }

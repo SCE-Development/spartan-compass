@@ -1,9 +1,30 @@
 CREATE TABLE IF NOT EXISTS "courses" (
 	"id" serial PRIMARY KEY NOT NULL,
+	"semester" text NOT NULL,
 	"title" text NOT NULL,
 	"subject" text NOT NULL,
-	"course_number" integer NOT NULL,
-	"description" text
+	"course_number" text NOT NULL,
+	"class_number" text NOT NULL,
+	"units" text NOT NULL,
+	"type" text NOT NULL,
+	"days" text NOT NULL,
+	"time" text NOT NULL,
+	"location" text NOT NULL,
+	"dates" text NOT NULL,
+	"open_seats" text NOT NULL,
+	"description" text,
+	"search_vector" "tsvector" GENERATED ALWAYS AS (setweight(to_tsvector('english', "courses"."subject"), 'A') ||
+          setweight(to_tsvector('english', "courses"."course_number"), 'A') ||
+          setweight(to_tsvector('english', "courses"."class_number"), 'B') ||
+          setweight(to_tsvector('english', "courses"."title"), 'C') ||
+          setweight(to_tsvector('english', "courses"."units"), 'D') ||
+          setweight(to_tsvector('english', "courses"."type"), 'E') ||
+          setweight(to_tsvector('english', "courses"."days"), 'F') ||
+          setweight(to_tsvector('english', "courses"."time"), 'G') ||
+          setweight(to_tsvector('english', "courses"."location"), 'H') ||
+          setweight(to_tsvector('english', "courses"."dates"), 'I') ||
+          setweight(to_tsvector('english', "courses"."open_seats"), 'J') ||
+          setweight(to_tsvector('english', "courses"."semester"), 'K')) STORED NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "professors_courses" (
@@ -15,7 +36,10 @@ CREATE TABLE IF NOT EXISTS "professors_courses" (
 CREATE TABLE IF NOT EXISTS "professors" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"name" text NOT NULL,
-	"department" text NOT NULL
+	"department" text NOT NULL,
+	"avg_rating" real,
+	"search_vector" "tsvector" GENERATED ALWAYS AS (setweight(to_tsvector('english', "professors"."name"), 'A') ||
+          setweight(to_tsvector('english', "professors"."department"), 'B')) STORED NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "reviews" (

@@ -1,5 +1,5 @@
 {
-  "id": "09b06434-de56-4752-91dc-097be0e79954",
+  "id": "8b016767-288a-4dce-b708-613f153e8d3b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -12,6 +12,12 @@
           "name": "id",
           "type": "serial",
           "primaryKey": true,
+          "notNull": true
+        },
+        "semester": {
+          "name": "semester",
+          "type": "text",
+          "primaryKey": false,
           "notNull": true
         },
         "title": {
@@ -28,7 +34,55 @@
         },
         "course_number": {
           "name": "course_number",
-          "type": "integer",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "class_number": {
+          "name": "class_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "units": {
+          "name": "units",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "days": {
+          "name": "days",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "time": {
+          "name": "time",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "location": {
+          "name": "location",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "dates": {
+          "name": "dates",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "open_seats": {
+          "name": "open_seats",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -37,12 +91,25 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "search_vector": {
+          "name": "search_vector",
+          "type": "tsvector",
+          "primaryKey": false,
+          "notNull": true,
+          "generated": {
+            "as": "setweight(to_tsvector('english', \"courses\".\"subject\"), 'A') ||\n          setweight(to_tsvector('english', \"courses\".\"course_number\"), 'A') ||\n          setweight(to_tsvector('english', \"courses\".\"class_number\"), 'B') ||\n          setweight(to_tsvector('english', \"courses\".\"title\"), 'C') ||\n          setweight(to_tsvector('english', \"courses\".\"units\"), 'D') ||\n          setweight(to_tsvector('english', \"courses\".\"type\"), 'E') ||\n          setweight(to_tsvector('english', \"courses\".\"days\"), 'F') ||\n          setweight(to_tsvector('english', \"courses\".\"time\"), 'G') ||\n          setweight(to_tsvector('english', \"courses\".\"location\"), 'H') ||\n          setweight(to_tsvector('english', \"courses\".\"dates\"), 'I') ||\n          setweight(to_tsvector('english', \"courses\".\"open_seats\"), 'J') ||\n          setweight(to_tsvector('english', \"courses\".\"semester\"), 'K')",
+            "type": "stored"
+          }
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     },
     "public.professors_courses": {
       "name": "professors_courses",
@@ -99,7 +166,10 @@
           ]
         }
       },
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     },
     "public.professors": {
       "name": "professors",
@@ -122,12 +192,31 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "avg_rating": {
+          "name": "avg_rating",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "search_vector": {
+          "name": "search_vector",
+          "type": "tsvector",
+          "primaryKey": false,
+          "notNull": true,
+          "generated": {
+            "as": "setweight(to_tsvector('english', \"professors\".\"name\"), 'A') ||\n          setweight(to_tsvector('english', \"professors\".\"department\"), 'B')",
+            "type": "stored"
+          }
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     },
     "public.reviews": {
       "name": "reviews",
@@ -194,7 +283,10 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     },
     "public.session": {
       "name": "session",
@@ -236,7 +328,10 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     },
     "public.user": {
       "name": "user",
@@ -264,12 +359,18 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     }
   },
   "enums": {},
   "schemas": {},
   "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
   "_meta": {
     "columns": {},
     "schemas": {},

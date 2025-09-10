@@ -74,7 +74,7 @@ export async function insertCourses() {
   for (const course of courses) {
     try {
       const semester = getSemester();
-      const { title, subject, courseNumber, professor } = course;
+      const { title, subject, courseNumber, classNumber, units, type, days, time, location, dates, openSeats, professor } = course;
 
       //check if professor for course exists
       const existingProfessor = allProfessors.find((p) =>
@@ -87,7 +87,7 @@ export async function insertCourses() {
       //if professor does not exist for course don't add and continue
       if (!existingProfessor) {
         console.error(
-          `Professor ${professor} not found for ${subject}${courseNumber}`,
+          `Professor ${professor} not found for ${subject}${courseNumber} ${classNumber}`,
         );
         professorNotFound++;
         continue;
@@ -102,6 +102,14 @@ export async function insertCourses() {
           and(
             eq(coursesTable.subject, subject),
             eq(coursesTable.courseNumber, courseNumber),
+            eq(coursesTable.classNumber, classNumber),
+            eq(coursesTable.units, units),
+            eq(coursesTable.type, type),
+            eq(coursesTable.days, days),
+            eq(coursesTable.time, time),
+            eq(coursesTable.location, location),
+            eq(coursesTable.dates, dates),
+            eq(coursesTable.openSeats, openSeats),
           ),
         )
         .limit(1);
@@ -140,6 +148,14 @@ export async function insertCourses() {
             title,
             subject,
             courseNumber,
+            classNumber,
+            units,
+            type,
+            days,
+            time,
+            location,
+            dates,
+            openSeats,
           })
           .returning({ id: coursesTable.id });
 

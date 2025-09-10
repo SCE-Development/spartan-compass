@@ -83,6 +83,9 @@ export default async function ProfessorPage(props: {
                               {result.courses.title}
                             </CardTitle>
                           </Link>
+                          <p className="text-muted-foreground">
+                            {result.courses.classNumber}
+                          </p>
                         </CardHeader>
                       </Card>
                     ))}
