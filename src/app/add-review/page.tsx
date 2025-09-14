@@ -1,8 +1,9 @@
 'use client';
 
 import { Check, ChevronsUpDown, X } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useId, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useId, useState, Suspense } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -29,7 +30,7 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Slider } from '@/components/ui/slider';
 
-export default function AddReviewPage() {
+function AddReviewPageContent() {
   // Unique IDs for radio groups
   const yesId1 = useId();
   const noId1 = useId();
@@ -195,8 +196,8 @@ export default function AddReviewPage() {
           onSubmit={handleSubmit}
           className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg max-w-3x1 mx-auto flex flex-col space-y-6"
         >
-          {/* Title */}
-          <h1 className="text-3xl font-semibold text-center">
+            {/* Title */}
+            <h1 className="text-3xl font-semibold text-center">
             Add Your Review
           </h1>
 
@@ -504,8 +505,17 @@ export default function AddReviewPage() {
               {isSubmitting ? 'Submitting...' : 'Submit Review'}
             </Button>
           </div>
+
         </form>
       </div>
     </div>
+  );
+}
+
+export default function AddReviewPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AddReviewPageContent />
+    </Suspense>
   );
 }
