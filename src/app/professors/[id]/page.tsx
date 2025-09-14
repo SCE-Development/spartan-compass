@@ -73,8 +73,8 @@ export default async function ProfessorPage(props: {
                 <>
                   <h2 className="text-2xl font-bold mb-4">Courses</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {courseResult.map((result, index) => (
-                      <Card key={index} className="p-4">
+                    {courseResult.map((result) => (
+                      <Card key={result.courses.id} className="p-4">
                         <CardHeader>
                           <Link href={`/courses/${result.courses.id}`}>
                             <CardTitle className="text-lg font-semibold hover:text-primary hover:underline">
