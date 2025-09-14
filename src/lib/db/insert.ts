@@ -80,7 +80,7 @@ export async function insertCourses() {
       const existingProfessor = allProfessors.find((p) =>
         isSameProfessor(professor, {
           firstName: p.name.split(' ')[0],
-          lastName: p.name.split(' ').slice(-1)[0],
+          lastName: "",
         }),
       );
 

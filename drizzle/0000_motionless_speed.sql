@@ -1,8 +1,9 @@
 CREATE TABLE IF NOT EXISTS "courses" (
 	"id" serial PRIMARY KEY NOT NULL,
+	"semester" text NOT NULL,
 	"title" text NOT NULL,
 	"subject" text NOT NULL,
-	"course_number" integer NOT NULL,
+	"course_number" text NOT NULL,
 	"description" text
 );
 --> statement-breakpoint

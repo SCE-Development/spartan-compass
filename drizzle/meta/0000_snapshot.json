@@ -1,5 +1,5 @@
 {
-  "id": "09b06434-de56-4752-91dc-097be0e79954",
+  "id": "4b155cce-3204-4ceb-b826-accc4d0a223e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -12,6 +12,12 @@
           "name": "id",
           "type": "serial",
           "primaryKey": true,
+          "notNull": true
+        },
+        "semester": {
+          "name": "semester",
+          "type": "text",
+          "primaryKey": false,
           "notNull": true
         },
         "title": {
@@ -28,7 +34,7 @@
         },
         "course_number": {
           "name": "course_number",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
