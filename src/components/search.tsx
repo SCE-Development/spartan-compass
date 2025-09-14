@@ -10,15 +10,23 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
+} from '@/components/ui/command';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
-import { Calendar, BookOpen, Hash, Rocket, Compass, Check, ChevronDown } from 'lucide-react';
+import {
+  Calendar,
+  BookOpen,
+  Hash,
+  Rocket,
+  Compass,
+  Check,
+  ChevronDown,
+} from 'lucide-react';
 import SmartSearch from './smart-search';
 
 export default function Search({ result }: { result: CourseResult[] }) {
@@ -112,8 +120,10 @@ export default function Search({ result }: { result: CourseResult[] }) {
     <div className="flex flex-col items-center justify-center w-full h-[75vh]">
       <div className="mx-auto flex flex-col items-center justify-center">
         <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-4 flex-col md:flex-row">
-
-          <Popover open={open[0]} onOpenChange={(openthis) => setOpen([openthis, open[1], open[2]])}>
+          <Popover
+            open={open[0]}
+            onOpenChange={(openthis) => setOpen([openthis, open[1], open[2]])}
+          >
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
@@ -123,11 +133,15 @@ export default function Search({ result }: { result: CourseResult[] }) {
                 className="relative w-[200px] justify-start disabled:cursor-not-allowed"
               >
                 <Calendar className="h-4 w-4 text-muted-foreground" />
-                <div className='flex-grow overflow-hidden text-left'>{selectedSemester ? selectedSemester : "Select semester"}</div>
+                <div className="flex-grow overflow-hidden text-left">
+                  {selectedSemester ? selectedSemester : 'Select semester'}
+                </div>
                 <ChevronDown
                   className={cn(
-                    "h-4 w-4 shrink-0 opacity-50",
-                    selectedSemester ? "rotate-0 md:rotate-270" : "rotate-90 md:rotate-0",
+                    'h-4 w-4 shrink-0 opacity-50',
+                    selectedSemester
+                      ? 'rotate-0 md:rotate-270'
+                      : 'rotate-90 md:rotate-0',
                   )}
                 />
               </Button>
@@ -143,15 +157,21 @@ export default function Search({ result }: { result: CourseResult[] }) {
                         key={semester}
                         value={semester}
                         onSelect={(currentValue) => {
-                          setSelectedSemester(currentValue === selectedSemester ? "" : currentValue)
-                          setOpen([false, open[1], open[2]])
-                          setSelectedSubject('')
+                          setSelectedSemester(
+                            currentValue === selectedSemester
+                              ? ''
+                              : currentValue,
+                          );
+                          setOpen([false, open[1], open[2]]);
+                          setSelectedSubject('');
                         }}
                       >
                         <Check
                           className={cn(
-                            "ml-2 h-4 w-4",
-                            selectedSemester === semester ? "opacity-100" : "opacity-0"
+                            'ml-2 h-4 w-4',
+                            selectedSemester === semester
+                              ? 'opacity-100'
+                              : 'opacity-0',
                           )}
                         />
                         {semester}
@@ -163,7 +183,10 @@ export default function Search({ result }: { result: CourseResult[] }) {
             </PopoverContent>
           </Popover>
 
-          <Popover open={open[1]} onOpenChange={(openthis) => setOpen([open[0], openthis, open[2]])}>
+          <Popover
+            open={open[1]}
+            onOpenChange={(openthis) => setOpen([open[0], openthis, open[2]])}
+          >
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
@@ -173,11 +196,17 @@ export default function Search({ result }: { result: CourseResult[] }) {
                 className="relative w-[200px] justify-start disabled:cursor-not-allowed"
               >
                 <BookOpen className="h-4 w-4 text-muted-foreground" />
-                <div className='flex-grow overflow-hidden text-left'>{selectedSubject ? selectedSubject : "Select subject"}</div>
+                <div className="flex-grow overflow-hidden text-left">
+                  {selectedSubject ? selectedSubject : 'Select subject'}
+                </div>
                 <ChevronDown
                   className={cn(
-                    "h-4 w-4 shrink-0 opacity-50",
-                    !selectedSemester ? "rotate-180 md:rotate-90" : selectedSubject ? "rotate-0 md:rotate-270" : "rotate-90 md:rotate-0",
+                    'h-4 w-4 shrink-0 opacity-50',
+                    !selectedSemester
+                      ? 'rotate-180 md:rotate-90'
+                      : selectedSubject
+                        ? 'rotate-0 md:rotate-270'
+                        : 'rotate-90 md:rotate-0',
                   )}
                 />
               </Button>
@@ -193,15 +222,21 @@ export default function Search({ result }: { result: CourseResult[] }) {
                         key={subject}
                         value={subject}
                         onSelect={(currentValue) => {
-                          setSelectedSubject(currentValue === selectedSubject ? "" : currentValue)
-                          setOpen([open[0], false, open[2]])
-                          setSelectedCourseNumber('')
+                          setSelectedSubject(
+                            currentValue === selectedSubject
+                              ? ''
+                              : currentValue,
+                          );
+                          setOpen([open[0], false, open[2]]);
+                          setSelectedCourseNumber('');
                         }}
                       >
                         <Check
                           className={cn(
-                            "ml-2 h-4 w-4",
-                            selectedSubject === subject ? "opacity-100" : "opacity-0"
+                            'ml-2 h-4 w-4',
+                            selectedSubject === subject
+                              ? 'opacity-100'
+                              : 'opacity-0',
                           )}
                         />
                         {subject}
@@ -213,7 +248,10 @@ export default function Search({ result }: { result: CourseResult[] }) {
             </PopoverContent>
           </Popover>
 
-          <Popover open={open[2]} onOpenChange={(openthis) => setOpen([open[0], open[1], openthis])}>
+          <Popover
+            open={open[2]}
+            onOpenChange={(openthis) => setOpen([open[0], open[1], openthis])}
+          >
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
@@ -223,11 +261,19 @@ export default function Search({ result }: { result: CourseResult[] }) {
                 className="relative w-[200px] justify-start disabled:cursor-not-allowed"
               >
                 <Hash className="h-4 w-4 text-muted-foreground" />
-                <div className='flex-grow overflow-hidden text-left'>{selectedCourseNumber ? selectedCourseNumber : "Select course number"}</div>
+                <div className="flex-grow overflow-hidden text-left">
+                  {selectedCourseNumber
+                    ? selectedCourseNumber
+                    : 'Select course number'}
+                </div>
                 <ChevronDown
                   className={cn(
-                    "h-4 w-4 shrink-0 opacity-50",
-                    !selectedSubject ? "rotate-180 md:rotate-90" : selectedCourseNumber ? "rotate-0 md:rotate-270" : "rotate-90 md:rotate-0",
+                    'h-4 w-4 shrink-0 opacity-50',
+                    !selectedSubject
+                      ? 'rotate-180 md:rotate-90'
+                      : selectedCourseNumber
+                        ? 'rotate-0 md:rotate-270'
+                        : 'rotate-90 md:rotate-0',
                   )}
                 />
               </Button>
@@ -243,14 +289,20 @@ export default function Search({ result }: { result: CourseResult[] }) {
                         key={number}
                         value={number}
                         onSelect={(currentValue) => {
-                          setSelectedCourseNumber(currentValue === selectedCourseNumber ? "" : currentValue)
-                          setOpen([open[0], open[1], false])
+                          setSelectedCourseNumber(
+                            currentValue === selectedCourseNumber
+                              ? ''
+                              : currentValue,
+                          );
+                          setOpen([open[0], open[1], false]);
                         }}
                       >
                         <Check
                           className={cn(
-                            "ml-2 h-4 w-4",
-                            selectedCourseNumber === number ? "opacity-100" : "opacity-0"
+                            'ml-2 h-4 w-4',
+                            selectedCourseNumber === number
+                              ? 'opacity-100'
+                              : 'opacity-0',
                           )}
                         />
                         {number}
