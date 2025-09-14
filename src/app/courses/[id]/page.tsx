@@ -1,6 +1,7 @@
-import { StarRating } from '@/components/star-rating';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { db } from '@/lib/db';
+import AddReviewForm from "@/components/AddReviewForm";
+import { StarRating } from "@/components/star-rating";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { db } from "@/lib/db";
 import {
   coursesTable,
   professorsCoursesTable,
@@ -99,6 +100,7 @@ export default async function CoursePage({
           </Card>
         ))}
       </div>
+      <AddReviewForm />
     </div>
   );
 }
