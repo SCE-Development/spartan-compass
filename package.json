@@ -7,7 +7,7 @@
     "dev:db": "docker compose -f docker/compose.dev.yml up -d && next dev --turbopack && docker compose -f docker/compose.dev.yml down",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "biome lint",
     "format": "biome format --write",
     "db:start": "docker compose -f docker/compose.dev.yml up -d",
     "db:stop": "docker compose -f docker/compose.dev.yml down",
