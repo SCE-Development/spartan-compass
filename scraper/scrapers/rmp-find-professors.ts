@@ -1,4 +1,5 @@
 import { encodeBasicCredentials } from 'arctic/dist/request';
+import { z } from 'zod';
 
 const query = `\
 query TeacherSearchResultsPageQuery($query: TeacherSearchQuery!, $cursor: String, $count: Int!) {
@@ -84,7 +85,27 @@ export async function rmpFindProfessorsPage(params: {
   const data = await response.json();
   if (data.errors) throw data.errors;
 
-  return data.data.search.teachers as ProfessorsPage;
+  // Zod schema for runtime validation
+  const ProfessorDetailsSchema = z.object({
+    id: z.string(),
+    firstName: z.string(),
+    lastName: z.string(),
+    department: z.string(),
+    avgRating: z.number(),
+    avgDifficulty: z.number(),
+    numRatings: z.number(),
+    wouldTakeAgainPercent: z.number(),
+  });
+
+  const ProfessorsPageSchema = z.object({
+    edges: z.array(z.object({ node: ProfessorDetailsSchema })),
+    pageInfo: z.object({
+      endCursor: z.string(),
+      hasNextPage: z.boolean(),
+    }),
+  });
+
+  return ProfessorsPageSchema.parse(data.data.search.teachers);
 }
 
 export async function rmpFindAllProfessors() {

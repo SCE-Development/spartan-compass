@@ -6,7 +6,7 @@ export default defineConfig({
   dbCredentials: {
     url: (() => {
       const url = process.env.DATABASE_URL;
-      if (!url) return ""
+      if (!url) return '';
       return url;
     })(),
   },

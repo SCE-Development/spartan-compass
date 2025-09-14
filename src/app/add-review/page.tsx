@@ -1,9 +1,8 @@
 'use client';
 
 import { Check, ChevronsUpDown, X } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useSearchParams } from 'next/navigation';
-import { useEffect, useId, useState, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense, useEffect, useId, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -196,8 +195,8 @@ function AddReviewPageContent() {
           onSubmit={handleSubmit}
           className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg max-w-3x1 mx-auto flex flex-col space-y-6"
         >
-            {/* Title */}
-            <h1 className="text-3xl font-semibold text-center">
+          {/* Title */}
+          <h1 className="text-3xl font-semibold text-center">
             Add Your Review
           </h1>
 
@@ -505,7 +504,6 @@ function AddReviewPageContent() {
               {isSubmitting ? 'Submitting...' : 'Submit Review'}
             </Button>
           </div>
-
         </form>
       </div>
     </div>
