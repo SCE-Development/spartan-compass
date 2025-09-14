@@ -1,8 +1,8 @@
-import React from 'react';
-import UserInfo from './userInfo';
-import { getCurrentSession } from '@/lib/db/session';
+import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
-import { Metadata } from 'next';
+import React from 'react';
+import { getCurrentSession } from '@/lib/db/session';
+import UserInfo from './userInfo';
 
 export const metadata: Metadata = {
   title: 'Spartan Compass | User Profile',

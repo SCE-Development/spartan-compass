@@ -1,14 +1,14 @@
+import type { OAuth2Tokens } from 'arctic';
+import { decodeIdToken } from 'arctic';
+import { addBasePath } from 'next/dist/client/add-base-path';
+import { cookies } from 'next/headers';
 import {
-  generateSessionToken,
   createSession,
+  generateSessionToken,
   setSessionTokenCookie,
 } from '@/lib/db/session';
-import { google } from '@/lib/oauth';
-import { cookies } from 'next/headers';
-import { decodeIdToken } from 'arctic';
-import type { OAuth2Tokens } from 'arctic';
 import { createUser, getUserFromGoogleId } from '@/lib/db/user';
-import { addBasePath } from 'next/dist/client/add-base-path';
+import { google } from '@/lib/oauth';
 
 export async function GET(request: Request): Promise<Response> {
   const url = new URL(request.url);

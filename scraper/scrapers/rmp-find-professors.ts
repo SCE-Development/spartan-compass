@@ -74,7 +74,7 @@ export async function rmpFindProfessorsPage(params: {
   const options = {
     method: 'POST',
     headers: {
-      authorization: 'Basic ' + encodeBasicCredentials('test', 'test'),
+      authorization: `Basic ${encodeBasicCredentials('test', 'test')}`,
       'content-type': 'application/json',
     },
     body: body,
@@ -82,9 +82,9 @@ export async function rmpFindProfessorsPage(params: {
 
   const response = await fetch(url, options);
   const data = await response.json();
-  if (data['errors']) throw data['errors'];
+  if (data.errors) throw data.errors;
 
-  return data['data']['search']['teachers'] as ProfessorsPage;
+  return data.data.search.teachers as ProfessorsPage;
 }
 
 export async function rmpFindAllProfessors() {

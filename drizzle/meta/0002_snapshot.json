@@ -73,12 +73,8 @@
           "name": "professors_courses_professor_id_professors_id_fk",
           "tableFrom": "professors_courses",
           "tableTo": "professors",
-          "columnsFrom": [
-            "professor_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["professor_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -86,12 +82,8 @@
           "name": "professors_courses_course_id_courses_id_fk",
           "tableFrom": "professors_courses",
           "tableTo": "courses",
-          "columnsFrom": [
-            "course_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["course_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -99,10 +91,7 @@
       "compositePrimaryKeys": {
         "professors_courses_professor_id_course_id_pk": {
           "name": "professors_courses_professor_id_course_id_pk",
-          "columns": [
-            "professor_id",
-            "course_id"
-          ]
+          "columns": ["professor_id", "course_id"]
         }
       },
       "uniqueConstraints": {}
@@ -182,12 +171,8 @@
           "name": "reviews_course_id_courses_id_fk",
           "tableFrom": "reviews",
           "tableTo": "courses",
-          "columnsFrom": [
-            "course_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["course_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -195,12 +180,8 @@
           "name": "reviews_professor_id_professors_id_fk",
           "tableFrom": "reviews",
           "tableTo": "professors",
-          "columnsFrom": [
-            "professor_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["professor_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -237,12 +218,8 @@
           "name": "session_user_id_user_id_fk",
           "tableFrom": "session",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

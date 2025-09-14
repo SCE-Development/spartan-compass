@@ -1,11 +1,12 @@
 // app/api/courses/[id]/route.ts
+
+import { eq } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { coursesTable } from '@/lib/db/schema';
-import { eq } from 'drizzle-orm';
 
 export async function GET(
-  req: Request,
+  _req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;

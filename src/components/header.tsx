@@ -1,21 +1,21 @@
 'use client';
 
+import { CircleUser, Compass } from 'lucide-react';
+import { addBasePath } from 'next/dist/client/add-base-path';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import SmartSearch from './smart-search';
+import { ThemeToggle } from './theme-toggle';
+import { Button } from './ui/button';
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuItem,
+  DropdownMenuTrigger,
 } from './ui/dropdown-menu';
-import { Button } from './ui/button';
-import Link from 'next/link';
-import { CircleUser, Compass } from 'lucide-react';
-import { ThemeToggle } from './theme-toggle';
-import { useEffect, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
-import SmartSearch from './smart-search';
-import { addBasePath } from 'next/dist/client/add-base-path';
 
 export function Header({ children }: { children: React.ReactNode }) {
   const router = useRouter();

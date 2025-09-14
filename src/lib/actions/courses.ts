@@ -1,6 +1,6 @@
-import { db } from "@/lib/db";
-import { coursesTable } from "@/lib/db/schema";
-import { asc, eq } from "drizzle-orm";
+import { asc, eq } from 'drizzle-orm';
+import { db } from '@/lib/db';
+import { coursesTable } from '@/lib/db/schema';
 
 // ✅ Fetch all courses from DB
 export async function getCourses() {

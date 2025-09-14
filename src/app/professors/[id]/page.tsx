@@ -1,14 +1,14 @@
+import { eq } from 'drizzle-orm';
+import type { Metadata } from 'next';
+import Link from 'next/link';
 import { StarRating } from '@/components/star-rating';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { db } from '@/lib/db';
 import {
   coursesTable,
   professorsCoursesTable,
   professorsTable,
 } from '@/lib/db/schema';
-import { eq } from 'drizzle-orm';
-import Link from 'next/link';
-import { Metadata } from 'next';
 
 export async function generateMetadata(props: {
   params: Promise<{ id: string }>;
@@ -59,7 +59,7 @@ export default async function ProfessorPage(props: {
               <p className="text-primary-foreground">{professor.department}</p>
               <div className="mt-2">
                 {professor.avgRating === null ? (
-                  <>No ratings yet</>
+                  'No ratings yet'
                 ) : (
                   <StarRating
                     rating={professor.avgRating}

@@ -1,3 +1,6 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -6,10 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Metadata } from 'next';
 import ErrorToastLogin from './ErrorToastLogin';
-import { Suspense } from 'react';
-import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Spartan Compass | Login',

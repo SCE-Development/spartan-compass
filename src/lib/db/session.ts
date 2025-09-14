@@ -1,16 +1,15 @@
-import { userTable, sessionTable } from './schema';
-import { db } from './index';
-import { eq } from 'drizzle-orm';
+import { sha256 } from '@oslojs/crypto/sha2';
 import {
   encodeBase32LowerCaseNoPadding,
   encodeHexLowerCase,
 } from '@oslojs/encoding';
-import { sha256 } from '@oslojs/crypto/sha2';
-import { cookies } from 'next/headers';
-
-import type { User, Session } from './schema.js';
-import { cache } from 'react';
+import { eq } from 'drizzle-orm';
 import { addBasePath } from 'next/dist/client/add-base-path';
+import { cookies } from 'next/headers';
+import { cache } from 'react';
+import { db } from './index';
+import { sessionTable, userTable } from './schema';
+import type { Session, User } from './schema.js';
 
 export function generateSessionToken(): string {
   const bytes = new Uint8Array(20);

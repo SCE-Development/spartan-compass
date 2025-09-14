@@ -1,6 +1,6 @@
+import { eq } from 'drizzle-orm';
 import { db } from '@/lib/db';
 import { userTable } from '@/lib/db/schema';
-import { eq } from 'drizzle-orm';
 
 export async function createUser(googleId: string, name: string) {
   const [user] = await db

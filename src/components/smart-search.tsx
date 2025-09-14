@@ -1,19 +1,18 @@
 'use client';
 
-import {
-  Command,
-  CommandInput,
-  CommandList,
-  CommandGroup,
-  CommandItem,
-  CommandEmpty,
-  CommandSeparator,
-} from '@/components/ui/command';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import smartSearch from '@/app/actions';
+import {
+  Command,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from '@/components/ui/command';
+import type { Course, Professor } from '@/lib/db/schema';
 import { cn } from '@/lib/utils';
-import { Course, Professor } from '@/lib/db/schema';
-import Link from 'next/link';
 
 // Updated SearchResult type to handle combined results
 export type SearchResult =

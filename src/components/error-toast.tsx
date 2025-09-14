@@ -1,6 +1,6 @@
 'use client';
 import { useEffect } from 'react';
-import { toast, Toaster } from 'sonner';
+import { Toaster, toast } from 'sonner';
 
 type CustomToastProps = {
   error?: string | undefined;

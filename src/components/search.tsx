@@ -1,8 +1,18 @@
 'use client';
 
-import { useState, useMemo, useCallback, useEffect } from 'react';
-import { cn } from '@/lib/utils';
-import { CourseResult } from '@/app/page';
+import {
+  BookOpen,
+  Calendar,
+  Check,
+  ChevronDown,
+  Compass,
+  Hash,
+  Rocket,
+} from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useCallback, useMemo, useState } from 'react';
+import type { CourseResult } from '@/app/page';
+import { Button } from '@/components/ui/button';
 import {
   Command,
   CommandEmpty,
@@ -16,17 +26,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
-import {
-  Calendar,
-  BookOpen,
-  Hash,
-  Rocket,
-  Compass,
-  Check,
-  ChevronDown,
-} from 'lucide-react';
+import { cn } from '@/lib/utils';
 import SmartSearch from './smart-search';
 
 export default function Search({ result }: { result: CourseResult[] }) {

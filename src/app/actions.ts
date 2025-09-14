@@ -1,9 +1,9 @@
 'use server';
 
-import { sql, desc, getTableColumns } from 'drizzle-orm';
+import { desc, getTableColumns, sql } from 'drizzle-orm';
+import type { SearchResult } from '@/components/smart-search';
 import { db } from '@/lib/db';
 import { coursesTable, professorsTable } from '@/lib/db/schema';
-import { SearchResult } from '@/components/smart-search';
 
 export default async function smartSearch(term: string): Promise<SearchResult> {
   const trimmedTerm = term.trim();
@@ -12,7 +12,7 @@ export default async function smartSearch(term: string): Promise<SearchResult> {
     return { type: 'empty', data: [] };
   }
 
-  const formattedTerm = trimmedTerm.replace(/\s+/g, ' & ') + ':*';
+  const formattedTerm = `${trimmedTerm.replace(/\s+/g, ' & ')}:*`;
 
   const courseResults = await db
     .select({

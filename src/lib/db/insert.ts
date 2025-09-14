@@ -1,14 +1,11 @@
-import { db } from '.';
-import { sql, eq, and } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import { rmpFindAllProfessors } from '../../../scraper/scrapers/rmp-find-professors';
+import { fetchAllCourses } from '../../../scraper/scrapers/sjsu-find-courses';
+import { db } from '.';
 import {
-  fetchAllCourses,
-  getSemester,
-} from '../../../scraper/scrapers/sjsu-find-courses';
-import {
-  professorsTable,
   coursesTable,
   professorsCoursesTable,
+  professorsTable,
   reviewsTable,
 } from './schema';
 
@@ -73,14 +70,28 @@ export async function insertCourses() {
   const allProfessors = await db.select().from(professorsTable);
   for (const course of courses) {
     try {
-      const semester = getSemester();
+      const semester = 'fall-2025';
       const { title, subject, courseNumber, professor } = course;
 
+      // Improved professor name splitting
+      // Try to split the professor name into first and last name for matching
+      let firstName = '';
+      let lastName = '';
+      if (professor) {
+        const parts = professor.trim().split(/\s+/);
+        if (parts.length === 1) {
+          firstName = parts[0];
+        } else if (parts.length > 1) {
+          firstName = parts[0];
+          lastName = parts.slice(1).join(' ');
+        }
+      }
+
       //check if professor for course exists
-      const existingProfessor = allProfessors.find((p) =>
+      const existingProfessor = allProfessors.find((_p) =>
         isSameProfessor(professor, {
-          firstName: p.name.split(' ')[0],
-          lastName: "",
+          firstName,
+          lastName,
         }),
       );
 

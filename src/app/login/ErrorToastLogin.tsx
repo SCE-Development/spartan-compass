@@ -1,7 +1,7 @@
 'use client';
 
-import ErrorToast from '@/components/error-toast';
 import { useSearchParams } from 'next/navigation';
+import ErrorToast from '@/components/error-toast';
 
 export default function ErrorToastLogin() {
   const searchParams = useSearchParams();
