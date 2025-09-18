@@ -1,5 +1,6 @@
 import { StarRating } from '@/components/star-rating';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { db } from '@/lib/db';
 import {
   coursesTable,
@@ -60,10 +61,6 @@ export default async function CoursePage({
     .from(professorsCoursesTable)
     .where(eq(professorsCoursesTable.courseId, Number(params.id)));
 
-  function findCourseFromProfessor() {
-
-  }
-
   return (
     <div className="container mx-auto p-4">
       <div className="grid">
@@ -72,7 +69,7 @@ export default async function CoursePage({
             <CardHeader className="bg-primary text-primary-foreground">
               <CardTitle className="text-4xl">{`${course.title} (${course.subject} ${course.courseNumber})`}</CardTitle>
               <p className="text-primary-foreground">{course.classNumber}</p>
-              <p className="text-primary-foreground">Units: {course.units} | {course.type}</p>
+              <p className="text-primary-foreground">Units: {course.units} | Type: {course.type}</p>
               <p className="text-primary-foreground">{course.description}</p>
             </CardHeader>
             <CardContent className="mt-4">
@@ -90,17 +87,14 @@ export default async function CoursePage({
                       </p>
                       <p className="text-sm">
                           {
-                            professorCourseResult.filter(
-                              (professorCourse) =>
-                                professorCourse.professorId ===
-                                result.professor.id,
+                            professorCourseResult.filter((professorCourse) =>
+                              professorCourse.professorId === result.professor.id,
                             ).map((professorCourse) => (
-                              courseResult.filter(
-                                (course) =>
-                                  course.id === professorCourse.courseId,
+                              courseResult.filter((course) =>
+                                professorCourse.courseId === course.id,
                               ).map((course) => (
                                 <span key={course.id} className="flex flex-col">
-                                  <span>{course.location} {course.days} {course.time} {course.dates}</span>
+                                  <span>{course.location} | {course.days} | {course.time} | {course.dates}</span>
                                   <span>Open Seats: {course.openSeats}</span>
                                 </span>
                               ))
@@ -108,7 +102,7 @@ export default async function CoursePage({
                           }
                       </p>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className='flex flex-row justify-between'>
                       <div className="mt-2">
                         {result.professor.avgRating ? (
                           <StarRating
@@ -120,6 +114,9 @@ export default async function CoursePage({
                             No ratings yet
                           </span>
                         )}
+                      </div>
+                      <div className="mt-2">
+                        <Button className='disabled:cursor-not-allowed' disabled>Add To Cart</Button>
                       </div>
                     </CardContent>
                   </Card>
