@@ -1,16 +1,17 @@
 // src/lib/db/schema.ts
+
+import { type InferSelectModel, relations, type SQL, sql } from 'drizzle-orm';
 import {
+  customType,
+  index,
+  integer,
   pgTable,
+  primaryKey,
+  real,
   serial,
   text,
-  integer,
-  real,
-  primaryKey,
   timestamp,
-  index,
 } from 'drizzle-orm/pg-core';
-import { InferSelectModel, relations, SQL, sql } from 'drizzle-orm';
-import { customType } from 'drizzle-orm/pg-core';
 
 export const tsvector = customType<{ data: string; driverData: string }>({
   dataType() {

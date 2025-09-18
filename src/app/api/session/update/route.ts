@@ -1,7 +1,8 @@
 // Update database and session
-import { updateUserName } from '@/lib/db/user';
+
+import { type NextRequest, NextResponse } from 'next/server';
 import { getCurrentSession } from '@/lib/db/session';
-import { NextRequest, NextResponse } from 'next/server';
+import { updateUserName } from '@/lib/db/user';
 export async function PUT(req: NextRequest) {
   try {
     const { name } = await req.json();

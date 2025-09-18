@@ -1,14 +1,14 @@
+import { eq } from 'drizzle-orm';
+import type { Metadata } from 'next';
+import Link from 'next/link';
 import { StarRating } from '@/components/star-rating';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { db } from '@/lib/db';
 import {
   coursesTable,
   professorsCoursesTable,
   professorsTable,
 } from '@/lib/db/schema';
-import { eq } from 'drizzle-orm';
-import Link from 'next/link';
-import { Metadata } from 'next';
 
 export async function generateMetadata(props: {
   params: Promise<{ id: string }>;
@@ -59,7 +59,7 @@ export default async function ProfessorPage(props: {
               <p className="text-primary-foreground">{professor.department}</p>
               <div className="mt-2">
                 {professor.avgRating === null ? (
-                  <>No ratings yet</>
+                  'No ratings yet'
                 ) : (
                   <StarRating
                     rating={professor.avgRating}
@@ -73,8 +73,8 @@ export default async function ProfessorPage(props: {
                 <>
                   <h2 className="text-2xl font-bold mb-4">Courses</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {courseResult.map((result, index) => (
-                      <Card key={index} className="p-4">
+                    {courseResult.map((result) => (
+                      <Card key={result.courses.id} className="p-4">
                         <CardHeader>
                           <Link href={`/courses/${result.courses.id}`}>
                             <CardTitle className="text-lg font-semibold hover:text-primary hover:underline">

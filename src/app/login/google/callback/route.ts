@@ -1,14 +1,15 @@
+import type { OAuth2Tokens } from 'arctic';
+import { decodeIdToken } from 'arctic';
+import { addBasePath } from 'next/dist/client/add-base-path';
+import { cookies } from 'next/headers';
+import { z } from 'zod';
 import {
-  generateSessionToken,
   createSession,
+  generateSessionToken,
   setSessionTokenCookie,
 } from '@/lib/db/session';
-import { google } from '@/lib/oauth';
-import { cookies } from 'next/headers';
-import { decodeIdToken } from 'arctic';
-import type { OAuth2Tokens } from 'arctic';
 import { createUser, getUserFromGoogleId } from '@/lib/db/user';
-import { addBasePath } from 'next/dist/client/add-base-path';
+import { google } from '@/lib/oauth';
 
 export async function GET(request: Request): Promise<Response> {
   const url = new URL(request.url);
@@ -44,12 +45,15 @@ export async function GET(request: Request): Promise<Response> {
       status: 400,
     });
   }
-  interface Claims {
-    sub: string;
-    email: string;
-    name: string;
-  }
-  const claims = decodeIdToken(tokens.idToken()) as Claims;
+
+  const ClaimsSchema = z.object({
+    sub: z.string(),
+    email: z.string().email(),
+    name: z.string(),
+  });
+
+  const decoded = decodeIdToken(tokens.idToken());
+  const claims = ClaimsSchema.parse(decoded);
 
   const googleUserId = claims.sub;
   const username = claims.name;

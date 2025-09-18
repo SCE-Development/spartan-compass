@@ -15,9 +15,8 @@ export function getSemester(): string {
 }
 
 export async function fetchAllCourses() {
-  const semester = getSemester();
-  const url = `https://www.sjsu.edu/classes/schedules/${semester}.php`;
-  console.log(url);
+  const semester = 'fall-2025';
+  const url = `https://www.sjsu.edu/classes/schedules/fall-2025.php`;
 
   try {
     const response = await axios.get(url);
@@ -25,8 +24,8 @@ export async function fetchAllCourses() {
 
     const table = $('table#classSchedule');
     if (table.length) {
-      let uniqueCourses = new Set<string>();
-      let courses: any[] = [];
+      const uniqueCourses = new Set<string>();
+      const courses: any[] = [];
 
       table.find('tbody tr').each((_, element) => {
         const cells = $(element).find('td');
@@ -90,8 +89,8 @@ export async function fetchAllCourses() {
       console.error('No table found');
       return [];
     }
-  } catch (error) {
-    console.error(`Error: Unable to fetch data. ${error}`);
+  } catch (_error) {
+    console.error(`Error: Unable to fetch data. ${_error}`);
     return [];
   }
 }

@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS "courses" (
+CREATE TABLE IF NOT EXISTS "courses"  (
 	"id" serial PRIMARY KEY NOT NULL,
 	"semester" text NOT NULL,
 	"title" text NOT NULL,

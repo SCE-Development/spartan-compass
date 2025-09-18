@@ -1,13 +1,18 @@
 'use client';
 
-import { Input } from '@/components/ui/input';
-import { SearchIcon } from 'lucide-react';
-import { ChangeEvent, useEffect, useState } from 'react';
-import smartSearch from '@/app/actions';
-import { cn } from '@/lib/utils';
-import { Course, Professor } from '@/lib/db/schema';
 import Link from 'next/link';
-import { addBasePath } from 'next/dist/client/add-base-path';
+import { useEffect, useState } from 'react';
+import smartSearch from '@/app/actions';
+import {
+  Command,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from '@/components/ui/command';
+import type { Course, Professor } from '@/lib/db/schema';
+import { cn } from '@/lib/utils';
 
 // Updated SearchResult type to handle combined results
 export type SearchResult =
@@ -40,10 +45,8 @@ export default function SmartSearch({
     setResult(result);
   }
 
-  function handleQueryChange(e: ChangeEvent<HTMLInputElement>) {
-    const value = e.target.value;
+  function handleInputChange(value: string) {
     setInputValue(value);
-    updateResult(value);
   }
 
   useEffect(() => {
@@ -55,101 +58,87 @@ export default function SmartSearch({
     }
   }, []);
 
+  useEffect(() => {
+    const getData = setTimeout(() => {
+      updateResult(inputValue);
+      console.log('Fetching data...');
+    }, 300);
+    return () => clearTimeout(getData);
+  }, [inputValue]);
+
   return (
     <div className="ml-auto flex-initial">
-      <div className="relative">
-        {/*TODO: change to Form component when upgrading to next 15*/}
-        {/*https://nextjs.org/docs/app/api-reference/components/form*/}
-        <form method="get" action={addBasePath('/search')}>
-          <SearchIcon className="absolute left-2.5 top-0 bottom-0 m-auto h-4 w-4" />
-          <Input
-            type="search"
-            name="query"
-            value={inputValue}
+      <div
+        className={cn(
+          'relative rounded-lg border shadow-md',
+          type === 'page'
+            ? 'w-[400px] md:w-[1000px]'
+            : type === 'full'
+              ? 'w-[300px] md:w-[440px]'
+              : 'w-[120px] md:w-[200px]',
+        )}
+      >
+        <Command>
+          <CommandInput
             placeholder={`Search ${type === 'full' || type === 'page' ? 'for courses and professors' : ''}`}
-            className={cn(
-              'pl-8',
-              type === 'page'
-                ? 'w-[400px] md:w-[1000px]'
-                : type === 'full'
-                  ? 'w-[300px] md:w-[440px]'
-                  : 'w-[120px] md:w-[200px]',
-            )}
-            onChange={handleQueryChange}
+            value={inputValue}
+            onValueChange={handleInputChange}
+            className="h-8 bg-popover"
           />
-        </form>
-
-        {result && result.type !== 'empty' && (
-          <div
+          <CommandList
             className={cn(
-              'absolute mt-2 w-full rounded-md bg-background',
-              type === 'page' ? '' : 'border max-h-96 overflow-auto',
+              'absolute w-full rounded-md bg-background border',
+              type === 'half' ? 'mt-12' : 'mt-[40px]',
             )}
           >
-            {type === 'page' && <br />}
-
-            {result.type === 'combined' && (
-              <div className='p-1'>
+            {result && result.type === 'combined' && (
+              <>
                 {result.data.courses.length > 0 && (
-                  <div>
-                    <h3
-                      className={cn(
-                        'font-bold p-2',
-                        type === 'page'
-                          ? 'text-xl'
-                          : type === 'full'
-                            ? 'text-md'
-                            : 'text-sm',
-                      )}
-                    >
-                      Courses
-                    </h3>
+                  <CommandGroup heading="Courses">
                     {result.data.courses.map((course) => (
-                      <Link key={course.id} href={`/courses/${course.id}`}>
-                        <div className="hover:bg-accent rounded-sm px-2 py-1.5">
-                          <p className={cn(type === 'half' ? 'text-sm' : '')}>
-                            {`${course.subject} ${course.courseNumber} - ${course.title}`}
-                          </p>
-                        </div>
+                      <Link
+                        key={course.id}
+                        href={`/courses/${course.id}`}
+                        passHref
+                      >
+                        <CommandItem
+                          className={cn(
+                            'pl-2',
+                            type === 'half' ? 'text-sm' : '',
+                          )}
+                        >
+                          {`${course.subject} ${course.courseNumber} - ${course.title}`}
+                        </CommandItem>
                       </Link>
                     ))}
-                  </div>
+                  </CommandGroup>
                 )}
-                {type === 'page' && <br />}
+                {result.data.courses.length > 0 &&
+                  result.data.professors.length > 0 && <CommandSeparator />}
                 {result.data.professors.length > 0 && (
-                  <div>
-                    <h3
-                      className={cn(
-                        'font-bold p-2',
-                        type === 'page'
-                          ? 'text-xl'
-                          : type === 'full'
-                            ? 'text-md'
-                            : 'text-sm',
-                      )}
-                    >
-                      Professors
-                    </h3>
+                  <CommandGroup heading="Professors">
                     {result.data.professors.map((professor) => (
-                      <Link key={professor.id} href={`/professors/${professor.id}`}>
-                        <div className="hover:bg-accent rounded-sm px-2 py-1.5">
-                          <p className={cn(type === 'half' ? 'text-sm' : '')}>
-                            {`${professor.name} - ${professor.department}`}
-                          </p>
-                        </div>
+                      <Link
+                        key={professor.id}
+                        href={`/professors/${professor.id}`}
+                        passHref
+                      >
+                        <CommandItem
+                          className={cn(
+                            'pl-2',
+                            type === 'half' ? 'text-sm' : '',
+                          )}
+                        >
+                          {`${professor.name} - ${professor.department}`}
+                        </CommandItem>
                       </Link>
                     ))}
-                  </div>
+                  </CommandGroup>
                 )}
-              </div>
+              </>
             )}
-            {result.type === 'none' && (
-              <div className="p-2 text-center text-sm text-muted-foreground">
-                No results found.
-              </div>
-            )}
-          </div>
-        )}
+          </CommandList>
+        </Command>
       </div>
     </div>
   );

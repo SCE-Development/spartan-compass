@@ -1,8 +1,8 @@
 import { db } from '.';
 import {
-  professorsTable,
   coursesTable,
   professorsCoursesTable,
+  professorsTable,
   reviewsTable,
 } from './schema';
 

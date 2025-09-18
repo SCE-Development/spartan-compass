@@ -1,15 +1,16 @@
+import { eq } from 'drizzle-orm';
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import AddReviewForm from '@/components/AddReviewForm';
 import { StarRating } from '@/components/star-rating';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { db } from '@/lib/db';
 import {
   coursesTable,
   professorsCoursesTable,
   professorsTable,
 } from '@/lib/db/schema';
-import { eq } from 'drizzle-orm';
-import Link from 'next/link';
-import { Metadata } from 'next';
+import { Button } from '@/components/ui/button';
 
 export async function generateMetadata(props: {
   params: Promise<{ id: string }>;
@@ -74,8 +75,8 @@ export default async function CoursePage({
             </CardHeader>
             <CardContent className="mt-4">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {professorResult.map((result, index) => (
-                  <Card key={index} className="p-4">
+                {professorResult.map((result) => (
+                  <Card key={result.professor.id} className="p-4">
                     <CardHeader>
                       <Link href={`/professors/${result.professor.id}`}>
                         <CardTitle className="text-lg font-semibold hover:text-primary hover:underline">
@@ -126,6 +127,7 @@ export default async function CoursePage({
           </Card>
         ))}
       </div>
+      <AddReviewForm />
     </div>
   );
 }

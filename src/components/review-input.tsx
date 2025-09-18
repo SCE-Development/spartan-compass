@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { Star } from 'lucide-react';
+import { useEffect, useId, useState } from 'react';
+import type { CourseResult } from '@/app/review/page';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -19,7 +20,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { CourseResult } from '@/app/review/page';
 
 export default function Search({ result }: { result: CourseResult[] }) {
   const [rating, setRating] = useState(0);
@@ -39,12 +39,16 @@ export default function Search({ result }: { result: CourseResult[] }) {
     new Set(professors.map((prof) => prof.id)),
   ).map((id) => professors.find((prof) => prof.id === id));
 
+  const professorId = useId();
+  const courseId = useId();
+  const reviewId = useId();
+
   useEffect(() => {
     if (selectedProfessor) {
       const courses = result
         .filter((item) => item.professorId === Number(selectedProfessor))
         .map((item) => ({
-          displayName: item.courseSubject + ' ' + item.courseNumber,
+          displayName: `${item.courseSubject} ${item.courseNumber}`,
           id: item.courseId,
         }));
       setFilteredCourses(courses);
@@ -67,12 +71,12 @@ export default function Search({ result }: { result: CourseResult[] }) {
         <form className="space-y-3">
           <div className="flex gap-2 w-full">
             <div className="space-y-2">
-              <Label htmlFor="professor">Professor</Label>
+              <Label htmlFor={professorId}>Professor</Label>
               <Select
                 value={selectedProfessor}
                 onValueChange={setSelectedProfessor}
               >
-                <SelectTrigger id="professor">
+                <SelectTrigger id={professorId}>
                   <SelectValue placeholder="Select a professor" />
                 </SelectTrigger>
                 <SelectContent>
@@ -88,13 +92,13 @@ export default function Search({ result }: { result: CourseResult[] }) {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="course">Course</Label>
+              <Label htmlFor={courseId}>Course</Label>
               <Select
                 disabled={!selectedProfessor}
                 value={selectedCourse}
                 onValueChange={setSelectedCourse}
               >
-                <SelectTrigger id="course">
+                <SelectTrigger id={courseId}>
                   <SelectValue placeholder="Select a course" />
                 </SelectTrigger>
                 <SelectContent>
@@ -131,9 +135,9 @@ export default function Search({ result }: { result: CourseResult[] }) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="review">Review</Label>
+            <Label htmlFor={reviewId}>Review</Label>
             <Textarea
-              id="review"
+              id={reviewId}
               value={review}
               onChange={(e) => setReview(e.target.value.slice(0, 500))}
               placeholder="Write your review here..."
