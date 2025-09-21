@@ -1,5 +1,5 @@
 {
-  "id": "dfca2e09-cf8a-48c2-86c5-bbc2902fa020",
+  "id": "e794e902-9e80-4aae-9f1b-5353952a3aac",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -98,7 +98,7 @@
           "primaryKey": false,
           "notNull": true,
           "generated": {
-            "as": "setweight(to_tsvector('english', \"courses\".\"subject\"), 'A') ||\n          setweight(to_tsvector('english', \"courses\".\"course_number\"), 'A') ||\n          setweight(to_tsvector('english', \"courses\".\"class_number\"), 'B') ||\n          setweight(to_tsvector('english', \"courses\".\"title\"), 'C') ||\n          setweight(to_tsvector('english', \"courses\".\"units\"), 'D') ||\n          setweight(to_tsvector('english', \"courses\".\"type\"), 'E') ||\n          setweight(to_tsvector('english', \"courses\".\"days\"), 'F') ||\n          setweight(to_tsvector('english', \"courses\".\"time\"), 'G') ||\n          setweight(to_tsvector('english', \"courses\".\"location\"), 'H') ||\n          setweight(to_tsvector('english', \"courses\".\"dates\"), 'I') ||\n          setweight(to_tsvector('english', \"courses\".\"open_seats\"), 'J') ||\n          setweight(to_tsvector('english', \"courses\".\"semester\"), 'K')",
+            "as": "setweight(to_tsvector('english', \"courses\".\"subject\"), 'A') ||\n          setweight(to_tsvector('english', \"courses\".\"course_number\"), 'A') ||\n          setweight(to_tsvector('english', \"courses\".\"class_number\"), 'B') ||\n          setweight(to_tsvector('english', \"courses\".\"title\"), 'C') ||\n          setweight(to_tsvector('english', \"courses\".\"semester\"), 'D')",
             "type": "stored"
           }
         }
@@ -195,6 +195,24 @@
         },
         "avg_rating": {
           "name": "avg_rating",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "avg_difficulty": {
+          "name": "avg_difficulty",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "num_ratings": {
+          "name": "num_ratings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "would_take_again_percent": {
+          "name": "would_take_again_percent",
           "type": "real",
           "primaryKey": false,
           "notNull": false

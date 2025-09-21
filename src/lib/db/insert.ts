@@ -54,6 +54,11 @@ export async function insertProfessors() {
           avgRating: professor.avgRating
             ? Math.round(professor.avgRating * 10) / 10
             : null,
+          avgDifficulty: professor.avgDifficulty
+            ? Math.round(professor.avgDifficulty * 10) / 10
+            : null,
+          numRatings: professor.numRatings,
+          wouldTakeAgainPercent: professor.wouldTakeAgainPercent,
         })
         .returning();
       console.log('Added: ', newProfessor);
@@ -68,44 +73,64 @@ export async function insertCourses() {
   let alreadyExists = 0;
   let professorNotFound = 0;
   const allProfessors = await db.select().from(professorsTable);
+  // Group courses by all fields except professor
+  const courseMap = new Map();
   for (const course of courses) {
+    const {
+      semester,
+      title,
+      subject,
+      courseNumber,
+      classNumber,
+      units,
+      type,
+      days,
+      time,
+      location,
+      dates,
+      openSeats,
+      professor,
+    } = course;
+    // Key without professor
+    const key = JSON.stringify({
+      semester,
+      title,
+      subject,
+      courseNumber,
+      classNumber,
+      units,
+      type,
+      days,
+      time,
+      location,
+      dates,
+      openSeats,
+    });
+    if (!courseMap.has(key)) {
+      courseMap.set(key, { ...course, professors: [] });
+    }
+    courseMap.get(key).professors.push(professor);
+  }
+
+  for (const courseObj of courseMap.values()) {
     try {
-      const semester = 'fall-2025';
-      const { title, subject, courseNumber, classNumber, units, type, days, time, location, dates, openSeats, professor } = course;
+      const {
+        semester,
+        title,
+        subject,
+        courseNumber,
+        classNumber,
+        units,
+        type,
+        days,
+        time,
+        location,
+        dates,
+        openSeats,
+        professors,
+      } = courseObj;
 
-      // Improved professor name splitting
-      // Try to split the professor name into first and last name for matching
-      let firstName = '';
-      let lastName = '';
-      if (professor) {
-        const parts = professor.trim().split(/\s+/);
-        if (parts.length === 1) {
-          firstName = parts[0];
-        } else if (parts.length > 1) {
-          firstName = parts[0];
-          lastName = parts.slice(1).join(' ');
-        }
-      }
-
-      //check if professor for course exists
-      const existingProfessor = allProfessors.find((_p) =>
-        isSameProfessor(professor, {
-          firstName,
-          lastName,
-        }),
-      );
-
-      //if professor does not exist for course don't add and continue
-      if (!existingProfessor) {
-        console.error(
-          `Professor ${professor} not found for ${subject}${courseNumber} ${classNumber}`,
-        );
-        professorNotFound++;
-        continue;
-      }
-      const professorId = existingProfessor.id;
-
-      //check if course already exists in the courses table
+      // Check if course exists
       const existingCourse = await db
         .select()
         .from(coursesTable)
@@ -124,33 +149,9 @@ export async function insertCourses() {
           ),
         )
         .limit(1);
-      //if course already exists in courses table then check if professorCourse exists
+      let courseId;
       if (existingCourse.length > 0) {
-        const courseId = existingCourse[0].id;
-        const existingProfCourse = await db
-          .select()
-          .from(professorsCoursesTable)
-          .where(
-            and(
-              eq(professorsCoursesTable.professorId, professorId),
-              eq(professorsCoursesTable.courseId, courseId),
-            ),
-          )
-          .limit(1);
-        //if professorCourse does not exists add else don't add
-        if (existingProfCourse.length === 0) {
-          await db.insert(professorsCoursesTable).values({
-            professorId,
-            courseId,
-          });
-          added++;
-        } else {
-          console.log(
-            `Course ${subject}${courseNumber} with ${professor} already exists`,
-          );
-          alreadyExists++;
-        }
-        //if course does not exists in courses table add to both courses table and professorCourse
+        courseId = existingCourse[0].id;
       } else {
         const insertedCourse = await db
           .insert(coursesTable)
@@ -169,15 +170,58 @@ export async function insertCourses() {
             openSeats,
           })
           .returning({ id: coursesTable.id });
+        courseId = insertedCourse[0].id;
+      }
 
-        await db.insert(professorsCoursesTable).values({
-          professorId,
-          courseId: insertedCourse[0].id,
-        });
-        added++;
+      // For each professor, associate with course
+      for (const professor of professors) {
+        let firstName = '';
+        let lastName = '';
+        if (professor) {
+          const parts = professor.trim().split(/\s+/);
+          if (parts.length === 1) {
+            firstName = parts[0];
+          } else if (parts.length > 1) {
+            firstName = parts[0];
+            lastName = parts.slice(1).join(' ');
+          }
+        }
+        const existingProfessor = allProfessors.find((_p) =>
+          isSameProfessor(_p.name, {
+            firstName,
+            lastName,
+          }),
+        );
+        if (!existingProfessor) {
+          console.error(
+            `Professor ${professor} not found for ${subject}${courseNumber} ${classNumber}`,
+          );
+          professorNotFound++;
+          continue;
+        }
+        const professorId = existingProfessor.id;
+        const existingProfCourse = await db
+          .select()
+          .from(professorsCoursesTable)
+          .where(
+            and(
+              eq(professorsCoursesTable.professorId, professorId),
+              eq(professorsCoursesTable.courseId, courseId),
+            ),
+          )
+          .limit(1);
+        if (existingProfCourse.length === 0) {
+          await db.insert(professorsCoursesTable).values({
+            professorId,
+            courseId,
+          });
+          added++;
+        } else {
+          alreadyExists++;
+        }
       }
     } catch (error) {
-      console.error(`Error processing course ${course.title}:`, error);
+      console.error(`Error processing course ${courseObj.title}:`, error);
     }
   }
   console.log(

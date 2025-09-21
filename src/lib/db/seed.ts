@@ -196,7 +196,7 @@ const main = async () => {
     ];
 
     await db.insert(professorsTable).values(professors);
-    await db.insert(coursesTable).values(courses);
+    //await db.insert(coursesTable).values(courses);
     await db.insert(professorsCoursesTable).values(professorsCourses);
     await db.insert(reviewsTable).values(reviews);
     console.log('Database seeded, press Ctrl+C to exit');

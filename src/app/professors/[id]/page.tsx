@@ -57,6 +57,7 @@ export default async function ProfessorPage(props: {
             <CardHeader className="bg-primary text-primary-foreground">
               <CardTitle className="text-4xl">{professor.name}</CardTitle>
               <p className="text-primary-foreground">{professor.department}</p>
+              <p className="text-primary-foreground">Difficulty: {professor.avgDifficulty ?? 'N/A'} | Would take again: {professor.wouldTakeAgainPercent !== -1 ? professor.wouldTakeAgainPercent?.toFixed(1) : 'N/A'}%</p>
               <div className="mt-2">
                 {professor.avgRating === null ? (
                   'No ratings yet'

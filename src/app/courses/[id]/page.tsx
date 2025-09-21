@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import AddReviewForm from '@/components/AddReviewForm';
@@ -57,10 +57,109 @@ export default async function CoursePage({
       eq(professorsCoursesTable.professorId, professorsTable.id),
     );
 
-  const professorCourseResult = await db
-    .select()
-    .from(professorsCoursesTable)
-    .where(eq(professorsCoursesTable.courseId, Number(params.id)));
+  // Prepare data for "other professors who taught the same course"
+  let otherProfessorsCards = [];
+  if (courseResult.length > 0) {
+    const currentCourse = courseResult[0];
+    // Get all courses with same subject and courseNumber (excluding current class)
+    const sameCoursesSubject = await db
+      .select()
+      .from(coursesTable)
+      .where(
+        (eq(coursesTable.title, currentCourse.title)) &&
+        (eq(coursesTable.courseNumber, currentCourse.courseNumber))
+      )
+    const sameCourses = sameCoursesSubject.filter((c: any) => c.subject === currentCourse.subject);
+    const sameCourseIds = sameCourses.map((c: any) => c.id).filter((id: any) => id !== currentCourse.id);
+
+    if (!sameCourseIds) {
+      otherProfessorsCards.push(
+        <Card className="p-4" key="no-other-professors">
+          <CardContent>
+            <span className="text-sm italic text-muted-foreground">
+              No other professors have taught this course.
+            </span>
+          </CardContent>
+        </Card>
+      );
+    } else {
+      const sameProfessorsResult = await db
+        .select({
+          professor: professorsTable,
+          course: coursesTable,
+        })
+        .from(professorsCoursesTable)
+        .where(inArray(professorsCoursesTable.courseId, sameCourseIds))
+        .innerJoin(
+          professorsTable,
+          eq(professorsCoursesTable.professorId, professorsTable.id),
+        )
+        .innerJoin(
+          coursesTable,
+          eq(professorsCoursesTable.courseId, coursesTable.id),
+        );
+
+      if (!sameProfessorsResult) {
+        otherProfessorsCards.push(
+          <Card className="p-4" key="no-other-professors" hidden>
+            <CardContent>
+              <span className="text-sm italic text-muted-foreground">
+                No other professors have taught this course.
+              </span>
+            </CardContent>
+          </Card>
+        );
+      } else {
+
+        otherProfessorsCards = sameProfessorsResult.map((result) => (
+          <Card key={result.professor.id + result.course.id} className="p-4">
+            <CardHeader>
+              <Link href={`/professors/${result.professor.id}`}>
+                <CardTitle className="text-lg font-semibold hover:text-primary hover:underline">
+                  {result.professor.name}
+                </CardTitle>
+              </Link>
+              <p className="text-muted-foreground">
+                {result.professor.department}
+              </p>
+              <p className="text-muted-foreground">
+                {result.course.classNumber}
+              </p>
+            </CardHeader>
+            <CardContent className='flex flex-row flex-wrap justify-between'>
+              <div className="mt-2">
+                {result.professor.avgRating ? (
+                  <StarRating
+                    rating={result.professor.avgRating}
+                    textColor="text-muted-foreground"
+                  />
+                ) : (
+                  <span className="text-sm italic text-muted-foreground">
+                    No ratings yet
+                  </span>
+                )}
+              </div>
+              <div className='mt-2'>
+                <Link href={`/courses/${result.course.id}`}>
+                  <Button className='disabled:cursor-not-allowed'>Go To Class</Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        ));
+      }
+    }
+  } else {
+    otherProfessorsCards.push(
+      <Card className="p-4" key="no-professors" hidden>
+        <CardContent>
+          <span className="text-sm italic text-muted-foreground">
+            No professors found for this course.
+          </span>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <div className="container mx-auto p-4">
@@ -72,6 +171,11 @@ export default async function CoursePage({
               <p className="text-primary-foreground">{course.classNumber}</p>
               <p className="text-primary-foreground">Units: {course.units} | Type: {course.type}</p>
               <p className="text-primary-foreground">{course.description}</p>
+              <p className="text-primary-foreground">{course.location} | {course.days} | {course.time} | {course.dates}</p>
+              <p className="text-primary-foreground">Open Seats: {course.openSeats}</p>
+              <div className="mt-2">
+                <Button className='disabled:cursor-not-allowed' disabled>Add To Cart</Button>
+              </div>
             </CardHeader>
             <CardContent className="mt-4">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -86,24 +190,8 @@ export default async function CoursePage({
                       <p className="text-muted-foreground">
                         {result.professor.department}
                       </p>
-                      <p className="text-sm">
-                          {
-                            professorCourseResult.filter((professorCourse) =>
-                              professorCourse.professorId === result.professor.id,
-                            ).map((professorCourse) => (
-                              courseResult.filter((course) =>
-                                professorCourse.courseId === course.id,
-                              ).map((course) => (
-                                <span key={course.id} className="flex flex-col">
-                                  <span>{course.location} | {course.days} | {course.time} | {course.dates}</span>
-                                  <span>Open Seats: {course.openSeats}</span>
-                                </span>
-                              ))
-                            ))
-                          }
-                      </p>
                     </CardHeader>
-                    <CardContent className='flex flex-row justify-between'>
+                    <CardContent>
                       <div className="mt-2">
                         {result.professor.avgRating ? (
                           <StarRating
@@ -116,12 +204,13 @@ export default async function CoursePage({
                           </span>
                         )}
                       </div>
-                      <div className="mt-2">
-                        <Button className='disabled:cursor-not-allowed' disabled>Add To Cart</Button>
-                      </div>
                     </CardContent>
                   </Card>
                 ))}
+              </div>
+              <div className='text-2xl mt-4'>Other Classes</div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                {otherProfessorsCards}
               </div>
             </CardContent>
           </Card>
