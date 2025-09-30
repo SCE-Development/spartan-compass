@@ -4,7 +4,20 @@ CREATE TABLE IF NOT EXISTS "courses" (
 	"title" text NOT NULL,
 	"subject" text NOT NULL,
 	"course_number" text NOT NULL,
-	"description" text
+	"class_number" text NOT NULL,
+	"units" text NOT NULL,
+	"type" text NOT NULL,
+	"days" text NOT NULL,
+	"time" text NOT NULL,
+	"location" text NOT NULL,
+	"dates" text NOT NULL,
+	"open_seats" text NOT NULL,
+	"description" text,
+	"search_vector" "tsvector" GENERATED ALWAYS AS (setweight(to_tsvector('english', "courses"."subject"), 'A') ||
+          setweight(to_tsvector('english', "courses"."course_number"), 'A') ||
+          setweight(to_tsvector('english', "courses"."class_number"), 'B') ||
+          setweight(to_tsvector('english', "courses"."title"), 'C') ||
+          setweight(to_tsvector('english', "courses"."semester"), 'D')) STORED NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "professors_courses" (
@@ -16,7 +29,13 @@ CREATE TABLE IF NOT EXISTS "professors_courses" (
 CREATE TABLE IF NOT EXISTS "professors" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"name" text NOT NULL,
-	"department" text NOT NULL
+	"department" text NOT NULL,
+	"avg_rating" real,
+	"avg_difficulty" real,
+	"num_ratings" integer,
+	"would_take_again_percent" real,
+	"search_vector" "tsvector" GENERATED ALWAYS AS (setweight(to_tsvector('english', "professors"."name"), 'A') ||
+          setweight(to_tsvector('english', "professors"."department"), 'B')) STORED NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "reviews" (

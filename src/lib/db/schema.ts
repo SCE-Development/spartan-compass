@@ -42,6 +42,9 @@ export const professorsTable = pgTable(
     name: text('name').notNull(),
     department: text('department').notNull(),
     avgRating: real('avg_rating'),
+    avgDifficulty: real('avg_difficulty'),
+    numRatings: integer('num_ratings'),
+    wouldTakeAgainPercent: real('would_take_again_percent'),
     searchVector: tsvector('search_vector')
       .notNull()
       .generatedAlwaysAs(
@@ -69,6 +72,14 @@ export const coursesTable = pgTable(
     title: text('title').notNull(),
     subject: text('subject').notNull(),
     courseNumber: text('course_number').notNull(),
+    classNumber: text('class_number').notNull(),
+    units: text('units').notNull(),
+    type: text('type').notNull(),
+    days: text('days').notNull(),
+    time: text('time').notNull(),
+    location: text('location').notNull(),
+    dates: text('dates').notNull(),
+    openSeats: text('open_seats').notNull(),
     description: text('description'),
     searchVector: tsvector('search_vector')
       .notNull()
@@ -76,8 +87,9 @@ export const coursesTable = pgTable(
         (): SQL =>
           sql`setweight(to_tsvector('english', ${coursesTable.subject}), 'A') ||
           setweight(to_tsvector('english', ${coursesTable.courseNumber}), 'A') ||
-          setweight(to_tsvector('english', ${coursesTable.title}), 'B') ||
-          setweight(to_tsvector('english', ${coursesTable.semester}), 'C')`,
+          setweight(to_tsvector('english', ${coursesTable.classNumber}), 'B') ||
+          setweight(to_tsvector('english', ${coursesTable.title}), 'C') ||
+          setweight(to_tsvector('english', ${coursesTable.semester}), 'D')`,
       ),
   },
   (table) => ({
