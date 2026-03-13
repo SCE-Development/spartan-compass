@@ -107,7 +107,7 @@ export default function SmartSearch({
                             type === 'half' ? 'text-sm' : '',
                           )}
                         >
-                          {`${course.subject} ${course.courseNumber} - ${course.title}`}
+                          {`${course.subject} ${course.courseNumber} - ${course.title} | ${course.classNumber}`}
                         </CommandItem>
                       </Link>
                     ))}
